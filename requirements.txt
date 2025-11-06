@@ -1,0 +1,25 @@
+# This file lists the required Python packages for the AI Business Intelligence Agent.
+# Install them using the command: pip install -r requirements.txt
+
+# Core Vanna and web application dependencies
+requests
+tabulate
+plotly
+pandas
+sqlparse
+kaleido
+flask
+flask-sock
+flasgger
+sqlalchemy
+
+# Database connector for MySQL
+PyMySQL
+mysql-connector-python
+
+# Vector database for local storage
+chromadb<1.0.0
+
+# LLM connector for Ollama
+ollama
+httpx
