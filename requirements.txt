@@ -18,7 +18,8 @@ PyMySQL
 mysql-connector-python
 
 # Vector database for local storage
-chromadb<1.0.0
+qdrant-client
+fastembed
 
 # LLM connector for Ollama
 ollama
