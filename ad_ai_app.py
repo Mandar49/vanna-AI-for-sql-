@@ -1,14 +1,18 @@
 # ad_ai_app.py
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, render_template
 import pandas as pd
 import json
 import re
+from datetime import datetime
 
 # Import the pre-trained Vanna instance from our common module
 from common import vn
 
 # Initialize the Flask application
 app = Flask(__name__)
+
+# In-memory storage for conversations
+conversations = {}
 
 def extract_json_from_response(response: str):
     """
@@ -36,6 +40,33 @@ def extract_json_from_response(response: str):
             except json.JSONDecodeError:
                 return None  # Return None if all attempts fail
     return None
+
+@app.route('/')
+def index():
+    """
+    Serve the main chat interface.
+    """
+    return render_template('index.html')
+
+@app.route('/api/conversations', methods=['GET'])
+def get_conversations():
+    """
+    Return a list of all conversations with their titles.
+    """
+    conv_list = []
+    for conv_id, conv_data in conversations.items():
+        title = conv_data.get('title', 'New Chat')
+        conv_list.append({'id': conv_id, 'title': title})
+    return jsonify(conv_list)
+
+@app.route('/api/conversations/<conversation_id>', methods=['GET'])
+def get_conversation(conversation_id):
+    """
+    Return the full history of a specific conversation.
+    """
+    if conversation_id in conversations:
+        return jsonify(conversations[conversation_id]['history'])
+    return jsonify([])
 
 def summarize_data_with_llm(question: str, df: pd.DataFrame) -> str:
     """
@@ -72,11 +103,37 @@ def ask():
     """
     data = request.json
     question = data.get('question')
+    conversation_id = data.get('conversation_id')
 
     if not question:
         return jsonify({"error": "A 'question' is required."}), 400
+    
+    # Initialize conversation if it doesn't exist
+    if conversation_id not in conversations:
+        conversations[conversation_id] = {
+            'title': question[:50],  # Use first 50 chars of first question as title
+            'history': []
+        }
+    
+    # Add user message to history
+    conversations[conversation_id]['history'].append({
+        'role': 'user',
+        'value': question
+    })
 
     # --- Two-Brain System Logic ---
+    
+    # Handle greetings and casual conversation
+    greeting_keywords = ["hi", "hello", "hey", "good morning", "good afternoon", "good evening", "greetings"]
+    if any(question.lower().strip() == keyword or question.lower().strip().startswith(keyword + " ") for keyword in greeting_keywords):
+        greeting_response = "Hello! I'm your AI assistant for analyzing advertising data. You can ask me questions about your data, or request strategic analysis. How can I help you today?"
+        conversations[conversation_id]['history'].append({
+            'role': 'assistant',
+            'value': greeting_response,
+            'sql': None
+        })
+        return jsonify(conversations[conversation_id]['history'])
+    
     analytical_keywords = ["analyze", "analyse", "strategy", "improve", "loopholes", "recommend"]
 
     if any(keyword in question.lower() for keyword in analytical_keywords):
@@ -116,10 +173,23 @@ def ask():
             """
             final_answer = vn.submit_prompt([vn.user_message(synthesis_prompt)])
 
-            return jsonify({"answer": final_answer, "sql": None})
+            # Add AI response to history
+            conversations[conversation_id]['history'].append({
+                'role': 'assistant',
+                'value': final_answer,
+                'sql': None
+            })
+            
+            return jsonify(conversations[conversation_id]['history'])
 
         except Exception as e:
-            return jsonify({"answer": f"An error occurred during strategic analysis: {e}", "sql": None})
+            error_msg = f"An error occurred during strategic analysis: {e}"
+            conversations[conversation_id]['history'].append({
+                'role': 'assistant',
+                'value': error_msg,
+                'sql': None
+            })
+            return jsonify(conversations[conversation_id]['history'])
 
     else:
         # --- Brain #1: The "Data Retrieval Brain" ---
@@ -131,13 +201,34 @@ def ask():
                 df = vn.run_sql(sql)
                 # Use the presentation layer to summarize the data
                 summary = summarize_data_with_llm(question, df)
-                return jsonify({"answer": summary, "sql": sql})
+                
+                # Add AI response to history
+                conversations[conversation_id]['history'].append({
+                    'role': 'assistant',
+                    'value': summary,
+                    'sql': sql
+                })
+                
+                return jsonify(conversations[conversation_id]['history'])
             else:
                 summary = "I could not generate a SQL query for your question. Please try rephrasing."
-                return jsonify({"answer": summary, "sql": None})
+                
+                conversations[conversation_id]['history'].append({
+                    'role': 'assistant',
+                    'value': summary,
+                    'sql': None
+                })
+                
+                return jsonify(conversations[conversation_id]['history'])
 
         except Exception as e:
-            return jsonify({"answer": f"An error occurred: {e}", "sql": None})
+            error_msg = f"An error occurred: {e}"
+            conversations[conversation_id]['history'].append({
+                'role': 'assistant',
+                'value': error_msg,
+                'sql': None
+            })
+            return jsonify(conversations[conversation_id]['history'])
 
 # Main execution block
 if __name__ == '__main__':

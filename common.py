@@ -62,3 +62,12 @@ def run_sql(sql: str) -> pd.DataFrame:
 
 # Assign the database connection function to our Vanna instance
 vn.run_sql = run_sql
+
+# Connect Vanna to the MySQL database so it can access schema information
+# This is critical for SQL generation to work properly
+vn.connect_to_mysql(
+    host=AppConfig.DB_HOST,
+    user=AppConfig.DB_USER,
+    password=AppConfig.DB_PASSWORD,
+    database=AppConfig.DB_NAME
+)
