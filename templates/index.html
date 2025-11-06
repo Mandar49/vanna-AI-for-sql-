@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Business Intelligence Agent</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div class="app-container">
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <img src="/static/logo.png" alt="Company Logo" class="logo">
+                <h2>Conversations</h2>
+            </div>
+            <div class="new-chat-btn-container">
+                <button id="new-chat-btn">+ New Chat</button>
+            </div>
+            <nav id="conversation-list"></nav>
+        </aside>
+        <main class="chat-area">
+            <div id="chat-history">
+                <!-- Chat messages will be dynamically inserted here -->
+            </div>
+            <div class="chat-input-area">
+                <form id="ask-form">
+                    <input type="text" id="question-input" placeholder="Ask a question about your data..." required autocomplete="off">
+                    <button type="submit">Send</button>
+                </form>
+            </div>
+        </main>
+    </div>
+    <script src="/static/script.js"></script>
+</body>
+</html>
