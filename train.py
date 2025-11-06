@@ -1,5 +1,5 @@
 # train.py
-from common import LocalVanna, run_sql, AppConfig
+from common import LocalVanna, run_sql
 
 # Instantiate the Vanna class. The new architecture handles configuration internally.
 vn = LocalVanna()
@@ -45,7 +45,7 @@ def train_vanna():
         sql="SELECT p.Category, SUM(oi.Quantity * oi.UnitPrice) AS TotalSales FROM products p JOIN orderitems oi ON p.ProductID = oi.ProductID GROUP BY p.Category ORDER BY TotalSales DESC"
     )
     print("  - Added 5 high-quality Question-SQL pairs.")
-    print(f"\nTraining complete. Vector store saved to '{AppConfig.CHROMA_DB_PATH}'.")
+    print("\nTraining complete. All training data has been added to the Qdrant vector store.")
 
 if __name__ == '__main__':
     train_vanna()

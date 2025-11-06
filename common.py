@@ -2,7 +2,8 @@
 import mysql.connector
 import pandas as pd
 from vanna.ollama.ollama import Ollama
-from vanna.chromadb.chromadb_vector import ChromaDB_VectorStore
+from vanna.qdrant.qdrant_vector import Qdrant_VectorStore
+import qdrant_client
 
 # Centralized Configuration
 class AppConfig:
@@ -11,25 +12,29 @@ class AppConfig:
     DB_USER = 'root'
     DB_PASSWORD = ''
     DB_NAME = 'ad_ai_testdb'
-    CHROMA_DB_PATH = './vanna_chroma_db'
+    QDRANT_HOST = 'localhost'
+    QDRANT_PORT = 6333
 
-# Shared Vanna Class with the CORRECT inheritance and __init__ pattern.
-# This inherits from both the VectorStore and LLM components, which is the
-# library's intended pattern for creating a local-only Vanna instance.
-class LocalVanna(ChromaDB_VectorStore, Ollama):
+# Shared Vanna Class re-architected to use Qdrant
+class LocalVanna(Qdrant_VectorStore, Ollama):
     def __init__(self, config=None):
         if config is None:
             config = {}
 
+        # Configure Qdrant connection
+        qdrant_client_instance = qdrant_client.QdrantClient(
+            host=AppConfig.QDRANT_HOST,
+            port=AppConfig.QDRANT_PORT
+        )
+
         # A single, complete config is created and passed to both parent
-        # constructors. Each parent will pick the keys it needs. This
-        # ensures the 'model' key is passed to the Ollama parent, fixing the bug.
+        # constructors. Each parent will pick the keys it needs.
         full_config = {
             'model': config.get('model', AppConfig.LLM_MODEL),
-            'path': config.get('path', AppConfig.CHROMA_DB_PATH),
+            'client': qdrant_client_instance,
         }
 
-        ChromaDB_VectorStore.__init__(self, config=full_config)
+        Qdrant_VectorStore.__init__(self, config=full_config)
         Ollama.__init__(self, config=full_config)
 
 # Shared Database Connection Function
