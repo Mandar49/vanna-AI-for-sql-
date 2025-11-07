@@ -1,13 +1,11 @@
 document.addEventListener('DOMContentLoaded', () => {
     const conversationList = document.getElementById('conversation-list');
     const newChatBtn = document.getElementById('new-chat-btn');
+    const chatHistory = document.getElementById('chat-history');
     const askForm = document.getElementById('ask-form');
     const questionInput = document.getElementById('question-input');
-    const chatHistory = document.getElementById('chat-history');
 
     let currentConversationId = null;
-
-    // --- Core Functions ---
 
     const loadConversations = async () => {
         const response = await fetch('/api/conversations');
@@ -16,8 +14,8 @@ document.addEventListener('DOMContentLoaded', () => {
         conversations.forEach(conv => {
             const link = document.createElement('a');
             link.href = '#';
-            link.textContent = conv.title;
             link.dataset.id = conv.id;
+            link.textContent = conv.title;
             if (conv.id === currentConversationId) {
                 link.classList.add('active');
             }
@@ -25,63 +23,54 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     };
 
-    const loadConversation = async (id) => {
-        currentConversationId = id;
-        const response = await fetch(`/api/conversations/${id}`);
-        const history = await response.json();
-        renderChatHistory(history);
-        document.querySelectorAll('#conversation-list a').forEach(a => {
-            a.classList.toggle('active', a.dataset.id === id);
-        });
-    };
-
     const renderChatHistory = (history) => {
         chatHistory.innerHTML = '';
         history.forEach(message => {
-            const messageDiv = document.createElement('div');
-            messageDiv.classList.add('message');
+            const messageEl = document.createElement('div');
+            messageEl.classList.add('message', message.role === 'user' ? 'user-message' : 'ai-message');
 
-            if (message.role === 'user') {
-                messageDiv.classList.add('user-message');
-                messageDiv.textContent = message.value;
-            } else {
-                messageDiv.classList.add('ai-message');
-                messageDiv.innerHTML = `<p>${message.value.replace(/\n/g, '<br>')}</p>`;
+            const p = document.createElement('p');
+            p.textContent = message.value;
+            messageEl.appendChild(p);
 
-                if (message.sql) {
-                    const showSqlBtn = document.createElement('button');
-                    showSqlBtn.className = 'show-sql-btn';
-                    showSqlBtn.textContent = 'Show SQL';
+            if (message.sql) {
+                const btn = document.createElement('button');
+                btn.textContent = 'Show SQL';
+                btn.classList.add('show-sql-btn');
+                btn.onclick = () => {
+                    const pre = messageEl.querySelector('pre');
+                    if (pre) {
+                        pre.style.display = pre.style.display === 'none' ? 'block' : 'none';
+                    }
+                };
+                messageEl.appendChild(btn);
 
-                    const sqlCode = document.createElement('div');
-                    sqlCode.className = 'sql-code';
-                    sqlCode.textContent = message.sql;
-                    sqlCode.style.display = 'none';
-
-                    showSqlBtn.onclick = () => {
-                        const isHidden = sqlCode.style.display === 'none';
-                        sqlCode.style.display = isHidden ? 'block' : 'none';
-                        showSqlBtn.textContent = isHidden ? 'Hide SQL' : 'Show SQL';
-                    };
-
-                    messageDiv.appendChild(showSqlBtn);
-                    messageDiv.appendChild(sqlCode);
-                }
+                const pre = document.createElement('pre');
+                pre.classList.add('sql-code');
+                pre.style.display = 'none';
+                pre.textContent = message.sql;
+                messageEl.appendChild(pre);
             }
-            chatHistory.appendChild(messageDiv);
+            chatHistory.appendChild(messageEl);
         });
-        chatHistory.scrollTop = chatHistory.scrollHeight; // Scroll to bottom
+        chatHistory.scrollTop = chatHistory.scrollHeight;
+    };
+
+    const loadConversation = async (id) => {
+        const response = await fetch(`/api/conversations/${id}`);
+        const history = await response.json();
+        currentConversationId = id;
+        renderChatHistory(history);
+        loadConversations();
     };
 
     const startNewChat = () => {
-        currentConversationId = self.crypto.randomUUID();
+        currentConversationId = `conversation_${Date.now()}`;
         chatHistory.innerHTML = '';
         questionInput.value = '';
         questionInput.focus();
-        loadConversations(); // To highlight the new "active" chat (which is none)
+        loadConversations();
     };
-
-    // --- Event Listeners ---
 
     newChatBtn.addEventListener('click', startNewChat);
 
@@ -101,8 +90,7 @@ document.addEventListener('DOMContentLoaded', () => {
             startNewChat();
         }
 
-        // Add user message to UI immediately
-        const userMessage = { role: 'user', value: question };
+        const userMessage = { role: 'user', 'value': question };
         const tempHistory = [...getCurrentHistory(), userMessage];
         renderChatHistory(tempHistory);
 
@@ -119,7 +107,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const updatedHistory = await response.json();
         renderChatHistory(updatedHistory);
-        loadConversations(); // Refresh list to show new title
+        loadConversations();
     });
 
     const getCurrentHistory = () => {
@@ -132,7 +120,6 @@ document.addEventListener('DOMContentLoaded', () => {
         return history;
     };
 
-    // --- Initial Load ---
     loadConversations();
     startNewChat();
 });

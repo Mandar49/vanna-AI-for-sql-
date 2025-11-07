@@ -1,5 +1,4 @@
-# Essential libraries for the simplified AI BI Agent MVP
-vanna[ollama,mysql,chromadb]
+# Essential libraries for the AI BI Agent
+vanna[ollama,mysql]
 flask
 mysql-connector-python
-chromadb
