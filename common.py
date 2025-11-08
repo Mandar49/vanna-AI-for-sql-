@@ -44,3 +44,6 @@ def run_sql(sql: str) -> pd.DataFrame:
 
 # Assign the database connection function to our Vanna instance
 vn.run_sql = run_sql
+
+# Note: We don't use vn.connect_to_mysql() because we provide a custom run_sql function
+# The training script will teach Vanna about the database schema through DDL training

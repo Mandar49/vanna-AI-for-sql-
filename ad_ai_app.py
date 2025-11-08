@@ -109,14 +109,12 @@ def ask():
 
     chat_history.append({"role": "user", "value": question})
 
-    # --- New Guardrail: Greeting Handler ---
-    greetings = ["hi", "hello", "hey"]
-    if question.lower().strip() in greetings:
-        chat_history.append({
-            "role": "assistant",
-            "value": "Hello! I'm your AI assistant for analyzing advertising data. You can ask me questions about your data, or request strategic analysis. How can I help you today?",
-            "sql": None
-        })
+    # Handle greetings and casual conversation
+    greeting_keywords = ["hi", "hello", "hey", "good morning", "good afternoon", "good evening", "greetings", "howdy"]
+    question_lower = question.lower().strip()
+    if any(question_lower == keyword or question_lower.startswith(keyword + " ") or question_lower.startswith(keyword + ",") for keyword in greeting_keywords):
+        greeting_response = "Hello! I'm your AI assistant for analyzing business data. You can ask me questions about your data, or request strategic analysis. How can I help you today?"
+        chat_history.append({"role": "assistant", "value": greeting_response, "sql": None})
         with open(filepath, 'w') as f:
             json.dump(chat_history, f, indent=2)
         return jsonify(chat_history)
