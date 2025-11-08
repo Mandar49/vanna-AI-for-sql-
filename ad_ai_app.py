@@ -83,6 +83,13 @@ def summarize_data_with_llm(question: str, df: pd.DataFrame) -> str:
     """
     return vn.submit_prompt([vn.user_message(prompt)])
 
+def is_sql_query(s: str) -> bool:
+    """
+    A simple guardrail to check if a string looks like a SQL query.
+    """
+    s = s.strip().lower()
+    return s.startswith("select") or s.startswith("with")
+
 @app.route('/api/ask', methods=['POST'])
 def ask():
     data = request.json
@@ -101,6 +108,18 @@ def ask():
         chat_history = []
 
     chat_history.append({"role": "user", "value": question})
+
+    # --- New Guardrail: Greeting Handler ---
+    greetings = ["hi", "hello", "hey"]
+    if question.lower().strip() in greetings:
+        chat_history.append({
+            "role": "assistant",
+            "value": "Hello! I'm your AI assistant for analyzing advertising data. You can ask me questions about your data, or request strategic analysis. How can I help you today?",
+            "sql": None
+        })
+        with open(filepath, 'w') as f:
+            json.dump(chat_history, f, indent=2)
+        return jsonify(chat_history)
 
     conversation_for_vanna = [{"role": msg["role"], "content": msg["value"]} for msg in chat_history]
 
@@ -123,7 +142,7 @@ def ask():
             facts = []
             for sub_q in sub_questions:
                 sql = vn.generate_sql(question=sub_q, chat_history=conversation_for_vanna)
-                if sql:
+                if sql and is_sql_query(sql):
                     try:
                         df = vn.run_sql(sql)
                         facts.append(f"- For '{sub_q}', data: {df.to_string()}\\n")
@@ -148,7 +167,8 @@ def ask():
         try:
             sql = vn.generate_sql(question=question, chat_history=conversation_for_vanna)
 
-            if sql:
+            # --- New Guardrail: SQL Validation ---
+            if sql and is_sql_query(sql):
                 df = vn.run_sql(sql)
                 summary = summarize_data_with_llm(question, df)
                 chat_history.append({"role": "assistant", "value": summary, "sql": sql})
@@ -165,4 +185,4 @@ def ask():
     return jsonify(chat_history)
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000, debug=True)
+    app.run(host='0.g.0.0', port=5000, debug=True)
