@@ -88,11 +88,7 @@ def summarize_data_with_llm(question: str, df: pd.DataFrame) -> str:
     if df.empty:
         return "I found no data for your question."
 
-    # If the result is a single value, just return it directly.
-    if len(df) == 1 and len(df.columns) == 1:
-        return f"The answer to your question '{question}' is: {df.iloc[0, 0]}"
-
-    # Otherwise, send to the LLM for a more detailed summary.
+    # Always send to the LLM for a more detailed summary.
     prompt = f"""
     The user asked the following question: '{question}'.
     I ran a SQL query and got the following data:
