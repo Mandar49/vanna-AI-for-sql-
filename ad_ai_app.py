@@ -14,7 +14,7 @@ app = Flask(__name__)
 
 # --- Configuration & Pre-flight Checks ---
 CONVERSATIONS_DIR = "conversations"
-VANNA_TRAINING_FILE = "vanna-chroma.sqlite3"
+VANNA_TRAINING_FILE = "vanna_chroma_db/chroma.sqlite3"
 
 if not os.path.exists(CONVERSATIONS_DIR):
     os.makedirs(CONVERSATIONS_DIR)
@@ -191,20 +191,27 @@ def ask():
         # --- Brain #1: The "Data Retrieval Brain" ---
         try:
             sql = vn.generate_sql(question=question, chat_history=conversation_for_vanna)
-
+            print(f"Generated SQL: {sql}")
+            
             # --- Guardrail #2: SQL Validation ---
             if sql and is_sql_query(sql):
-                df = vn.run_sql(sql)
-                summary = summarize_data_with_llm(question, df)
-                chat_history.append({"role": "assistant", "value": summary, "sql": sql})
-            else:
-                # If no SQL is generated, it's likely a conversational question.
-                # Let the base LLM handle it.
+                try:
+                    df = vn.run_sql(sql)
+                    summary = summarize_data_with_llm(question, df)
+                    chat_history.append({"role": "assistant", "value": summary, "sql": sql})
+                except Exception as sql_error:
+                    # SQL execution failed
+                    error_msg = f"I generated a SQL query but couldn't execute it. Error: {str(sql_error)}"
+                    chat_history.append({"role": "assistant", "value": error_msg, "sql": sql})
+            else:        
+                # If no valid SQL is generated, it's likely a conversational or meta question.
+                # Let the base LLM handle it directly without trying to query the database.
                 summary = vn.submit_prompt(conversation_for_vanna)
                 chat_history.append({"role": "assistant", "value": summary, "sql": None})
 
         except Exception as e:
-            chat_history.append({"role": "assistant", "value": f"An error occurred: {e}", "sql": f"Execution failed on sql {sql if 'sql' in locals() else 'not generated'}"})
+            error_msg = f"An error occurred while processing your question: {str(e)}"
+            chat_history.append({"role": "assistant", "value": error_msg, "sql": None})
 
     # Save the updated conversation
     with open(filepath, 'w') as f:

@@ -11,19 +11,25 @@ def is_greeting(message):
     return False
 
 def is_sql_query(text):
-    # A simple but more robust check for SQL queries.
-    sql_keywords = [
-        "select", "from", "where", "insert", "update", "delete", "create",
-        "drop", "alter", "table", "database", "index", "view", "join",
-        "inner join", "left join", "right join", "on", "group by", "order by",
-        "having", "limit", "offset", "union", "distinct", "as", "count",
-        "sum", "avg", "min", "max", "like", "in", "between", "and", "or", "not"
+    """
+    Check if the text is a valid SQL query.
+    Must start with a SQL command keyword to be considered valid SQL.
+    """
+    if not text or not isinstance(text, str):
+        return False
+    
+    # Remove leading/trailing whitespace and convert to lowercase
+    text_stripped = text.strip().lower()
+    
+    # SQL queries must start with one of these keywords
+    sql_start_keywords = [
+        "select", "insert", "update", "delete", "create", "drop", 
+        "alter", "show", "describe", "explain", "with"
     ]
-
-    # Normalize the text to lower case and check for presence of keywords
-    text_lower = text.lower()
-    for keyword in sql_keywords:
-        # Using regex to match whole words to avoid matching substrings in other words
-        if re.search(r'\b' + keyword + r'\b', text_lower):
+    
+    # Check if the text starts with a SQL keyword
+    for keyword in sql_start_keywords:
+        if text_stripped.startswith(keyword + " ") or text_stripped == keyword:
             return True
+    
     return False
