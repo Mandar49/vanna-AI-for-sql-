@@ -83,20 +83,29 @@ def extract_json_from_response(response: str):
                 return None  # Failed to extract
     return None
 
-def summarize_data_with_llm(question: str, df: pd.DataFrame) -> str:
+def summarize_data_with_llm(question: str, df: pd.DataFrame, conversation_history: list) -> str:
     """Uses the LLM to generate a natural language summary of a DataFrame."""
     if df.empty:
         return "I found no data for your question."
 
     # Always send to the LLM for a more detailed summary.
-    prompt = f"""
-    The user asked the following question: '{question}'.
-    I ran a SQL query and got the following data:
+    summary_prompt = f"""
+    The user's question was: '{question}'.
+    I executed a SQL query and retrieved the following data:
+    ---
     {df.to_string()}
-    Please summarize this data into a friendly, natural-language sentence.
-    Focus on answering the user's original question.
+    ---
+    Your task is to act as a "Presentation Layer."
+    Do not just say "here is the data."
+    Instead, you MUST summarize the data in a clear, natural language paragraph.
+    Start with a heading, then present the key information from the data that directly answers the user's question.
+
+    For example, if the user asked "Who are the top 5 highest paid employees?", you should respond like this:
+    ## Top 5 Highest Paid Employees
+    The top 5 highest paid employees are John Doe ($120,000), Jane Smith ($115,000), ...and so on.
     """
-    return vn.submit_prompt([vn.user_message(prompt)])
+    messages = conversation_history + [vn.user_message(summary_prompt)]
+    return vn.submit_prompt(messages)
 
 @app.route('/api/ask', methods=['POST'])
 def ask():
@@ -140,10 +149,10 @@ def ask():
             json.dump(chat_history, f, indent=2)
         return jsonify(chat_history)
 
-    # Prepare conversation history for Vanna, keeping the last 4 messages for context
+    # Prepare conversation history for Vanna, keeping the last 10 messages for context
     conversation_for_vanna = [{"role": msg["role"], "content": msg["value"]} for msg in chat_history]
-    if len(conversation_for_vanna) > 4:
-        conversation_for_vanna = conversation_for_vanna[-4:]
+    if len(conversation_for_vanna) > 10:
+        conversation_for_vanna = conversation_for_vanna[-10:]
 
     analytical_keywords = ["analyze", "analyse", "strategy", "improve", "loopholes", "recommend", "suggestions", "breakdown"]
 
@@ -162,7 +171,7 @@ def ask():
         if sql and is_sql_query(sql):
             try:
                 df = vn.run_sql(sql)
-                data_summary = summarize_data_with_llm(question, df)
+                data_summary = summarize_data_with_llm(question, df, conversation_for_vanna)
             except Exception as e:
                 error_message = f"I tried to run a query but failed: {e}"
                 sql = f"Execution failed on SQL: {sql}" # Keep the failed SQL for debugging
@@ -180,14 +189,14 @@ def ask():
                 Based ONLY on this data, provide a concise, strategic recommendation.
                 Start with a summary, then a bulleted list of actionable insights.
                 """
-                strategic_analysis = vn.submit_prompt([vn.user_message(synthesis_prompt)])
+                strategic_analysis = vn.submit_prompt(conversation_for_vanna + [vn.user_message(synthesis_prompt)])
             else:
                 # No direct data found, use the original sub-question method as a fallback
                 deconstruct_prompt = f"""
                 Break down this complex question into factual sub-questions I can answer with SQL: "{question}"
                 Respond with ONLY a valid JSON object like: {{"sub_questions": ["question1", "question2", ...]}}
                 """
-                llm_response_str = vn.submit_prompt([vn.user_message(deconstruct_prompt)])
+                llm_response_str = vn.submit_prompt(conversation_for_vanna + [vn.user_message(deconstruct_prompt)])
                 sub_questions_data = extract_json_from_response(llm_response_str)
                 sub_questions = sub_questions_data.get("sub_questions", []) if sub_questions_data else []
 
@@ -207,7 +216,7 @@ def ask():
                 {''.join(facts)}
                 Based ONLY on these facts, generate a concise strategic recommendation.
                 """
-                strategic_analysis = vn.submit_prompt([vn.user_message(synthesis_prompt)])
+                strategic_analysis = vn.submit_prompt(conversation_for_vanna + [vn.user_message(synthesis_prompt)])
 
         # STEP 3: Assemble the final response
         final_answer = ""

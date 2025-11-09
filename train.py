@@ -54,6 +54,15 @@ def train_vanna():
         question="What is the total sales for each department?",
         sql="SELECT d.DepartmentName, SUM(so.TotalAmount) AS TotalSales FROM departments d JOIN employees e ON d.DepartmentID = e.DepartmentID JOIN salesorders so ON e.EmployeeID = so.EmployeeID GROUP BY d.DepartmentName ORDER BY TotalSales DESC"
     )
+    vn.train(
+        question="Which employees report to Andrew Fuller?",
+        sql="""
+        SELECT e.FirstName, e.LastName
+        FROM employees e
+        JOIN employees m ON e.ReportsTo = m.EmployeeID
+        WHERE m.FirstName = 'Andrew' AND m.LastName = 'Fuller';
+        """
+    )
 
     print("  - Added additional high-quality Question-SQL pairs.")
 
