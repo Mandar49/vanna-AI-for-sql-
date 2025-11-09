@@ -147,60 +147,90 @@ def ask():
 
     analytical_keywords = ["analyze", "analyse", "strategy", "improve", "loopholes", "recommend", "suggestions", "breakdown"]
 
-    if any(keyword in question.lower() for keyword in analytical_keywords):
-        # --- Brain #2: The "Strategic Analyst Brain" ---
-        try:
-            deconstruct_prompt = f"""
-            Your task is to break down a complex strategic question into a series of smaller, factual sub-questions that can be answered with SQL queries.
-            The user's question is: "{question}"
-            Respond with ONLY a valid JSON object in the following format: {{"sub_questions": ["question1", "question2", "question3", ...]}}
-            """
-            llm_response_str = vn.submit_prompt([vn.user_message(deconstruct_prompt)])
+    # Initialize response components
+    sql = None
+    df = None
+    data_summary = ""
+    strategic_analysis = ""
+    error_message = None
 
-            sub_questions_data = extract_json_from_response(llm_response_str)
-            sub_questions = sub_questions_data.get("sub_questions", []) if sub_questions_data else []
+    # --- Unified Brain Logic ---
+    try:
+        # STEP 1: Always attempt to answer the question directly with data (Brain #1)
+        sql = vn.generate_sql(question=question, chat_history=conversation_for_vanna)
 
-            facts = []
-            for sub_q in sub_questions:
-                sql = vn.generate_sql(question=sub_q, chat_history=conversation_for_vanna)
-                if sql and is_sql_query(sql):
-                    try:
-                        df = vn.run_sql(sql)
-                        facts.append(f"- For the question '{sub_q}', the data shows: {df.to_string()}\\n")
-                    except Exception as e:
-                        facts.append(f"- When asking '{sub_q}', I encountered an error: {e}\\n")
-
-            synthesis_prompt = f"""
-            The user's original strategic question was: '{question}'.
-            I have gathered the following facts by querying the database:
-            {''.join(facts)}
-            Based ONLY on the facts provided, generate a concise, strategic recommendation.
-            Start with a short summary paragraph, then provide a bulleted list of actionable insights.
-            """
-            final_answer = vn.submit_prompt([vn.user_message(synthesis_prompt)])
-            chat_history.append({"role": "assistant", "value": final_answer, "sql": None})
-
-        except Exception as e:
-            chat_history.append({"role": "assistant", "value": f"An error occurred during strategic analysis: {e}", "sql": None})
-
-    else:
-        # --- Brain #1: The "Data Retrieval Brain" ---
-        try:
-            sql = vn.generate_sql(question=question, chat_history=conversation_for_vanna)
-
-            # --- Guardrail #2: SQL Validation ---
-            if sql and is_sql_query(sql):
+        if sql and is_sql_query(sql):
+            try:
                 df = vn.run_sql(sql)
-                summary = summarize_data_with_llm(question, df)
-                chat_history.append({"role": "assistant", "value": summary, "sql": sql})
-            else:
-                # If no SQL is generated, it's likely a conversational question.
-                # Let the base LLM handle it.
-                summary = vn.submit_prompt(conversation_for_vanna)
-                chat_history.append({"role": "assistant", "value": summary, "sql": None})
+                data_summary = summarize_data_with_llm(question, df)
+            except Exception as e:
+                error_message = f"I tried to run a query but failed: {e}"
+                sql = f"Execution failed on SQL: {sql}" # Keep the failed SQL for debugging
+        else:
+            sql = None # Ensure sql is None if Vanna didn't generate a valid query
 
-        except Exception as e:
-            chat_history.append({"role": "assistant", "value": f"An error occurred: {e}", "sql": f"Execution failed on sql {sql if 'sql' in locals() else 'not generated'}"})
+        # STEP 2: If strategic keywords are present, perform analysis (Brain #2)
+        if any(keyword in question.lower() for keyword in analytical_keywords):
+            if df is not None and not df.empty:
+                # We have data, so analyze it directly
+                synthesis_prompt = f"""
+                The user's strategic question was: '{question}'.
+                I have already retrieved the following data:
+                {df.to_string()}
+                Based ONLY on this data, provide a concise, strategic recommendation.
+                Start with a summary, then a bulleted list of actionable insights.
+                """
+                strategic_analysis = vn.submit_prompt([vn.user_message(synthesis_prompt)])
+            else:
+                # No direct data found, use the original sub-question method as a fallback
+                deconstruct_prompt = f"""
+                Break down this complex question into factual sub-questions I can answer with SQL: "{question}"
+                Respond with ONLY a valid JSON object like: {{"sub_questions": ["question1", "question2", ...]}}
+                """
+                llm_response_str = vn.submit_prompt([vn.user_message(deconstruct_prompt)])
+                sub_questions_data = extract_json_from_response(llm_response_str)
+                sub_questions = sub_questions_data.get("sub_questions", []) if sub_questions_data else []
+
+                facts = []
+                for sub_q in sub_questions:
+                    sub_sql = vn.generate_sql(question=sub_q, chat_history=conversation_for_vanna)
+                    if sub_sql and is_sql_query(sub_sql):
+                        try:
+                            sub_df = vn.run_sql(sub_sql)
+                            facts.append(f"- For '{sub_q}', the data shows: {sub_df.to_string()}\\n")
+                        except Exception as e:
+                            facts.append(f"- When asking '{sub_q}', I got an error: {e}\\n")
+
+                synthesis_prompt = f"""
+                The user's question was: '{question}'.
+                I gathered these facts:
+                {''.join(facts)}
+                Based ONLY on these facts, generate a concise strategic recommendation.
+                """
+                strategic_analysis = vn.submit_prompt([vn.user_message(synthesis_prompt)])
+
+        # STEP 3: Assemble the final response
+        final_answer = ""
+        if data_summary:
+            final_answer += data_summary
+        if strategic_analysis:
+            if final_answer:
+                final_answer += "\n\n---\n\n**Strategic Analysis:**\n"
+            final_answer += strategic_analysis
+
+        # STEP 4: Fallback if no answer was generated
+        if not final_answer:
+            if error_message:
+                final_answer = error_message
+            else:
+                # If no SQL and no analysis, it's a general question for the base LLM
+                final_answer = vn.submit_prompt(conversation_for_vanna)
+
+        chat_history.append({"role": "assistant", "value": final_answer, "sql": sql})
+
+    except Exception as e:
+        # Broad exception handler for unexpected errors in the logic
+        chat_history.append({"role": "assistant", "value": f"A critical error occurred: {e}", "sql": sql})
 
     # Save the updated conversation
     with open(filepath, 'w') as f:
