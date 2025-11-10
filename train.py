@@ -20,7 +20,8 @@ def train_vanna():
     # --- Pillar 2: Documentation Training ---
     print("\nTraining on documentation...")
     vn.train(documentation="To find an employee's sales, you must join the employees table with the salesorders table on EmployeeID.")
-    vn.train(documentation="The employees table contains a 'ReportsTo' column, which indicates the EmployeeID of a person's manager.")
+    vn.train(documentation="The employees table contains a 'ManagerID' column, which indicates the EmployeeID of a person's manager.")
+    vn.train(documentation="The price of a product is stored in the 'UnitPrice' column in the 'products' table.")
     print("  - Added business logic documentation.")
 
     # --- Pillar 3: Question-SQL Pair Training ---
@@ -32,7 +33,7 @@ def train_vanna():
         sql="""
             SELECT m.FirstName, m.LastName, SUM(so.TotalAmount) AS TotalSales
             FROM employees e
-            JOIN employees m ON e.ReportsTo = m.EmployeeID
+            JOIN employees m ON e.ManagerID = m.EmployeeID
             JOIN salesorders so ON e.EmployeeID = so.EmployeeID
             GROUP BY m.FirstName, m.LastName
             ORDER BY TotalSales DESC
@@ -44,7 +45,7 @@ def train_vanna():
     # Add other high-quality examples
     vn.train(
         question="What are the top 5 products by sales?",
-        sql="SELECT p.ProductName, SUM(oi.Quantity * oi.UnitPrice) AS TotalSales FROM products p JOIN orderitems oi ON p.ProductID = oi.ProductID GROUP BY p.ProductName ORDER BY TotalSales DESC LIMIT 5"
+        sql="SELECT p.ProductName, SUM(oi.Quantity * p.UnitPrice) AS TotalSales FROM products p JOIN orderitems oi ON p.ProductID = oi.ProductID GROUP BY p.ProductName ORDER BY TotalSales DESC LIMIT 5"
     )
     vn.train(
         question="Who are the top 5 employees by sales?",
@@ -59,7 +60,7 @@ def train_vanna():
         sql="""
         SELECT e.FirstName, e.LastName
         FROM employees e
-        JOIN employees m ON e.ReportsTo = m.EmployeeID
+        JOIN employees m ON e.ManagerID = m.EmployeeID
         WHERE m.FirstName = 'Andrew' AND m.LastName = 'Fuller';
         """
     )
