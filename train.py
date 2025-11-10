@@ -25,11 +25,97 @@ def train_vanna():
 
     # --- Pillar 1: DDL Training ---
     print("Training on DDLs...")
-    tables = ["customers", "employees", "departments", "products", "salesorders", "orderitems"]
-    for table in tables:
-        ddl = vn.run_sql(f"SHOW CREATE TABLE {table}").iloc[0, 1]
+    ddl_statements = {
+        "customers": """
+            CREATE TABLE `customers` (
+              `CustomerID` int(11) NOT NULL AUTO_INCREMENT,
+              `CustomerName` varchar(100) NOT NULL,
+              `ContactPerson` varchar(100) DEFAULT NULL,
+              `ContactEmail` varchar(100) DEFAULT NULL,
+              `PhoneNumber` varchar(20) DEFAULT NULL,
+              `Address` varchar(255) DEFAULT NULL,
+              `Industry` varchar(100) DEFAULT NULL,
+              PRIMARY KEY (`CustomerID`),
+              UNIQUE KEY `CustomerName` (`CustomerName`)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+        """,
+        "employees": """
+            CREATE TABLE `employees` (
+              `EmployeeID` int(11) NOT NULL AUTO_INCREMENT,
+              `FirstName` varchar(50) NOT NULL,
+              `LastName` varchar(50) NOT NULL,
+              `Email` varchar(100) NOT NULL,
+              `PhoneNumber` varchar(20) DEFAULT NULL,
+              `HireDate` date DEFAULT NULL,
+              `JobTitle` varchar(100) DEFAULT NULL,
+              `DepartmentID` int(11) DEFAULT NULL,
+              `ManagerID` int(11) DEFAULT NULL,
+              `Salary` decimal(10,2) DEFAULT NULL,
+              `ActiveStatus` tinyint(1) DEFAULT 1,
+              `Address` varchar(255) DEFAULT NULL,
+              `DateOfBirth` date DEFAULT NULL,
+              `Role` varchar(50) DEFAULT NULL,
+              PRIMARY KEY (`EmployeeID`),
+              UNIQUE KEY `Email` (`Email`),
+              KEY `fk_emp_dept` (`DepartmentID`),
+              KEY `fk_emp_manager` (`ManagerID`),
+              CONSTRAINT `fk_emp_dept` FOREIGN KEY (`DepartmentID`) REFERENCES `departments` (`DepartmentID`) ON DELETE SET NULL,
+              CONSTRAINT `fk_emp_manager` FOREIGN KEY (`ManagerID`) REFERENCES `employees` (`EmployeeID`) ON DELETE SET NULL
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+        """,
+        "departments": """
+            CREATE TABLE `departments` (
+              `DepartmentID` int(11) NOT NULL AUTO_INCREMENT,
+              `DepartmentName` varchar(100) NOT NULL,
+              PRIMARY KEY (`DepartmentID`),
+              UNIQUE KEY `DepartmentName` (`DepartmentName`)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+        """,
+        "products": """
+            CREATE TABLE `products` (
+              `ProductID` int(11) NOT NULL AUTO_INCREMENT,
+              `ProductName` varchar(100) NOT NULL,
+              `Category` varchar(50) DEFAULT NULL,
+              `UnitPrice` decimal(10,2) DEFAULT NULL,
+              `StockQuantity` int(11) DEFAULT NULL,
+              PRIMARY KEY (`ProductID`),
+              UNIQUE KEY `ProductName` (`ProductName`)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+        """,
+        "salesorders": """
+            CREATE TABLE `salesorders` (
+              `OrderID` int(11) NOT NULL AUTO_INCREMENT,
+              `CustomerID` int(11) DEFAULT NULL,
+              `EmployeeID` int(11) DEFAULT NULL,
+              `OrderDate` date DEFAULT NULL,
+              `TotalAmount` decimal(12,2) DEFAULT 0.00,
+              `Status` varchar(50) DEFAULT NULL,
+              PRIMARY KEY (`OrderID`),
+              KEY `fk_order_customer` (`CustomerID`),
+              KEY `fk_order_employee` (`EmployeeID`),
+              CONSTRAINT `fk_order_customer` FOREIGN KEY (`CustomerID`) REFERENCES `customers` (`CustomerID`) ON DELETE SET NULL,
+              CONSTRAINT `fk_order_employee` FOREIGN KEY (`EmployeeID`) REFERENCES `employees` (`EmployeeID`) ON DELETE SET NULL
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+        """,
+        "orderitems": """
+            CREATE TABLE `orderitems` (
+              `OrderItemID` int(11) NOT NULL AUTO_INCREMENT,
+              `OrderID` int(11) DEFAULT NULL,
+              `ProductID` int(11) DEFAULT NULL,
+              `Quantity` int(11) DEFAULT NULL,
+              `ItemPrice` decimal(10,2) DEFAULT NULL,
+              PRIMARY KEY (`OrderItemID`),
+              KEY `fk_item_order` (`OrderID`),
+              KEY `fk_item_product` (`ProductID`),
+              CONSTRAINT `fk_item_order` FOREIGN KEY (`OrderID`) REFERENCES `salesorders` (`OrderID`) ON DELETE CASCADE,
+              CONSTRAINT `fk_item_product` FOREIGN KEY (`ProductID`) REFERENCES `products` (`ProductID`) ON DELETE SET NULL
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+        """
+    }
+
+    for table_name, ddl in ddl_statements.items():
         vn.train(ddl=ddl)
-        print(f"  - Trained on table: {table}")
+        print(f"  - Trained on table: {table_name}")
 
     # --- Pillar 2: Documentation Training ---
     print("\nTraining on documentation...")
@@ -58,7 +144,7 @@ def train_vanna():
         sql="""
             SELECT m.FirstName, m.LastName, SUM(so.TotalAmount) AS TotalSales
             FROM employees e
-            JOIN employees m ON e.ManagerID = m.EmployeeID
+            JOIN employees m ON e.ReportsTo = m.EmployeeID
             JOIN salesorders so ON e.EmployeeID = so.EmployeeID
             GROUP BY m.FirstName, m.LastName
             ORDER BY TotalSales DESC
@@ -70,7 +156,7 @@ def train_vanna():
     # Add other high-quality examples
     vn.train(
         question="What are the top 5 products by sales?",
-        sql="SELECT p.ProductName, SUM(oi.Quantity * p.UnitPrice) AS TotalSales FROM products p JOIN orderitems oi ON p.ProductID = oi.ProductID GROUP BY p.ProductName ORDER BY TotalSales DESC LIMIT 5"
+        sql="SELECT p.ProductName, SUM(oi.Quantity * oi.UnitPrice) AS TotalSales FROM products p JOIN orderitems oi ON p.ProductID = oi.ProductID GROUP BY p.ProductName ORDER BY TotalSales DESC LIMIT 5"
     )
     vn.train(
         question="Who are the top 5 employees by sales?",
@@ -79,15 +165,6 @@ def train_vanna():
     vn.train(
         question="What is the total sales for each department?",
         sql="SELECT d.DepartmentName, SUM(so.TotalAmount) AS TotalSales FROM departments d JOIN employees e ON d.DepartmentID = e.DepartmentID JOIN salesorders so ON e.EmployeeID = so.EmployeeID GROUP BY d.DepartmentName ORDER BY TotalSales DESC"
-    )
-    vn.train(
-        question="Which employees report to Andrew Fuller?",
-        sql="""
-        SELECT e.FirstName, e.LastName
-        FROM employees e
-        JOIN employees m ON e.ManagerID = m.EmployeeID
-        WHERE m.FirstName = 'Andrew' AND m.LastName = 'Fuller';
-        """
     )
 
     print("  - Added additional high-quality Question-SQL pairs.")

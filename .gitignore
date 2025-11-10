@@ -20,3 +20,7 @@ chroma.sqlite3
 .coverage.*
 milvus.db
 .milvus.db.lock
+flask_output.log
+ollama.log
+conversations/
+ollama
