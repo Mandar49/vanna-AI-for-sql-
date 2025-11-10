@@ -29,15 +29,9 @@ document.addEventListener('DOMContentLoaded', () => {
             const messageEl = document.createElement('div');
             messageEl.classList.add('message', message.role === 'user' ? 'user-message' : 'ai-message');
 
-            if (message.role === 'assistant') {
-                // For AI messages, render the value as Markdown
-                messageEl.innerHTML = marked.parse(message.value);
-            } else {
-                // For user messages, just display the plain text
-                const p = document.createElement('p');
-                p.textContent = message.value;
-                messageEl.appendChild(p);
-            }
+            const p = document.createElement('p');
+            p.textContent = message.value;
+            messageEl.appendChild(p);
 
             if (message.sql) {
                 const btn = document.createElement('button');
