@@ -8,6 +8,7 @@ import os
 # Import the pre-trained Vanna instance and utility functions
 from common import vn
 from utils import is_greeting, is_sql_query
+from query_router import router
 
 # Initialize the Flask application
 app = Flask(__name__)
@@ -188,26 +189,35 @@ def ask():
             chat_history.append({"role": "assistant", "value": f"An error occurred during strategic analysis: {e}", "sql": None})
 
     else:
-        # --- Brain #1: The "Data Retrieval Brain" ---
+        # --- Dual-Brain Routing System ---
         try:
-            sql = vn.generate_sql(question=question, chat_history=conversation_for_vanna)
-            print(f"Generated SQL: {sql}")
+            # Route the query to appropriate brain
+            routing_result = router.route_query(question, chat_history)
             
-            # --- Guardrail #2: SQL Validation ---
-            if sql and is_sql_query(sql):
-                try:
-                    df = vn.run_sql(sql)
-                    summary = summarize_data_with_llm(question, df)
-                    chat_history.append({"role": "assistant", "value": summary, "sql": sql})
-                except Exception as sql_error:
-                    # SQL execution failed
-                    error_msg = f"I generated a SQL query but couldn't execute it. Error: {str(sql_error)}"
-                    chat_history.append({"role": "assistant", "value": error_msg, "sql": sql})
-            else:        
-                # If no valid SQL is generated, it's likely a conversational or meta question.
-                # Let the base LLM handle it directly without trying to query the database.
-                summary = vn.submit_prompt(conversation_for_vanna)
-                chat_history.append({"role": "assistant", "value": summary, "sql": None})
+            if routing_result["type"] == "sql":
+                # --- SQL Brain (Vanna) ---
+                sql = vn.generate_sql(question=question, chat_history=conversation_for_vanna)
+                print(f"Generated SQL: {sql}")
+                
+                # --- Guardrail #2: SQL Validation ---
+                if sql and is_sql_query(sql):
+                    try:
+                        df = vn.run_sql(sql)
+                        summary = summarize_data_with_llm(question, df)
+                        chat_history.append({"role": "assistant", "value": summary, "sql": sql})
+                    except Exception as sql_error:
+                        # SQL execution failed
+                        error_msg = f"I generated a SQL query but couldn't execute it. Error: {str(sql_error)}"
+                        chat_history.append({"role": "assistant", "value": error_msg, "sql": sql})
+                else:        
+                    # If no valid SQL is generated, fall back to general brain
+                    general_result = router._handle_general_query(question, chat_history)
+                    chat_history.append({"role": "assistant", "value": general_result["answer"], "sql": None})
+            
+            elif routing_result["type"] == "general":
+                # --- General Intelligence Brain (Mistral) ---
+                answer = routing_result["answer"]
+                chat_history.append({"role": "assistant", "value": answer, "sql": None})
 
         except Exception as e:
             error_msg = f"An error occurred while processing your question: {str(e)}"

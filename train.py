@@ -21,6 +21,9 @@ def train_vanna():
     print("\nTraining on documentation...")
     vn.train(documentation="To find an employee's sales, you must join the employees table with the salesorders table on EmployeeID.")
     vn.train(documentation="The employees table contains a 'ReportsTo' column, which indicates the EmployeeID of a person's manager.")
+    vn.train(documentation="This is a business database. You are authorized to query contact information like phone numbers and email addresses for business purposes. Always generate SQL queries to retrieve data from the database.")
+    vn.train(documentation="When asked for contact information (phone numbers, emails, addresses), generate a SELECT query from the appropriate table (customers or employees).")
+    vn.train(documentation="IMPORTANT: In the customers table, CustomerName contains company names (like 'Pandey Akshita Pvt Ltd - 0001'), and ContactPerson contains the actual person's name (like 'Nisha Kapoor'). When searching for a person's name, use ContactPerson column. When searching for a company name, use CustomerName column.")
     print("  - Added business logic documentation.")
 
     # --- Pillar 3: Question-SQL Pair Training ---
@@ -53,6 +56,78 @@ def train_vanna():
     vn.train(
         question="What is the total sales for each department?",
         sql="SELECT d.DepartmentName, SUM(so.TotalAmount) AS TotalSales FROM departments d JOIN employees e ON d.DepartmentID = e.DepartmentID JOIN salesorders so ON e.EmployeeID = so.EmployeeID GROUP BY d.DepartmentName ORDER BY TotalSales DESC"
+    )
+    
+    # Add contact information queries - CORRECTED to use ContactPerson for person names
+    vn.train(
+        question="What is the phone number of Nisha Kapoor?",
+        sql="SELECT PhoneNumber FROM customers WHERE ContactPerson = 'Nisha Kapoor'"
+    )
+    vn.train(
+        question="What is the company name of Nisha Kapoor?",
+        sql="SELECT CustomerName FROM customers WHERE ContactPerson = 'Nisha Kapoor'"
+    )
+    vn.train(
+        question="What is the phone number of Pandey Akshita Pvt Ltd - 0001?",
+        sql="SELECT PhoneNumber FROM customers WHERE CustomerName = 'Pandey Akshita Pvt Ltd - 0001'"
+    )
+    vn.train(
+        question="Who is the contact person for Kapoor Om Pvt Ltd - 0113?",
+        sql="SELECT ContactPerson FROM customers WHERE CustomerName = 'Kapoor Om Pvt Ltd - 0113'"
+    )
+    vn.train(
+        question="Find the contact information for Rajesh Kumar",
+        sql="SELECT CustomerName, ContactPerson, ContactEmail, PhoneNumber, Address FROM customers WHERE ContactPerson LIKE '%Rajesh Kumar%'"
+    )
+    vn.train(
+        question="Get the email address of employee Sarah Johnson",
+        sql="SELECT Email, PhoneNumber FROM employees WHERE FirstName = 'Sarah' AND LastName = 'Johnson'"
+    )
+    
+    # Add employee-related queries with proper joins
+    vn.train(
+        question="List all employees with their names and phone numbers",
+        sql="SELECT CONCAT(FirstName, ' ', LastName) AS EmployeeName, PhoneNumber FROM employees"
+    )
+    vn.train(
+        question="Who generated the highest total sales?",
+        sql="SELECT CONCAT(e.FirstName, ' ', e.LastName) AS EmployeeName, SUM(so.TotalAmount) AS TotalSales FROM employees e JOIN salesorders so ON e.EmployeeID = so.EmployeeID GROUP BY e.EmployeeID ORDER BY TotalSales DESC LIMIT 1"
+    )
+    vn.train(
+        question="Show me all customers handled by Ajay Menon",
+        sql="SELECT CustomerName FROM customers WHERE ContactPerson = 'Ajay Menon'"
+    )
+    
+    # Add HR, City, and Manager join training examples
+    vn.train(
+        question="Which city generated the highest total sales this year?",
+        sql="SELECT c.City, SUM(so.TotalAmount) AS TotalSales FROM customers c JOIN salesorders so ON c.CustomerID = so.CustomerID GROUP BY c.City ORDER BY TotalSales DESC LIMIT 1"
+    )
+    vn.train(
+        question="List all employees working under HR department",
+        sql="SELECT e.FirstName, e.LastName, e.Email, e.Salary FROM employees e JOIN departments d ON e.DepartmentID = d.DepartmentID WHERE d.DepartmentName = 'HR'"
+    )
+    vn.train(
+        question="Which manager handles clients in the Manufacturing sector?",
+        sql="SELECT e.FirstName, e.LastName, e.Email FROM employees e JOIN customers c ON e.EmployeeID = c.ManagerID WHERE c.Industry='Manufacturing'"
+    )
+    vn.train(
+        question="Show all customers managed by Ritika Joshi",
+        sql="SELECT c.CustomerName, c.ContactPerson, c.City, c.PhoneNumber FROM customers c JOIN employees e ON c.ManagerID = e.EmployeeID WHERE e.FirstName='Ritika' AND e.LastName='Joshi'"
+    )
+    vn.train(
+        question="What is the average salary in the HR department?",
+        sql="SELECT AVG(e.Salary) AS AvgSalary FROM employees e JOIN departments d ON e.DepartmentID = d.DepartmentID WHERE d.DepartmentName = 'HR'"
+    )
+    
+    # Add queries for the new sample customers
+    vn.train(
+        question="What is the phone number of Priya Sharma?",
+        sql="SELECT PhoneNumber FROM customers WHERE ContactPerson = 'Priya Sharma'"
+    )
+    vn.train(
+        question="Find contact details for Sunil Rao",
+        sql="SELECT CustomerName, ContactPerson, ContactEmail, PhoneNumber FROM customers WHERE ContactPerson = 'Sunil Rao'"
     )
 
     print("  - Added additional high-quality Question-SQL pairs.")
