@@ -24,6 +24,15 @@ def train_vanna():
     vn.train(documentation="The price of a product is stored in the 'UnitPrice' column in the 'products' table.")
     print("  - Added business logic documentation.")
 
+    # --- NEW: Pillar 2.5: Data Patterns Training (The "Street Smarts") ---
+    # This is critical. We are teaching Vanna about the specific format of our data.
+    print("\nStarting data patterns training...")
+    vn.train(documentation="CustomerName columns often have a suffix like ' - 0001'. For searches on CustomerName, you should always use a LIKE query with a wildcard (%) at the end, not an exact match (=). For example, to find 'Menon Sameer Pvt Ltd', you should query WHERE CustomerName LIKE 'Menon Sameer Pvt Ltd%'.")
+    vn.train(documentation="Employee names are split into FirstName and LastName columns. If a user asks for a full employee name, you must search both columns. For example, for 'Aarav Singh', you must query WHERE FirstName = 'Aarav' AND LastName = 'Singh'.")
+    vn.train(documentation="Phone numbers are stored in the format '+91-XXXXXXXXXX'.")
+    vn.train(documentation="Email addresses are stored in the ContactEmail column in the customers table.")
+    print("  - Vanna training on data patterns completed.")
+
     # --- Pillar 3: Question-SQL Pair Training ---
     print("\nTraining on Question-SQL pairs...")
 
