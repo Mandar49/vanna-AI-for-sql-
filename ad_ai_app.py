@@ -9,6 +9,7 @@ import os
 from common import vn
 from utils import is_greeting, is_sql_query
 from query_router import router
+from sql_corrector import corrector
 
 # Initialize the Flask application
 app = Flask(__name__)
@@ -169,11 +170,14 @@ def ask():
             for sub_q in sub_questions:
                 sql = vn.generate_sql(question=sub_q, chat_history=conversation_for_vanna)
                 if sql and is_sql_query(sql):
-                    try:
-                        df = vn.run_sql(sql)
+                    # Use SQL corrector for error-tolerant execution
+                    execution_result = corrector.execute_with_retry(sql, max_retries=1)
+                    
+                    if execution_result['success']:
+                        df = execution_result['data']
                         facts.append(f"- For the question '{sub_q}', the data shows: {df.to_string()}\\n")
-                    except Exception as e:
-                        facts.append(f"- When asking '{sub_q}', I encountered an error: {e}\\n")
+                    else:
+                        facts.append(f"- When asking '{sub_q}', I encountered an error: {execution_result['message']}\\n")
 
             synthesis_prompt = f"""
             The user's original strategic question was: '{question}'.
@@ -199,15 +203,34 @@ def ask():
                 sql = vn.generate_sql(question=question, chat_history=conversation_for_vanna)
                 print(f"Generated SQL: {sql}")
                 
-                # --- Guardrail #2: SQL Validation ---
+                # --- Guardrail #2: SQL Validation & Auto-Correction ---
                 if sql and is_sql_query(sql):
-                    try:
-                        df = vn.run_sql(sql)
+                    # Use SQL corrector for error-tolerant execution
+                    execution_result = corrector.execute_with_retry(sql, max_retries=1)
+                    
+                    if execution_result['success']:
+                        df = execution_result['data']
+                        sql_used = execution_result['sql_used']
+                        
+                        # Log if correction was applied
+                        if execution_result['correction_applied']:
+                            print(f"✓ SQL auto-corrected:")
+                            print(f"  Original: {execution_result['original_sql']}")
+                            print(f"  Corrected: {sql_used}")
+                        
                         summary = summarize_data_with_llm(question, df)
-                        chat_history.append({"role": "assistant", "value": summary, "sql": sql})
-                    except Exception as sql_error:
-                        # SQL execution failed
-                        error_msg = f"I generated a SQL query but couldn't execute it. Error: {str(sql_error)}"
+                        
+                        # Add correction notice to response if applicable
+                        if execution_result['correction_applied']:
+                            summary = f"{execution_result['message']}\n\n{summary}"
+                        
+                        chat_history.append({"role": "assistant", "value": summary, "sql": sql_used})
+                    else:
+                        # SQL execution failed even after correction attempt
+                        error_msg = execution_result['message']
+                        if execution_result['correction_applied']:
+                            error_msg += f"\n\nOriginal SQL: {execution_result['original_sql']}\nAttempted correction: {execution_result['sql_used']}"
+                        
                         chat_history.append({"role": "assistant", "value": error_msg, "sql": sql})
                 else:        
                     # If no valid SQL is generated, fall back to general brain
