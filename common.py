@@ -8,6 +8,7 @@ from vanna.ollama.ollama import Ollama
 class AppConfig:
     VANNA_MODEL = 'gemma:7b'
     DB_HOST = 'localhost'
+    DB_PORT = 3306
     DB_USER = 'root'
     DB_PASSWORD = ''
     DB_NAME = 'ad_ai_testdb'
@@ -50,6 +51,7 @@ vn = LocalVanna()
 def run_sql(sql: str) -> pd.DataFrame:
     conn = mysql.connector.connect(
         host=AppConfig.DB_HOST,
+        port=AppConfig.DB_PORT,
         user=AppConfig.DB_USER,
         password=AppConfig.DB_PASSWORD,
         database=AppConfig.DB_NAME

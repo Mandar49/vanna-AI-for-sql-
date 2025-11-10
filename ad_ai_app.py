@@ -173,13 +173,17 @@ def ask():
                 df = vn.run_sql(sql)
                 data_summary = summarize_data_with_llm(question, df, conversation_for_vanna)
             except Exception as e:
-                error_message = f"I tried to run a query but failed: {e}"
-                sql = f"Execution failed on SQL: {sql}" # Keep the failed SQL for debugging
+                # Critical Error Guardrail: If the database fails, stop immediately and report.
+                error_response = f"Error: I could not execute the query. The database returned the following error:\n\n---\n{e}\n---"
+                chat_history.append({"role": "assistant", "value": error_response, "sql": sql})
+                with open(filepath, 'w') as f:
+                    json.dump(chat_history, f, indent=2)
+                return jsonify(chat_history)
         else:
             sql = None # Ensure sql is None if Vanna didn't generate a valid query
 
         # STEP 2: If strategic keywords are present, perform analysis (Brain #2)
-        if any(keyword in question.lower() for keyword in analytical_keywords):
+        if any(keyword in question.lower() for keyword in analytical_keywords) and not error_message:
             if df is not None and not df.empty:
                 # We have data, so analyze it directly
                 synthesis_prompt = f"""
