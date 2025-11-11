@@ -10,6 +10,7 @@ from common import vn
 from utils import is_greeting, is_sql_query
 from query_router import router
 from sql_corrector import corrector
+from business_analyst import analyst
 
 # Initialize the Flask application
 app = Flask(__name__)
@@ -85,24 +86,48 @@ def extract_json_from_response(response: str):
                 return None  # Failed to extract
     return None
 
-def summarize_data_with_llm(question: str, df: pd.DataFrame) -> str:
-    """Uses the LLM to generate a natural language summary of a DataFrame."""
+def summarize_data_with_llm(question: str, df: pd.DataFrame, sql: str = None) -> str:
+    """
+    Uses the Business Analyst to generate insights and strategic commentary
+    Performs full data introspection and business reasoning locally
+    """
     if df.empty:
         return "I found no data for your question."
 
-    # If the result is a single value, just return it directly.
+    # If the result is a single value, provide it with context
     if len(df) == 1 and len(df.columns) == 1:
-        return f"The answer to your question '{question}' is: {df.iloc[0, 0]}"
+        value = df.iloc[0, 0]
+        return f"📊 **Answer:** {value}\n\nThe answer to your question '{question}' is: {value}"
 
-    # Otherwise, send to the LLM for a more detailed summary.
-    prompt = f"""
-    The user asked the following question: '{question}'.
-    I ran a SQL query and got the following data:
-    {df.to_string()}
-    Please summarize this data into a friendly, natural-language sentence.
-    Focus on answering the user's original question.
-    """
-    return vn.submit_prompt([vn.user_message(prompt)])
+    # Use Business Analyst for comprehensive data introspection
+    analysis = analyst.analyze_results_with_llm(question, df, sql)
+    
+    # Build comprehensive response with insights and data
+    response_parts = []
+    
+    # Add insight section
+    if analysis.get('insight'):
+        response_parts.append("💡 **Business Insight:**")
+        response_parts.append(analysis['insight'])
+        response_parts.append("")
+    
+    # Add full analysis if available
+    if analysis.get('full_analysis') and analysis['full_analysis'] != analysis.get('insight'):
+        response_parts.append("📈 **Detailed Analysis:**")
+        response_parts.append(analysis['full_analysis'])
+        response_parts.append("")
+    
+    # Add data summary
+    response_parts.append("📊 **Data Summary:**")
+    response_parts.append(analysis['summary'])
+    
+    # Add a preview of the data for small result sets
+    if len(df) <= 5:
+        response_parts.append("")
+        response_parts.append("**Data:**")
+        response_parts.append(df.to_string(index=False))
+    
+    return "\n".join(response_parts)
 
 @app.route('/api/ask', methods=['POST'])
 def ask():
@@ -218,11 +243,12 @@ def ask():
                             print(f"  Original: {execution_result['original_sql']}")
                             print(f"  Corrected: {sql_used}")
                         
-                        summary = summarize_data_with_llm(question, df)
+                        # Use Business Analyst for comprehensive insights with data introspection
+                        summary = summarize_data_with_llm(question, df, sql_used)
                         
                         # Add correction notice to response if applicable
                         if execution_result['correction_applied']:
-                            summary = f"{execution_result['message']}\n\n{summary}"
+                            summary = f"⚙️ {execution_result['message']}\n\n{summary}"
                         
                         chat_history.append({"role": "assistant", "value": summary, "sql": sql_used})
                     else:

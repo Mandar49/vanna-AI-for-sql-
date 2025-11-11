@@ -26,6 +26,9 @@ class LocalVanna(ChromaDB_VectorStore, Ollama):
 
         ChromaDB_VectorStore.__init__(self, config=full_config)
         Ollama.__init__(self, config=full_config)
+        
+        # Enable full data introspection for business reasoning
+        self.allow_llm_to_see_data = True
     
     def get_sql_prompt(self, initial_prompt, question, question_sql_list, ddl_list, doc_list, **kwargs):
         """Override to add custom authorization message"""
