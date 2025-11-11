@@ -9,6 +9,47 @@ class BusinessAnalyst:
     def __init__(self):
         self.model = "mistral:7b-instruct"
     
+    def analyze_trends(self, df: pd.DataFrame) -> str:
+        """
+        Detect growth patterns and trends in data
+        
+        Args:
+            df: DataFrame to analyze
+        
+        Returns:
+            One-line trend summary
+        """
+        if df is None or df.empty or len(df) < 2:
+            return "Insufficient data for trend analysis."
+        
+        # Try to find numeric columns
+        numeric_cols = df.select_dtypes(include=['number']).columns
+        if len(numeric_cols) == 0:
+            return "No numeric data for trend analysis."
+        
+        # Analyze first numeric column
+        col = numeric_cols[0]
+        values = df[col].dropna()
+        
+        if len(values) < 2:
+            return "Insufficient numeric data."
+        
+        # Calculate trend
+        first_val = values.iloc[0]
+        last_val = values.iloc[-1]
+        
+        if first_val == 0:
+            return f"Growing from {first_val} to {last_val}"
+        
+        change_pct = ((last_val - first_val) / first_val) * 100
+        
+        if abs(change_pct) < 1:
+            return "Stable (minimal change)"
+        elif change_pct > 0:
+            return f"Increasing trend (+{change_pct:.1f}% growth)"
+        else:
+            return f"Declining trend ({change_pct:.1f}% decrease)"
+    
     def analyze_results_with_llm(self, question: str, df: pd.DataFrame, sql: str = None) -> dict:
         """
         Analyze SQL query results and provide business insights

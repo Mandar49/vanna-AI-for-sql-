@@ -11,6 +11,8 @@ from utils import is_greeting, is_sql_query
 from query_router import router
 from sql_corrector import corrector
 from business_analyst import analyst
+from context_memory import memory
+from response_composer import composer
 
 # Initialize the Flask application
 app = Flask(__name__)
@@ -62,6 +64,24 @@ def get_conversation(conversation_id):
     else:
         return jsonify([]) # Return empty list if no history
 
+@app.route('/api/clear_memory', methods=['POST'])
+def clear_memory():
+    """Clear conversation context memory"""
+    try:
+        memory.clear_memory()
+        return jsonify({"success": True, "message": "Memory cleared successfully"})
+    except Exception as e:
+        return jsonify({"success": False, "error": str(e)}), 500
+
+@app.route('/api/memory_stats', methods=['GET'])
+def get_memory_stats():
+    """Get memory statistics"""
+    try:
+        stats = memory.get_statistics()
+        return jsonify(stats)
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
 def extract_json_from_response(response: str):
     """Safely extracts a JSON object from a string, even with surrounding text."""
     # First, try to find the JSON within markdown-style code blocks
@@ -86,48 +106,54 @@ def extract_json_from_response(response: str):
                 return None  # Failed to extract
     return None
 
-def summarize_data_with_llm(question: str, df: pd.DataFrame, sql: str = None) -> str:
+def summarize_data_with_llm(question: str, df: pd.DataFrame, sql: str = None) -> tuple:
     """
-    Uses the Business Analyst to generate insights and strategic commentary
-    Performs full data introspection and business reasoning locally
+    Cognitive Fusion Layer - Uses Business Analyst + Response Composer
+    Performs full data introspection with persona-based reasoning
+    
+    Returns:
+        tuple: (response_text, persona_used, insights)
     """
     if df.empty:
-        return "I found no data for your question."
+        return ("I found no data for your question.", "analyst", None)
 
     # If the result is a single value, provide it with context
     if len(df) == 1 and len(df.columns) == 1:
         value = df.iloc[0, 0]
-        return f"📊 **Answer:** {value}\n\nThe answer to your question '{question}' is: {value}"
+        response = f"📊 **Answer:** {value}\n\nThe answer to your question '{question}' is: {value}"
+        return (response, "analyst", None)
 
     # Use Business Analyst for comprehensive data introspection
     analysis = analyst.analyze_results_with_llm(question, df, sql)
     
-    # Build comprehensive response with insights and data
-    response_parts = []
+    # Add trend analysis
+    trend = analyst.analyze_trends(df)
+    if trend and "Insufficient" not in trend:
+        analysis['trend'] = trend
     
-    # Add insight section
-    if analysis.get('insight'):
-        response_parts.append("💡 **Business Insight:**")
-        response_parts.append(analysis['insight'])
-        response_parts.append("")
+    # Detect appropriate persona
+    persona = composer.detect_persona(question)
     
-    # Add full analysis if available
-    if analysis.get('full_analysis') and analysis['full_analysis'] != analysis.get('insight'):
-        response_parts.append("📈 **Detailed Analysis:**")
-        response_parts.append(analysis['full_analysis'])
-        response_parts.append("")
+    # Get recent context
+    context = memory.recall_context(last_n=3)
     
-    # Add data summary
-    response_parts.append("📊 **Data Summary:**")
-    response_parts.append(analysis['summary'])
+    # Prepare raw data summary
+    raw_data = df.head(10).to_string(index=False) if len(df) <= 10 else df.head(5).to_string(index=False)
     
-    # Add a preview of the data for small result sets
-    if len(df) <= 5:
-        response_parts.append("")
-        response_parts.append("**Data:**")
-        response_parts.append(df.to_string(index=False))
+    # Compose response with appropriate persona
+    response = composer.compose_response(
+        persona=persona,
+        query=question,
+        analysis=analysis,
+        raw_data=raw_data,
+        context=context
+    )
     
-    return "\n".join(response_parts)
+    # Add trend if available
+    if analysis.get('trend'):
+        response += f"\n\n📈 **Trend:** {analysis['trend']}"
+    
+    return (response, persona, analysis.get('insight'))
 
 @app.route('/api/ask', methods=['POST'])
 def ask():
@@ -243,12 +269,21 @@ def ask():
                             print(f"  Original: {execution_result['original_sql']}")
                             print(f"  Corrected: {sql_used}")
                         
-                        # Use Business Analyst for comprehensive insights with data introspection
-                        summary = summarize_data_with_llm(question, df, sql_used)
+                        # Cognitive Fusion Layer - Use Business Analyst + Response Composer
+                        summary, persona, insights = summarize_data_with_llm(question, df, sql_used)
                         
                         # Add correction notice to response if applicable
                         if execution_result['correction_applied']:
                             summary = f"⚙️ {execution_result['message']}\n\n{summary}"
+                        
+                        # Store in context memory
+                        memory.remember(
+                            query=question,
+                            response=summary,
+                            sql=sql_used,
+                            insights=insights,
+                            persona=persona
+                        )
                         
                         chat_history.append({"role": "assistant", "value": summary, "sql": sql_used})
                     else:
