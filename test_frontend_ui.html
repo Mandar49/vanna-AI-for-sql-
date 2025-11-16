@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en" x-data="{ darkMode: localStorage.getItem('darkMode') === 'true' }" 
+      :class="{ 'dark': darkMode }">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UI Test - AI Business Intelligence</title>
+    
+    <!-- TailwindCSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Alpine.js CDN -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    
+    <!-- Custom Tailwind Config -->
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        'dark-bg': '#1E1E1E',
+                        'dark-card': '#2D2D2D',
+                        'dark-border': '#3D3D3D',
+                        'accent': '#00BFA6',
+                        'accent-hover': '#00A890',
+                        'dark-text': '#E5E5E5',
+                        'dark-text-secondary': '#B0B0B0',
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        * {
+            transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+        }
+        .stat-card {
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .stat-card:hover {
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body class="bg-gray-50 dark:bg-dark-bg text-gray-900 dark:text-dark-text p-8">
+    <div class="max-w-6xl mx-auto">
+        <!-- Header with Theme Toggle -->
+        <div class="flex items-center justify-between mb-8">
+            <h1 class="text-3xl font-bold">UI Component Test</h1>
+            <button 
+                @click="darkMode = !darkMode; localStorage.setItem('darkMode', darkMode)"
+                class="p-3 rounded-lg bg-white dark:bg-dark-card border border-gray-200 dark:border-dark-border hover:bg-gray-100 dark:hover:bg-dark-bg transition-colors"
+                aria-label="Toggle dark mode">
+                <svg x-show="darkMode" class="w-6 h-6 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" clip-rule="evenodd"></path>
+                </svg>
+                <svg x-show="!darkMode" class="w-6 h-6 text-gray-600" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path>
+                </svg>
+            </button>
+        </div>
+
+        <!-- Test Section 1: Styled Cards -->
+        <section class="mb-12">
+            <h2 class="text-2xl font-semibold mb-4">Styled Cards</h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                <!-- Card 1 -->
+                <div class="stat-card bg-white dark:bg-dark-card border border-gray-200 dark:border-dark-border rounded-lg p-4 shadow-sm hover:shadow-md">
+                    <h3 class="text-sm font-medium text-gray-600 dark:text-dark-text-secondary uppercase tracking-wide mb-2">
+                        TOTAL SALES (2024)
+                    </h3>
+                    <p class="text-2xl font-bold text-gray-900 dark:text-dark-text mb-1">
+                        $4,110,315.23
+                    </p>
+                    <span class="text-sm font-medium text-green-600 dark:text-green-400">
+                        ▲ +2.85%
+                    </span>
+                </div>
+
+                <!-- Card 2 -->
+                <div class="stat-card bg-white dark:bg-dark-card border border-gray-200 dark:border-dark-border rounded-lg p-4 shadow-sm hover:shadow-md">
+                    <h3 class="text-sm font-medium text-gray-600 dark:text-dark-text-secondary uppercase tracking-wide mb-2">
+                        TOTAL ORDERS
+                    </h3>
+                    <p class="text-2xl font-bold text-gray-900 dark:text-dark-text mb-1">
+                        1,247
+                    </p>
+                    <span class="text-sm font-medium text-red-600 dark:text-red-400">
+                        ▼ -1.2%
+                    </span>
+                </div>
+
+                <!-- Card 3 -->
+                <div class="stat-card bg-white dark:bg-dark-card border border-gray-200 dark:border-dark-border rounded-lg p-4 shadow-sm hover:shadow-md">
+                    <h3 class="text-sm font-medium text-gray-600 dark:text-dark-text-secondary uppercase tracking-wide mb-2">
+                        AVG ORDER VALUE
+                    </h3>
+                    <p class="text-2xl font-bold text-gray-900 dark:text-dark-text mb-1">
+                        $3,296.55
+                    </p>
+                    <span class="text-sm font-medium text-gray-600 dark:text-gray-400">
+                        ➖ 0.0%
+                    </span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Test Section 2: Message Bubbles -->
+        <section class="mb-12">
+            <h2 class="text-2xl font-semibold mb-4">Message Bubbles</h2>
+            
+            <!-- User Message -->
+            <div class="flex justify-end mb-4">
+                <div class="max-w-3xl bg-accent text-white rounded-2xl rounded-tr-sm px-5 py-4 shadow-sm">
+                    <p>What were our total sales in 2024?</p>
+                </div>
+            </div>
+
+            <!-- AI Message -->
+            <div class="flex justify-start mb-4">
+                <div class="max-w-3xl bg-white dark:bg-dark-card border border-gray-200 dark:border-dark-border rounded-2xl rounded-tl-sm px-5 py-4 shadow-sm">
+                    <h3 class="text-lg font-semibold text-gray-900 dark:text-dark-text mb-3 flex items-center">
+                        <svg class="w-5 h-5 inline mr-2 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4"></path>
+                        </svg>
+                        SQL RESULT
+                    </h3>
+                    <div class="bg-gray-50 dark:bg-dark-bg p-4 rounded-lg mb-4">
+                        <pre class="text-sm text-gray-700 dark:text-dark-text-secondary">Year  TotalSales
+2024  4110315.23</pre>
+                    </div>
+                    <p class="text-gray-700 dark:text-dark-text-secondary">
+                        Total sales for 2024 were $4,110,315.23
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Test Section 3: Buttons -->
+        <section class="mb-12">
+            <h2 class="text-2xl font-semibold mb-4">Buttons</h2>
+            <div class="flex flex-wrap gap-4">
+                <button class="px-6 py-3 font-medium text-white bg-accent hover:bg-accent-hover rounded-lg transition-colors">
+                    Primary Button
+                </button>
+                <button class="px-6 py-3 font-medium text-accent bg-transparent border-2 border-accent rounded-lg hover:bg-accent hover:text-white transition-all">
+                    Secondary Button
+                </button>
+                <button class="px-6 py-3 font-medium text-gray-700 dark:text-dark-text bg-gray-100 dark:bg-dark-card border border-gray-300 dark:border-dark-border rounded-lg hover:bg-gray-200 dark:hover:bg-dark-bg transition-colors">
+                    Tertiary Button
+                </button>
+            </div>
+        </section>
+
+        <!-- Test Section 4: Forms -->
+        <section class="mb-12">
+            <h2 class="text-2xl font-semibold mb-4">Form Elements</h2>
+            <div class="bg-white dark:bg-dark-card border border-gray-200 dark:border-dark-border rounded-lg p-6">
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-700 dark:text-dark-text mb-2">
+                        Text Input
+                    </label>
+                    <input 
+                        type="text" 
+                        placeholder="Enter text..." 
+                        class="w-full px-4 py-3 text-gray-900 dark:text-dark-text bg-gray-50 dark:bg-dark-bg border border-gray-300 dark:border-dark-border rounded-lg focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent">
+                </div>
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-700 dark:text-dark-text mb-2">
+                        Textarea
+                    </label>
+                    <textarea 
+                        rows="3" 
+                        placeholder="Enter longer text..." 
+                        class="w-full px-4 py-3 text-gray-900 dark:text-dark-text bg-gray-50 dark:bg-dark-bg border border-gray-300 dark:border-dark-border rounded-lg focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent"></textarea>
+                </div>
+            </div>
+        </section>
+
+        <!-- Test Section 5: Accessibility -->
+        <section class="mb-12">
+            <h2 class="text-2xl font-semibold mb-4">Accessibility Features</h2>
+            <div class="bg-white dark:bg-dark-card border border-gray-200 dark:border-dark-border rounded-lg p-6">
+                <ul class="space-y-2 text-gray-700 dark:text-dark-text-secondary">
+                    <li>✓ Keyboard navigation support</li>
+                    <li>✓ ARIA labels on interactive elements</li>
+                    <li>✓ Focus indicators on all focusable elements</li>
+                    <li>✓ Sufficient color contrast (WCAG AA compliant)</li>
+                    <li>✓ Semantic HTML structure</li>
+                    <li>✓ Screen reader friendly</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- Test Section 6: Responsive Grid -->
+        <section class="mb-12">
+            <h2 class="text-2xl font-semibold mb-4">Responsive Grid (resize window)</h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                <div class="bg-accent text-white p-4 rounded-lg text-center">1 col on mobile</div>
+                <div class="bg-accent text-white p-4 rounded-lg text-center">2 cols on sm</div>
+                <div class="bg-accent text-white p-4 rounded-lg text-center">3 cols on md</div>
+                <div class="bg-accent text-white p-4 rounded-lg text-center">4 cols on lg</div>
+            </div>
+        </section>
+
+        <!-- Color Palette Reference -->
+        <section class="mb-12">
+            <h2 class="text-2xl font-semibold mb-4">Color Palette</h2>
+            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+                <div class="text-center">
+                    <div class="h-20 bg-dark-bg rounded-lg mb-2"></div>
+                    <p class="text-sm">Dark BG<br>#1E1E1E</p>
+                </div>
+                <div class="text-center">
+                    <div class="h-20 bg-accent rounded-lg mb-2"></div>
+                    <p class="text-sm">Accent<br>#00BFA6</p>
+                </div>
+                <div class="text-center">
+                    <div class="h-20 bg-dark-text rounded-lg mb-2"></div>
+                    <p class="text-sm">Dark Text<br>#E5E5E5</p>
+                </div>
+                <div class="text-center">
+                    <div class="h-20 bg-dark-card rounded-lg mb-2"></div>
+                    <p class="text-sm">Dark Card<br>#2D2D2D</p>
+                </div>
+            </div>
+        </section>
+    </div>
+</body>
+</html>

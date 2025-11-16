@@ -1,0 +1,35 @@
+{
+  "list_profiles": {
+    "example": "list profiles",
+    "keywords": [
+      "list",
+      "profiles"
+    ],
+    "success_rate": 1.0,
+    "updated_at": "2025-11-11T17:20:42.579336"
+  },
+  "analyze_kpis": {
+    "example": "analyze KPIs for Sales",
+    "keywords": [
+      "for",
+      "kpis",
+      "analyze",
+      "marketing",
+      "sales"
+    ],
+    "success_rate": 1.0,
+    "updated_at": "2025-11-11T17:20:42.619348"
+  },
+  "generate_report": {
+    "example": "generate report for Marketing",
+    "keywords": [
+      "generate",
+      "finance",
+      "for",
+      "report",
+      "marketing"
+    ],
+    "success_rate": 1.0,
+    "updated_at": "2025-11-11T17:20:42.619348"
+  }
+}

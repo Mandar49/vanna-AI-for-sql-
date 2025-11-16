@@ -1,0 +1,11 @@
+[
+  {
+    "role": "user",
+    "value": "What is the phone number of Nisha Kapoor"
+  },
+  {
+    "role": "assistant",
+    "value": "An error occurred while processing your question: 'str' object is not callable",
+    "sql": null
+  }
+]

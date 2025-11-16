@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Executive Report</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            color: #333;
+        }
+        h1 {
+            color: #2c3e50;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 10px;
+        }
+        h2 {
+            color: #34495e;
+            margin-top: 30px;
+            border-bottom: 1px solid #bdc3c7;
+            padding-bottom: 5px;
+        }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin: 20px 0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+        th {
+            background-color: #3498db;
+            color: white;
+            font-weight: bold;
+        }
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        tr:hover {
+            background-color: #f5f5f5;
+        }
+        code {
+            background-color: #f4f4f4;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+        }
+        pre {
+            background-color: #f4f4f4;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+        hr {
+            border: none;
+            border-top: 2px solid #ecf0f1;
+            margin: 30px 0;
+        }
+        img {
+            max-width: 100%;
+            height: auto;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+<h1>Q4 2024 Resource Allocation Analysis<br></h1></h2>
+<br></h2>
+**Generated:** 2025-11-11 13:13:16<br></h2>
+<br></h2>
+---<br></h2>
+<br></h2>
+#<h1>Executive Summary<br></h2>
+<br></h2>
+<br></h2>
+    **Key Findings:**<br></h2>
+    <br></h2>
+    - Engineering has the highest resource allocation with 67 employees and $890K budget<br></h2>
+    - Engineering also shows the highest utilization rate at 95%, indicating efficient resource use<br></h2>
+    - HR is the smallest department with 12 employees and $120K budget<br></h2>
+    - Overall utilization across departments averages 88%, which is healthy<br></h2>
+    - Sales department shows strong performance with 92% utilization<br></h2>
+    <br></h2>
+    **Strategic Implications:**<br></h2>
+    <br></h2>
+    - Engineering investment is justified by high utilization<br></h2>
+    - Consider reviewing HR capacity given lower utilization (78%)<br></h2>
+    - Sales and Operations are well-balanced<br></h2>
+    <br></h2>
+<br></h2>
+---<br></h2>
+<br></h2>
+#<h1>Question Asked<br></h2>
+<br></h2>
+**Business Question:**<br></h2>
+<br></h2>
+What is the current resource allocation across departments?<br></h2>
+<br></h2>
+---<br></h2>
+<br></h2>
+#<h1>SQL Query<br></h2>
+<br></h2>
+```sql<br></h2>
+<br></h2>
+    SELECT <br></h2>
+        department,<br></h2>
+        COUNT(*) as headcount,<br></h2>
+        SUM(budget) as budget,<br></h2>
+        ROUND(AVG(utilization_rate), 2) as utilization<br></h2>
+    FROM employees<br></h2>
+    JOIN department_budgets USING (department_id)<br></h2>
+    GROUP BY department<br></h2>
+    ORDER BY budget DESC<br></h2>
+    <br></h2>
+```<br></h2>
+<br></h2>
+---<br></h2>
+<br></h2>
+#<h1>Data Preview<br></h2>
+<br></h2>
+| Department | Headcount | Budget | Utilization |<br></h2>
+| --- | --- | --- | --- |<br></h2>
+| Sales | 45 | 450000 | 92% |<br></h2>
+| Marketing | 23 | 230000 | 87% |<br></h2>
+| Engineering | 67 | 890000 | 95% |<br></h2>
+| HR | 12 | 120000 | 78% |<br></h2>
+| Operations | 34 | 340000 | 88% |<br></h2>
+<br></h2>
+---<br></h2>
+<br></h2>
+#<h1>Recommendations<br></h2>
+<br></h2>
+<br></h2>
+**Next Steps:**<br></h2>
+<br></h2>
+1. Review the data patterns identified in the analysis<br></h2>
+2. Validate findings with domain experts<br></h2>
+3. Consider additional drill-down queries for deeper insights<br></h2>
+4. Monitor key metrics over time for trend analysis<br></h2>
+5. Share findings with relevant stakeholders<br></h2>
+<br></h2>
+<br></h2>
+---<br></h2>
+
+</body>
+</html>

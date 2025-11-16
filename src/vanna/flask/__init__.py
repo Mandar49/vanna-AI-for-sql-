@@ -303,6 +303,8 @@ class VannaFlaskAPI:
         @self.flask_app.route("/api/v0/generate_sql", methods=["GET"])
         @self.requires_auth
         def generate_sql(user: any):
+            # print(f"306 coming here")
+
             """
             Generate SQL from a question
             ---

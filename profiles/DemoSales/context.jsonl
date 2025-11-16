@@ -1,0 +1,2 @@
+{"timestamp": "2025-11-11T13:53:54.991304", "query": "What are our top products?", "response": "Top products: Widget A, Widget B, Widget C", "sql": "SELECT product, SUM(sales) FROM sales GROUP BY product", "metadata": {}}
+{"timestamp": "2025-11-11T13:53:55.006401", "query": "Show quarterly revenue", "response": "Q1: $1.2M, Q2: $1.5M, Q3: $1.8M, Q4: $2.1M", "sql": "SELECT quarter, SUM(revenue) FROM sales GROUP BY quarter", "metadata": {}}

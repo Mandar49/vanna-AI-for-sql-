@@ -1,34 +1,358 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" x-data="{ darkMode: localStorage.getItem('darkMode') === 'true' }" 
+      :class="{ 'dark': darkMode }">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AI Business Intelligence Agent</title>
-    <link rel="stylesheet" href="/static/style.css">
+    
+    <!-- TailwindCSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Alpine.js CDN -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    
+    <!-- Custom Tailwind Config -->
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        'dark-bg': '#1E1E1E',
+                        'dark-card': '#2D2D2D',
+                        'dark-border': '#3D3D3D',
+                        'accent': '#00BFA6',
+                        'accent-hover': '#00A890',
+                        'dark-text': '#E5E5E5',
+                        'dark-text-secondary': '#B0B0B0',
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        /* CSS Variables for Light Mode */
+        :root {
+            --card-bg-data: #F8F9FA;
+            --card-border-data: #E0E0E0;
+            --card-bg-insight: #F5F7FA;
+            --card-border-insight: #D0D5DD;
+            --card-bg-strategist: #F0F4FF;
+            --card-border-strategist: #C7D2FE;
+            --card-bg-error: #FEF2F2;
+            --card-border-error: #FCA5A5;
+            --card-bg-sql: #F9FAFB;
+            --card-border-sql: #D1D5DB;
+            --card-text: #1F2937;
+            --card-text-secondary: #6B7280;
+            --card-header-bg: rgba(0, 0, 0, 0.02);
+        }
+        
+        /* CSS Variables for Dark Mode */
+        .dark {
+            --card-bg-data: #1E1E1E;
+            --card-border-data: #3D3D3D;
+            --card-bg-insight: #232323;
+            --card-border-insight: #2D2D2D;
+            --card-bg-strategist: #1A1D2E;
+            --card-border-strategist: #2E3A59;
+            --card-bg-error: #251313;
+            --card-border-error: #7F1D1D;
+            --card-bg-sql: #1E1E1E;
+            --card-border-sql: #374151;
+            --card-text: #FFFFFF;
+            --card-text-secondary: #B0B0B0;
+            --card-header-bg: rgba(255, 255, 255, 0.02);
+        }
+        
+        /* Custom scrollbar for dark mode */
+        .dark ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        .dark ::-webkit-scrollbar-track {
+            background: #2D2D2D;
+        }
+        .dark ::-webkit-scrollbar-thumb {
+            background: #4D4D4D;
+            border-radius: 4px;
+        }
+        .dark ::-webkit-scrollbar-thumb:hover {
+            background: #5D5D5D;
+        }
+        
+        /* Light mode scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #c1c1c1;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #a1a1a1;
+        }
+        
+        /* Smooth transitions */
+        * {
+            transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+        }
+        
+        /* Card hover effects */
+        .stat-card {
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .stat-card:hover {
+            transform: translateY(-2px);
+        }
+        
+        /* Pre-formatted text styling */
+        pre {
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+        
+        /* Smooth scrolling */
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        /* Card animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        /* Output card base styles */
+        .output-card {
+            animation: fadeIn 0.3s ease-in;
+            transition: all 0.15s ease;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            margin-bottom: 12px;
+        }
+        
+        .output-card:hover {
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+        }
+        
+        .dark .output-card:hover {
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+        }
+        
+        /* Card header */
+        .output-card-header {
+            background: var(--card-header-bg);
+            padding: 10px 14px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        }
+        
+        .dark .output-card-header {
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .output-card-title {
+            margin: 0;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--card-text);
+        }
+        
+        /* Card content */
+        .output-card-content {
+            padding: 14px;
+            line-height: 1.6;
+            color: var(--card-text);
+        }
+        
+        .output-card-content p,
+        .output-card-content div,
+        .output-card-content li {
+            color: var(--card-text) !important;
+        }
+        
+        /* Specific card types */
+        .output-card-data {
+            background: var(--card-bg-data) !important;
+            border: 1px solid var(--card-border-data) !important;
+        }
+        
+        .output-card-insight {
+            background: var(--card-bg-insight) !important;
+            border: 1px solid var(--card-border-insight) !important;
+        }
+        
+        .output-card-strategist {
+            background: var(--card-bg-strategist) !important;
+            border: 1px solid var(--card-border-strategist) !important;
+        }
+        
+        .output-card-error {
+            background: var(--card-bg-error) !important;
+            border: 1px solid var(--card-border-error) !important;
+        }
+        
+        .output-card-sql {
+            background: var(--card-bg-sql) !important;
+            border: 1px solid var(--card-border-sql) !important;
+        }
+        
+        /* SQL code block */
+        .sql-code {
+            background: #2D2D2D !important;
+            color: #F8F8F2 !important;
+            padding: 12px;
+            border-radius: 4px;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            margin: 0;
+        }
+        
+        .dark .sql-code {
+            background: #1A1A1A !important;
+        }
+        
+        /* Collapse button */
+        .collapse-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 12px;
+            color: var(--card-text);
+            padding: 4px 8px;
+            border-radius: 4px;
+        }
+        
+        .collapse-btn:hover {
+            background: rgba(0, 0, 0, 0.05);
+        }
+        
+        .dark .collapse-btn:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+    </style>
 </head>
-<body>
-    <div class="app-container">
-        <aside class="sidebar">
-            <div class="sidebar-header">
-                <h2>Conversations</h2>
+<body class="bg-gray-50 dark:bg-dark-bg text-gray-900 dark:text-dark-text font-sans antialiased">
+    <div class="flex h-screen overflow-hidden">
+        <!-- Sidebar -->
+        <aside class="w-64 bg-white dark:bg-dark-card border-r border-gray-200 dark:border-dark-border flex flex-col transition-all duration-300">
+            <!-- Sidebar Header -->
+            <div class="p-4 border-b border-gray-200 dark:border-dark-border">
+                <div class="flex items-center justify-between mb-4">
+                    <h2 class="text-lg font-semibold text-gray-800 dark:text-dark-text">Conversations</h2>
+                    
+                    <!-- Theme Toggle Button -->
+                    <button 
+                        @click="darkMode = !darkMode; localStorage.setItem('darkMode', darkMode)"
+                        class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-dark-bg transition-colors"
+                        aria-label="Toggle dark mode"
+                        title="Toggle dark mode">
+                        <!-- Sun Icon (shown in dark mode) -->
+                        <svg x-show="darkMode" class="w-5 h-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" clip-rule="evenodd"></path>
+                        </svg>
+                        <!-- Moon Icon (shown in light mode) -->
+                        <svg x-show="!darkMode" class="w-5 h-5 text-gray-600" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path>
+                        </svg>
+                    </button>
+                </div>
+                
+                <!-- New Chat Button -->
+                <button 
+                    id="new-chat-btn"
+                    class="w-full px-4 py-2.5 text-sm font-medium text-accent dark:text-accent bg-transparent border-2 border-accent dark:border-accent rounded-lg hover:bg-accent hover:text-white dark:hover:bg-accent dark:hover:text-white transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 dark:focus:ring-offset-dark-card mb-2">
+                    <span class="flex items-center justify-center">
+                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                        </svg>
+                        New Chat
+                    </span>
+                </button>
+                
+                <!-- Clear Cache Button -->
+                <button 
+                    id="clear-cache-btn"
+                    onclick="clearQueryCache()"
+                    class="w-full px-4 py-2.5 text-sm font-medium text-gray-600 dark:text-gray-400 bg-transparent border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-800 dark:hover:text-gray-200 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2 dark:focus:ring-offset-dark-card">
+                    <span class="flex items-center justify-center">
+                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                        </svg>
+                        Clear Cache
+                    </span>
+                </button>
             </div>
-            <div class="new-chat-btn-container">
-                <button id="new-chat-btn">+ New Chat</button>
-            </div>
-            <nav id="conversation-list"></nav>
+            
+            <!-- Conversation List -->
+            <nav id="conversation-list" class="flex-1 overflow-y-auto p-2">
+                <!-- Conversations will be dynamically inserted here -->
+            </nav>
         </aside>
-        <main class="chat-area">
-            <div id="chat-history">
-                <!-- Chat messages will be dynamically inserted here -->
+        
+        <!-- Main Chat Area -->
+        <main class="flex-1 flex flex-col bg-gray-50 dark:bg-dark-bg">
+            <!-- Chat History -->
+            <div id="chat-history" class="flex-1 overflow-y-auto p-6 space-y-4">
+                <!-- Welcome message -->
+                <div class="flex items-center justify-center h-full" id="welcome-message">
+                    <div class="text-center max-w-2xl px-4">
+                        <div class="mb-6">
+                            <svg class="w-16 h-16 mx-auto text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
+                            </svg>
+                        </div>
+                        <h1 class="text-3xl font-bold text-gray-800 dark:text-dark-text mb-3">
+                            AI Business Intelligence Agent
+                        </h1>
+                        <p class="text-gray-600 dark:text-dark-text-secondary text-lg">
+                            Ask questions about your data and get instant insights
+                        </p>
+                    </div>
+                </div>
             </div>
-            <div class="chat-input-area">
-                <form id="ask-form">
-                    <input type="text" id="question-input" placeholder="Ask a question about your data..." required autocomplete="off">
-                    <button type="submit">Send</button>
+            
+            <!-- Chat Input Area -->
+            <div class="border-t border-gray-200 dark:border-dark-border bg-white dark:bg-dark-card p-4">
+                <form id="ask-form" class="max-w-4xl mx-auto">
+                    <div class="flex gap-3">
+                        <input 
+                            type="text" 
+                            id="question-input" 
+                            placeholder="Ask a question about your data..." 
+                            required 
+                            autocomplete="off"
+                            class="flex-1 px-4 py-3 text-gray-900 dark:text-dark-text bg-gray-50 dark:bg-dark-bg border border-gray-300 dark:border-dark-border rounded-lg focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent placeholder-gray-400 dark:placeholder-gray-500">
+                        <button 
+                            type="submit"
+                            class="px-6 py-3 font-medium text-white bg-accent hover:bg-accent-hover rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 dark:focus:ring-offset-dark-card disabled:opacity-50 disabled:cursor-not-allowed">
+                            <span class="flex items-center">
+                                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>
+                                </svg>
+                                Send
+                            </span>
+                        </button>
+                    </div>
                 </form>
             </div>
         </main>
     </div>
+    
     <script src="/static/script.js"></script>
-</body>
-</html>

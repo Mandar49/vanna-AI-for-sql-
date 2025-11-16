@@ -2,3 +2,29 @@
 vanna[ollama,mysql]
 flask
 mysql-connector-python
+
+# Report generation (Phase 1 - Executive Intelligence Layer)
+markdown>=3.4.0  # For HTML conversion in reports
+
+# Visualization (Phase 2 - Executive Intelligence Layer)
+matplotlib>=3.5.0  # For offline chart generation
+
+# Voice Interface (Phase 4A - Executive Intelligence Layer)
+# Optional: Install for voice capabilities
+# openai-whisper  # For speech-to-text (offline)
+# pyttsx3  # For text-to-speech (offline)
+# sounddevice  # For audio recording
+# soundfile  # For audio file handling
+
+# Authentication (Phase 5A - Executive Intelligence Layer)
+bcrypt>=4.0.0  # For secure password hashing
+# Knowledge Fusion (Phase 5C - Executive Intelligence Layer)
+chromadb>=0.4.0  # For vector storage and retrieval
+sentence-transformers>=2.2.0  # For text embeddings (MiniLM)
+
+# Optional document processing
+# PyPDF2>=3.0.0  # For PDF document ingestion
+# python-docx>=0.8.11  # For Word document ingestion
+
+# Export functionality
+weasyprint>=59.0  # For PDF generation from HTML

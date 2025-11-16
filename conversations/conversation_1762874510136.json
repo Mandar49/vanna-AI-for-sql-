@@ -1,0 +1,29 @@
+[
+  {
+    "role": "user",
+    "value": "hey"
+  },
+  {
+    "role": "assistant",
+    "value": "Hello! I'm your AI assistant for analyzing business data. You can ask me questions about your data, or request strategic analysis. How can I help you today?",
+    "sql": null
+  },
+  {
+    "role": "user",
+    "value": "so tell me fjhxfhjfhx"
+  },
+  {
+    "role": "assistant",
+    "value": " It seems like there might be a misunderstanding. The phrase \"fjhxfhjfhx\" doesn't appear to be a question or a topic related to business intelligence or general knowledge. If you have any other questions or need assistance, feel free to ask!",
+    "sql": null
+  },
+  {
+    "role": "user",
+    "value": "give me the contact number of nisha kapoor"
+  },
+  {
+    "role": "assistant",
+    "value": "\u274c **SQL Execution Failed**\n\n[ERROR] Column not found in schema. Not an unknown column error\n\n**SQL Query:**\n```sql\nSELECT c.PhoneNumber\nFROM customers c\nWHERE c.ContactPerson = 'Nisha Kapoor'\n```\n\n\ud83d\udca1 *Try rephrasing your question or ask: 'What tables are available?'*",
+    "sql": "SELECT c.PhoneNumber\nFROM customers c\nWHERE c.ContactPerson = 'Nisha Kapoor'"
+  }
+]

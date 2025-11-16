@@ -1,0 +1,1207 @@
+
+======================================================================
+[2025-11-12 19:42:52] SQL ERROR: TABLE_NOT_FOUND
+======================================================================
+Question: Which product category showed highest YoY growth and highest profit margin in 2024?
+
+SQL Query:
+SELECT p.Category AS ProductCategory,
+       (y2024.TotalSales - y2023.TotalSales) / y2023.TotalSales * 100 AS YoYGrowthRate,
+       (p.UnitPrice - p.StockQuantity/y2024.TotalUnitsSold) / p.UnitPrice * 100 AS ProfitMargin
+FROM products p
+LEFT JOIN (
+    SELECT ProductID, SUM(units_sold) AS TotalUnitsSold, SUM(total_sales) AS TotalSales
+    FROM sales_2024
+    GROUP BY ProductID
+) y2024 ON p.ProductID = y2024.ProductID
+LEFT JOIN (
+    SELECT ProductID, SUM(units_sold) AS TotalUnitsSold, SUM(total_sales) AS TotalSales
+    FROM sales_2023
+    GROUP BY ProductID
+) y2023 ON p.ProductID = y2023.ProductID
+WHERE y2024.TotalUnitsSold > 0 AND y2023.TotalUnitsSold > 0
+ORDER BY YoYGrowthRate DESC, ProfitMargin DESC
+LIMIT 1
+
+Error Message:
+[ERROR] Unexpected error: Execution failed on sql 'SELECT p.Category AS ProductCategory,
+       (y2024.TotalSales - y2023.TotalSales) / y2023.TotalSales * 100 AS YoYGrowthRate,
+       (p.UnitPrice - p.StockQuantity/y2024.TotalUnitsSold) / p.UnitPrice * 100 AS ProfitMargin
+FROM products p
+LEFT JOIN (
+    SELECT ProductID, SUM(units_sold) AS TotalUnitsSold, SUM(total_sales) AS TotalSales
+    FROM sales_2024
+    GROUP BY ProductID
+) y2024 ON p.ProductID = y2024.ProductID
+LEFT JOIN (
+    SELECT ProductID, SUM(units_sold) AS TotalUnitsSold, SUM(total_sales) AS TotalSales
+    FROM sales_2023
+    GROUP BY ProductID
+) y2023 ON p.ProductID = y2023.ProductID
+WHERE y2024.TotalUnitsSold > 0 AND y2023.TotalUnitsSold > 0
+ORDER BY YoYGrowthRate DESC, ProfitMargin DESC
+LIMIT 1': 1146 (42S02): Table 'ad_ai_testdb.sales_2024' doesn't exist
+
+Context:
+  mode: DETAILED
+  profile: None
+  correction_applied: False
+  original_sql: SELECT p.Category AS ProductCategory,
+       (y2024.TotalSales - y2023.TotalSales) / y2023.TotalSales * 100 AS YoYGrowthRate,
+       (p.UnitPrice - p.StockQuantity/y2024.TotalUnitsSold) / p.UnitPrice * 100 AS ProfitMargin
+FROM products p
+LEFT JOIN (
+    SELECT ProductID, SUM(units_sold) AS TotalUnitsSold, SUM(total_sales) AS TotalSales
+    FROM sales_2024
+    GROUP BY ProductID
+) y2024 ON p.ProductID = y2024.ProductID
+LEFT JOIN (
+    SELECT ProductID, SUM(units_sold) AS TotalUnitsSold, SUM(total_sales) AS TotalSales
+    FROM sales_2023
+    GROUP BY ProductID
+) y2023 ON p.ProductID = y2023.ProductID
+WHERE y2024.TotalUnitsSold > 0 AND y2023.TotalUnitsSold > 0
+ORDER BY YoYGrowthRate DESC, ProfitMargin DESC
+LIMIT 1
+======================================================================
+
+======================================================================
+[2025-11-13 13:49:59] SQL ERROR: COLUMN_NOT_FOUND
+======================================================================
+Question: Which product saw the biggest YoY drop in revenue from 2023 to 2024, and what was the percentage decrease?
+
+SQL Query:
+SELECT p.ProductName, (s2024.TotalRevenue - s2023.TotalRevenue) / s2023.TotalRevenue * 100 AS PercentageDrop
+FROM (
+    SELECT SUM(oi.Quantity * oi.UnitPrice) AS TotalRevenue, ProductID
+    FROM orderitems oi
+    JOIN salesorders so ON oi.OrderID = so.OrderID
+    WHERE YEAR(so.OrderDate) = 2023
+    GROUP BY ProductID
+) s2023
+JOIN products p ON s2023.ProductID = p.ProductID
+JOIN (
+    SELECT SUM(oi.Quantity * oi.UnitPrice) AS TotalRevenue, ProductID
+    FROM orderitems oi
+    JOIN salesorders so ON oi.OrderID = so.OrderID
+    WHERE YEAR(so.OrderDate) = 2024
+    GROUP BY ProductID
+) s2024 ON p.ProductID = s2024.ProductID
+WHERE s2024.TotalRevenue < s2023.TotalRevenue
+ORDER BY PercentageDrop DESC
+LIMIT 1
+
+Error Message:
+[ERROR] Unexpected error: Execution failed on sql 'SELECT p.ProductName, (s2024.TotalRevenue - s2023.TotalRevenue) / s2023.TotalRevenue * 100 AS PercentageDrop
+FROM (
+    SELECT SUM(oi.Quantity * oi.UnitPrice) AS TotalRevenue, ProductID
+    FROM orderitems oi
+    JOIN salesorders so ON oi.OrderID = so.OrderID
+    WHERE YEAR(so.OrderDate) = 2023
+    GROUP BY ProductID
+) s2023
+JOIN products p ON s2023.ProductID = p.ProductID
+JOIN (
+    SELECT SUM(oi.Quantity * oi.UnitPrice) AS TotalRevenue, ProductID
+    FROM orderitems oi
+    JOIN salesorders so ON oi.OrderID = so.OrderID
+    WHERE YEAR(so.OrderDate) = 2024
+    GROUP BY ProductID
+) s2024 ON p.ProductID = s2024.ProductID
+WHERE s2024.TotalRevenue < s2023.TotalRevenue
+ORDER BY PercentageDrop DESC
+LIMIT 1': 1054 (42S22): Unknown column 'oi.UnitPrice' in 'field list'
+
+Context:
+  mode: DETAILED
+  profile: None
+  correction_applied: False
+  original_sql: SELECT p.ProductName, (s2024.TotalRevenue - s2023.TotalRevenue) / s2023.TotalRevenue * 100 AS PercentageDrop
+FROM (
+    SELECT SUM(oi.Quantity * oi.UnitPrice) AS TotalRevenue, ProductID
+    FROM orderitems oi
+    JOIN salesorders so ON oi.OrderID = so.OrderID
+    WHERE YEAR(so.OrderDate) = 2023
+    GROUP BY ProductID
+) s2023
+JOIN products p ON s2023.ProductID = p.ProductID
+JOIN (
+    SELECT SUM(oi.Quantity * oi.UnitPrice) AS TotalRevenue, ProductID
+    FROM orderitems oi
+    JOIN salesorders so ON oi.OrderID = so.OrderID
+    WHERE YEAR(so.OrderDate) = 2024
+    GROUP BY ProductID
+) s2024 ON p.ProductID = s2024.ProductID
+WHERE s2024.TotalRevenue < s2023.TotalRevenue
+ORDER BY PercentageDrop DESC
+LIMIT 1
+======================================================================
+
+======================================================================
+[2025-11-13 13:50:26] SQL ERROR: COLUMN_NOT_FOUND
+======================================================================
+Question: Rank all products by revenue volatility (standard deviation of monthly revenue) from 2022–2024.
+
+SQL Query:
+CREATE TEMPORARY TABLE SalesByMonth AS SELECT YEAR(OrderDate) AS Year, MONTH(OrderDate) AS Month, ProductID, SUM(Quantity * UnitPrice) AS MonthlySales FROM orderitems JOIN salesorders ON OrderItemID = OrderID GROUP BY Year, Month, ProductID
+
+Error Message:
+[ERROR] Unexpected error: Execution failed on sql 'CREATE TEMPORARY TABLE SalesByMonth AS SELECT YEAR(OrderDate) AS Year, MONTH(OrderDate) AS Month, ProductID, SUM(Quantity * UnitPrice) AS MonthlySales FROM orderitems JOIN salesorders ON OrderItemID = OrderID GROUP BY Year, Month, ProductID': 1054 (42S22): Unknown column 'UnitPrice' in 'field list'
+
+Context:
+  mode: DETAILED
+  profile: None
+  correction_applied: False
+  original_sql: CREATE TEMPORARY TABLE SalesByMonth AS SELECT YEAR(OrderDate) AS Year, MONTH(OrderDate) AS Month, ProductID, SUM(Quantity * UnitPrice) AS MonthlySales FROM orderitems JOIN salesorders ON OrderItemID = OrderID GROUP BY Year, Month, ProductID
+======================================================================
+
+======================================================================
+[2025-11-13 13:50:56] SQL ERROR: EXECUTION_ERROR
+======================================================================
+Question: Calculate the profit margin for every product in 2024 and identify the top 3 most profitable.
+
+SQL Query:
+SELECT p.ProductID, p.ProductName, (p.UnitPrice - oi.ItemPrice) / p.UnitPrice AS ProfitMargin
+FROM products p
+JOIN orderitems oi ON p.ProductID = oi.ProductID
+JOIN purchases pu ON p.ProductID = pu.ProductID AND pu.PurchaseDate >= '2024-01-01' AND pu.PurchaseDate <= '2024-12-31'
+WHERE YEAR(oi.OrderDate) = 2024
+
+Error Message:
+[ERROR] Table not found: purchases. Available tables: customers, departments, employees, industries, job_titles, name_first, name_last, orderitems, products, salesorders
+
+Context:
+  mode: DETAILED
+  profile: None
+  correction_applied: False
+  original_sql: SELECT p.ProductID, p.ProductName, (p.UnitPrice - oi.ItemPrice) / p.UnitPrice AS ProfitMargin
+FROM products p
+JOIN orderitems oi ON p.ProductID = oi.ProductID
+JOIN purchases pu ON p.ProductID = pu.ProductID AND pu.PurchaseDate >= '2024-01-01' AND pu.PurchaseDate <= '2024-12-31'
+WHERE YEAR(oi.OrderDate) = 2024
+======================================================================
+
+======================================================================
+[2025-11-13 13:58:16] SQL ERROR: EMPTY_RESULT
+======================================================================
+Question: Identify customer cohorts by first purchase year and compare their revenue contribution in 2024.
+
+SQL Query:
+SELECT YEAR(OrderDate) AS FirstPurchaseYear, SUM(TotalAmount) AS RevenueContribution2024
+FROM salesorders
+WHERE OrderDate BETWEEN '2001-01-01' AND '2013-12-31' -- Assuming first customer was acquired in 2001
+GROUP BY FirstPurchaseYear
+
+Error Message:
+Query executed successfully but returned no data
+
+Context:
+  mode: DETAILED
+  profile: None
+======================================================================
+
+======================================================================
+[2025-11-13 13:58:48] SQL ERROR: COLUMN_NOT_FOUND
+======================================================================
+Question: Which customers increased their spending by more than 70% from 2023 to 2024?
+
+SQL Query:
+SELECT c.CustomerName FROM (
+    SELECT CustomerID, SUM(TotalAmount) as TotalSpending2023 FROM salesorders WHERE YEAR(OrderDate) = 2023 GROUP BY CustomerID
+) AS previous_spending
+JOIN (
+    SELECT CustomerID, SUM(TotalAmount) as TotalSpending2024 FROM salesorders WHERE YEAR(OrderDate) = 2024 GROUP BY CustomerID
+) AS current_spending ON previous_spending.CustomerID = current_spending.CustomerID
+WHERE (current_spending.TotalSpending2024 - previous_spending.TotalSpending2023) / previous_spending.TotalSpending2023 >= 1.7
+ORDER BY (current_spending.TotalSpending2024 - previous_spending.TotalSpending2023) DESC LIMIT 10
+
+Error Message:
+[ERROR] Unexpected error: Execution failed on sql 'SELECT c.CustomerName FROM (
+    SELECT CustomerID, SUM(TotalAmount) as TotalSpending2023 FROM salesorders WHERE YEAR(OrderDate) = 2023 GROUP BY CustomerID
+) AS previous_spending
+JOIN (
+    SELECT CustomerID, SUM(TotalAmount) as TotalSpending2024 FROM salesorders WHERE YEAR(OrderDate) = 2024 GROUP BY CustomerID
+) AS current_spending ON previous_spending.CustomerID = current_spending.CustomerID
+WHERE (current_spending.TotalSpending2024 - previous_spending.TotalSpending2023) / previous_spending.TotalSpending2023 >= 1.7
+ORDER BY (current_spending.TotalSpending2024 - previous_spending.TotalSpending2023) DESC LIMIT 10': 1054 (42S22): Unknown column 'c.CustomerName' in 'field list'
+
+Context:
+  mode: DETAILED
+  profile: None
+  correction_applied: False
+  original_sql: SELECT c.CustomerName FROM (
+    SELECT CustomerID, SUM(TotalAmount) as TotalSpending2023 FROM salesorders WHERE YEAR(OrderDate) = 2023 GROUP BY CustomerID
+) AS previous_spending
+JOIN (
+    SELECT CustomerID, SUM(TotalAmount) as TotalSpending2024 FROM salesorders WHERE YEAR(OrderDate) = 2024 GROUP BY CustomerID
+) AS current_spending ON previous_spending.CustomerID = current_spending.CustomerID
+WHERE (current_spending.TotalSpending2024 - previous_spending.TotalSpending2023) / previous_spending.TotalSpending2023 >= 1.7
+ORDER BY (current_spending.TotalSpending2024 - previous_spending.TotalSpending2023) DESC LIMIT 10
+======================================================================
+
+======================================================================
+[2025-11-13 13:59:23] SQL ERROR: SYNTAX_ERROR
+======================================================================
+Question: Which customer segment (based on total lifetime spend) contributed most to 2024 revenue?
+
+SQL Query:
+CREATE DEFINER=`root`@`localhost` FUNCTION `getTotalLifetimeSpend`(p_customerID INT)
+RETURNS DECIMAL(12, 2)
+BEGIN
+    RETURN (SELECT SUM(so.TotalAmount) FROM salesorders so WHERE so.CustomerID = p_customerID)
+
+Error Message:
+[ERROR] Unexpected error: Execution failed on sql 'CREATE DEFINER=`root`@`localhost` FUNCTION `getTotalLifetimeSpend`(p_customerID INT)
+RETURNS DECIMAL(12, 2)
+BEGIN
+    RETURN (SELECT SUM(so.TotalAmount) FROM salesorders so WHERE so.CustomerID = p_customerID)': 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near '' at line 4
+
+Context:
+  mode: DETAILED
+  profile: None
+  correction_applied: False
+  original_sql: CREATE DEFINER=`root`@`localhost` FUNCTION `getTotalLifetimeSpend`(p_customerID INT)
+RETURNS DECIMAL(12, 2)
+BEGIN
+    RETURN (SELECT SUM(so.TotalAmount) FROM salesorders so WHERE so.CustomerID = p_customerID)
+======================================================================
+
+======================================================================
+[2025-11-13 15:05:11] SQL ERROR: EXECUTION_ERROR
+======================================================================
+Question: Which month in 2024 had the highest deviation from the monthly average?
+
+SQL Query:
+SELECT `MonthName`, AVG(YEAR(`OrderDate`)) AS AverageYear, COUNT(`OrderID`) AS OrdersCount, YEAR(`OrderDate`) AS Year, MONTH(`OrderDate`) AS Month
+FROM salesorders
+GROUP BY `MonthName`, Year, Month
+JOIN (SELECT DATE_FORMAT(DATE_ADD('2024-01-01', INTERVAL m-1 MONTH), '%Y %c') AS `MonthName` FROM enum_months) em ON YEAR(`OrderDate`) = Year AND MONTH(`OrderDate`) = Month
+ORDER BY Year, Month
+
+
+
+Error Message:
+[ERROR] Table not found: enum_months. Available tables: customers, departments, employees, industries, job_titles, name_first, name_last, orderitems, products, salesorders
+
+Context:
+  mode: DETAILED
+  profile: None
+  correction_applied: False
+  original_sql: SELECT `MonthName`, AVG(YEAR(`OrderDate`)) AS AverageYear, COUNT(`OrderID`) AS OrdersCount, YEAR(`OrderDate`) AS Year, MONTH(`OrderDate`) AS Month
+FROM salesorders
+GROUP BY `MonthName`, Year, Month
+JOIN (SELECT DATE_FORMAT(DATE_ADD('2024-01-01', INTERVAL m-1 MONTH), '%Y %c') AS `MonthName` FROM enum_months) em ON YEAR(`OrderDate`) = Year AND MONTH(`OrderDate`) = Month
+ORDER BY Year, Month
+
+
+======================================================================
+
+======================================================================
+[2025-11-13 15:10:37] SQL ERROR: EXECUTION_ERROR
+======================================================================
+Question: Find employees whose revenue in 2024 was greater than the 2024 average AND whose customer repeat rate exceeded 40%.
+
+SQL Query:
+SELECT e.EmployeeID, e.FirstName, e.LastName
+FROM employees e
+JOIN (
+    SELECT EmployeeID, AVG(TotalAmount) AS AverageSales2024
+    FROM salesorders
+    WHERE YEAR(OrderDate) = 2024
+    GROUP BY EmployeeID
+) s ON e.EmployeeID = s.EmployeeID
+JOIN (
+    SELECT CustomerID, COUNT(DISTINCT OrderID) AS NumOrders, COUNT(*) AS TotalCustomers
+    FROM salesorders so
+    JOIN customers c ON so.CustomerID = c.CustomerID
+    WHERE YEAR(so.OrderDate) = 2024 AND so.TotalAmount > 0
+    GROUP BY CustomerID
+) r ON e.EmployeeID = r.CustomerID
+WHERE s.AverageSales2024 * 1.2 < r.NumOrders / r.TotalCustomers AND r.NumOrders >= (SELECT COUNT(DISTINCT OrderID) FROM salesorders WHERE YEAR(OrderDate) = 2024 AND EmployeeID = e.EmployeeID)
+ORDER BY s.AverageSales2024 DESC, r.NumOrders DESC
+
+Error Message:
+[ERROR] Unexpected error: Execution failed on sql 'SELECT e.EmployeeID, e.FirstName, e.LastName
+FROM employees e
+JOIN (
+    SELECT EmployeeID, AVG(TotalAmount) AS AverageSales2024
+    FROM salesorders
+    WHERE YEAR(OrderDate) = 2024
+    GROUP BY EmployeeID
+) s ON e.EmployeeID = s.EmployeeID
+JOIN (
+    SELECT CustomerID, COUNT(DISTINCT OrderID) AS NumOrders, COUNT(*) AS TotalCustomers
+    FROM salesorders so
+    JOIN customers c ON so.CustomerID = c.CustomerID
+    WHERE YEAR(so.OrderDate) = 2024 AND so.TotalAmount > 0
+    GROUP BY CustomerID
+) r ON e.EmployeeID = r.CustomerID
+WHERE s.AverageSales2024 * 1.2 < r.NumOrders / r.TotalCustomers AND r.NumOrders >= (SELECT COUNT(DISTINCT OrderID) FROM salesorders WHERE YEAR(OrderDate) = 2024 AND EmployeeID = e.EmployeeID)
+ORDER BY s.AverageSales2024 DESC, r.NumOrders DESC': 1052 (23000): Column 'CustomerID' in field list is ambiguous
+
+Context:
+  mode: DETAILED
+  profile: None
+  correction_applied: False
+  original_sql: SELECT e.EmployeeID, e.FirstName, e.LastName
+FROM employees e
+JOIN (
+    SELECT EmployeeID, AVG(TotalAmount) AS AverageSales2024
+    FROM salesorders
+    WHERE YEAR(OrderDate) = 2024
+    GROUP BY EmployeeID
+) s ON e.EmployeeID = s.EmployeeID
+JOIN (
+    SELECT CustomerID, COUNT(DISTINCT OrderID) AS NumOrders, COUNT(*) AS TotalCustomers
+    FROM salesorders so
+    JOIN customers c ON so.CustomerID = c.CustomerID
+    WHERE YEAR(so.OrderDate) = 2024 AND so.TotalAmount > 0
+    GROUP BY CustomerID
+) r ON e.EmployeeID = r.CustomerID
+WHERE s.AverageSales2024 * 1.2 < r.NumOrders / r.TotalCustomers AND r.NumOrders >= (SELECT COUNT(DISTINCT OrderID) FROM salesorders WHERE YEAR(OrderDate) = 2024 AND EmployeeID = e.EmployeeID)
+ORDER BY s.AverageSales2024 DESC, r.NumOrders DESC
+======================================================================
+
+======================================================================
+[2025-11-13 15:15:39] SQL ERROR: SYNTAX_ERROR
+======================================================================
+Question: Which product categories are losing traction based on 2-year rolling growth?
+
+SQL Query:
+SELECT DISTINCT Category FROM (
+    SELECT p1.Category, (SUM(oi1.Quantity * oi1.UnitPrice) - SUM(oi2.Quantity * oi2.UnitPrice))/SUM(oi1.Quantity * oi1.UnitPrice)*100 AS GrowthPercentage
+    FROM products p1 JOIN orderitems oi1 ON p1.ProductID = oi1.ProductID
+            LEFT JOIN orderitems oi2 ON oi1.OrderID = DATE_SUB(oi1.OrderDate, INTERVAL 2 YEAR) AND oi2.ProductID = oi1.ProductID
+    GROUP BY p1.Category
+    HAVING GrowthPercentage < 0
+)
+
+Error Message:
+[ERROR] Unexpected error: Execution failed on sql 'SELECT DISTINCT Category FROM (
+    SELECT p1.Category, (SUM(oi1.Quantity * oi1.UnitPrice) - SUM(oi2.Quantity * oi2.UnitPrice))/SUM(oi1.Quantity * oi1.UnitPrice)*100 AS GrowthPercentage
+    FROM products p1 JOIN orderitems oi1 ON p1.ProductID = oi1.ProductID
+            LEFT JOIN orderitems oi2 ON oi1.OrderID = DATE_SUB(oi1.OrderDate, INTERVAL 2 YEAR) AND oi2.ProductID = oi1.ProductID
+    GROUP BY p1.Category
+    HAVING GrowthPercentage < 0
+)': 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near '' at line 7
+
+Context:
+  mode: DETAILED
+  profile: None
+  correction_applied: False
+  original_sql: SELECT DISTINCT Category FROM (
+    SELECT p1.Category, (SUM(oi1.Quantity * oi1.UnitPrice) - SUM(oi2.Quantity * oi2.UnitPrice))/SUM(oi1.Quantity * oi1.UnitPrice)*100 AS GrowthPercentage
+    FROM products p1 JOIN orderitems oi1 ON p1.ProductID = oi1.ProductID
+            LEFT JOIN orderitems oi2 ON oi1.OrderID = DATE_SUB(oi1.OrderDate, INTERVAL 2 YEAR) AND oi2.ProductID = oi1.ProductID
+    GROUP BY p1.Category
+    HAVING GrowthPercentage < 0
+)
+======================================================================
+
+======================================================================
+[2025-11-13 15:18:34] SQL ERROR: EXECUTION_ERROR
+======================================================================
+Question: Ask it to show phone numbers of employees (table does NOT exist) — it should return a clean error.
+
+SQL Query:
+SELECT PhoneNumber FROM phone_numbers
+
+Error Message:
+[ERROR] Table not found: phone_numbers. Available tables: customers, departments, employees, industries, job_titles, name_first, name_last, orderitems, products, salesorders
+
+Context:
+  mode: DETAILED
+  profile: None
+  correction_applied: False
+  original_sql: SELECT PhoneNumber FROM phone_numbers
+======================================================================
+
+======================================================================
+[2025-11-13 15:23:09] SQL ERROR: EMPTY_RESULT
+======================================================================
+Question: Share the contact details of Aditi Kapoor and whi is she she an employee of ours or what is she and which company she works for?
+
+SQL Query:
+ SELECT c.CustomerName AS CompanyName, e.FirstName AS FirstName, e.LastName AS LastName, e.Email AS Email, e.PhoneNumber AS PhoneNumber
+FROM customers c
+LEFT JOIN employees e ON c.ContactPerson = CONCAT(e.FirstName, ' ', e.LastName)
+WHERE CONCAT(e.FirstName, ' ', e.LastName) = 'Aditi Kapoor'
+
+Error Message:
+Query executed successfully but returned no data
+
+Context:
+  mode: DETAILED
+  profile: None
+======================================================================
+
+======================================================================
+[2025-11-13 15:25:22] SQL ERROR: COLUMN_NOT_FOUND
+======================================================================
+Question: Find the customer-product combination that generated the highest total revenue from 2022–2024.
+
+SQL Query:
+SELECT c.CustomerName AS Customer, p.ProductName AS Product, SUM(so.TotalAmount) AS TotalRevenue
+FROM salesorders so
+JOIN customers c ON so.CustomerID = c.CustomerID
+JOIN products p ON so.OrderItemID = oi.OrderItemID
+JOIN orderitems oi ON so.OrderID = oi.OrderID
+WHERE so.OrderDate >= '2022-01-01' AND so.OrderDate <= '2024-12-31'
+GROUP BY c.CustomerName, p.ProductName
+ORDER BY TotalRevenue DESC
+LIMIT 1
+
+Error Message:
+[ERROR] Unexpected error: Execution failed on sql 'SELECT c.CustomerName AS Customer, p.ProductName AS Product, SUM(so.TotalAmount) AS TotalRevenue
+FROM salesorders so
+JOIN customers c ON so.CustomerID = c.CustomerID
+JOIN products p ON so.OrderItemID = oi.OrderItemID
+JOIN orderitems oi ON so.OrderID = oi.OrderID
+WHERE so.OrderDate >= '2022-01-01' AND so.OrderDate <= '2024-12-31'
+GROUP BY c.CustomerName, p.ProductName
+ORDER BY TotalRevenue DESC
+LIMIT 1': 1054 (42S22): Unknown column 'so.OrderItemID' in 'on clause'
+
+Context:
+  mode: DETAILED
+  profile: None
+  correction_applied: False
+  original_sql: SELECT c.CustomerName AS Customer, p.ProductName AS Product, SUM(so.TotalAmount) AS TotalRevenue
+FROM salesorders so
+JOIN customers c ON so.CustomerID = c.CustomerID
+JOIN products p ON so.OrderItemID = oi.OrderItemID
+JOIN orderitems oi ON so.OrderID = oi.OrderID
+WHERE so.OrderDate >= '2022-01-01' AND so.OrderDate <= '2024-12-31'
+GROUP BY c.CustomerName, p.ProductName
+ORDER BY TotalRevenue DESC
+LIMIT 1
+======================================================================
+
+======================================================================
+[2025-11-13 15:26:28] SQL ERROR: COLUMN_NOT_FOUND
+======================================================================
+Question: For each quarter of 2024, identify the product with the highest profit margin and explain why.
+
+SQL Query:
+SELECT ProductName, AVG((UnitPrice - UnitCost) * Quantity) as ProfitMargin
+FROM (
+    SELECT p.ProductName, oi.Quantity, p.UnitPrice, p.UnitCost, oi.OrderDate
+    FROM products p
+    JOIN orderitems oi ON p.ProductID = oi.ProductID
+    JOIN salesorders so ON oi.OrderID = so.OrderID
+    WHERE so.OrderDate >= '2024-01-01' AND so.OrderDate <= '2024-03-31'
+) as profits_data
+GROUP BY ProductName
+ORDER BY ProfitMargin DESC
+LIMIT 1
+
+Error Message:
+[ERROR] Unexpected error: Execution failed on sql 'SELECT ProductName, AVG((UnitPrice - UnitCost) * Quantity) as ProfitMargin
+FROM (
+    SELECT p.ProductName, oi.Quantity, p.UnitPrice, p.UnitCost, oi.OrderDate
+    FROM products p
+    JOIN orderitems oi ON p.ProductID = oi.ProductID
+    JOIN salesorders so ON oi.OrderID = so.OrderID
+    WHERE so.OrderDate >= '2024-01-01' AND so.OrderDate <= '2024-03-31'
+) as profits_data
+GROUP BY ProductName
+ORDER BY ProfitMargin DESC
+LIMIT 1': 1054 (42S22): Unknown column 'p.UnitCost' in 'field list'
+
+Context:
+  mode: DETAILED
+  profile: None
+  correction_applied: False
+  original_sql: SELECT ProductName, AVG((UnitPrice - UnitCost) * Quantity) as ProfitMargin
+FROM (
+    SELECT p.ProductName, oi.Quantity, p.UnitPrice, p.UnitCost, oi.OrderDate
+    FROM products p
+    JOIN orderitems oi ON p.ProductID = oi.ProductID
+    JOIN salesorders so ON oi.OrderID = so.OrderID
+    WHERE so.OrderDate >= '2024-01-01' AND so.OrderDate <= '2024-03-31'
+) as profits_data
+GROUP BY ProductName
+ORDER BY ProfitMargin DESC
+LIMIT 1
+======================================================================
+
+======================================================================
+[2025-11-14 15:09:42] SQL ERROR: EMPTY_RESULT
+======================================================================
+Question: what is phone number of Akshiita Pandey
+
+SQL Query:
+ SELECT PhoneNumber FROM customers WHERE CustomerName = 'Pandey Akshita Pvt Ltd - 0001'
+
+Error Message:
+Query executed successfully but returned no data
+
+Context:
+  mode: DETAILED
+  profile: None
+======================================================================
+
+======================================================================
+[2025-11-14 15:41:39] SQL ERROR: EMPTY_RESULT
+======================================================================
+Question: what is phone number of Akshita Pandey
+
+SQL Query:
+ SELECT PhoneNumber FROM customers WHERE CustomerName = 'Pandey Akshita Pvt Ltd - 0001'
+
+Error Message:
+Query executed successfully but returned no data
+
+Context:
+  mode: DETAILED
+  profile: None
+======================================================================
+
+======================================================================
+[2025-11-16 21:07:00] SQL ERROR: COLUMN_NOT_FOUND
+======================================================================
+Question: Which product category generated the highest revenue in 2024?
+
+SQL Query:
+ SELECT c.CategoryName, SUM(so.TotalAmount) AS TotalRevenue
+FROM orderitems oi JOIN salesorders so ON oi.OrderID = so.OrderID
+JOIN products p ON oi.ProductID = p.ProductID
+JOIN departments d ON p.DepartmentID = d.DepartmentID
+WHERE YEAR(so.OrderDate) = 2024
+GROUP BY c.CategoryName
+ORDER BY TotalRevenue DESC
+LIMIT 1
+
+Error Message:
+[ERROR] Unexpected error: Execution failed on sql ' SELECT c.CategoryName, SUM(so.TotalAmount) AS TotalRevenue
+FROM orderitems oi JOIN salesorders so ON oi.OrderID = so.OrderID
+JOIN products p ON oi.ProductID = p.ProductID
+JOIN departments d ON p.DepartmentID = d.DepartmentID
+WHERE YEAR(so.OrderDate) = 2024
+GROUP BY c.CategoryName
+ORDER BY TotalRevenue DESC
+LIMIT 1': 1054 (42S22): Unknown column 'c.CategoryName' in 'field list'
+
+Context:
+  mode: DETAILED
+  profile: None
+  correction_applied: False
+  original_sql:  SELECT c.CategoryName, SUM(so.TotalAmount) AS TotalRevenue
+FROM orderitems oi JOIN salesorders so ON oi.OrderID = so.OrderID
+JOIN products p ON oi.ProductID = p.ProductID
+JOIN departments d ON p.DepartmentID = d.DepartmentID
+WHERE YEAR(so.OrderDate) = 2024
+GROUP BY c.CategoryName
+ORDER BY TotalRevenue DESC
+LIMIT 1
+======================================================================
+
+======================================================================
+[2025-11-16 21:10:18] SQL ERROR: EXECUTION_ERROR
+======================================================================
+Question: Calculate month-by-month revenue growth for 2024 and identify the biggest spike.
+
+SQL Query:
+SELECT EXTRACT(YEAR_MONTH FROM OrderDate) AS Month, COUNT(*) AS Orders, SUM(TotalAmount) AS TotalSales
+FROM salesorders
+WHERE YEAR(OrderDate) = 2024
+GROUP BY Month
+ORDER BY TotalSales DESC
+LIMIT 1
+
+Error Message:
+[ERROR] Table not found: OrderDate. Available tables: customers, departments, employees, industries, job_titles, name_first, name_last, orderitems, products, salesorders
+
+Context:
+  mode: DETAILED
+  profile: None
+  correction_applied: False
+  original_sql: SELECT EXTRACT(YEAR_MONTH FROM OrderDate) AS Month, COUNT(*) AS Orders, SUM(TotalAmount) AS TotalSales
+FROM salesorders
+WHERE YEAR(OrderDate) = 2024
+GROUP BY Month
+ORDER BY TotalSales DESC
+LIMIT 1
+======================================================================
+
+======================================================================
+[2025-11-16 21:11:32] SQL ERROR: EXECUTION_ERROR
+======================================================================
+Question: Find the percentage of 2024 revenue that came from repeat customers (customers with >1 order).
+
+SQL Query:
+WITH customers AS (
+    SELECT CustomerID FROM salesorders so
+    JOIN (
+        SELECT CustomerID, COUNT(OrderID) as TotalOrders
+        FROM salesorders
+        GROUP BY CustomerID
+        HAVING TotalOrders > 1
+    ) sc ON so.CustomerID = sc.CustomerID
+)
+SELECT
+    SUM(TotalAmount) AS TotalRevenue2024,
+    (SELECT COUNT(DISTINCT CustomerID) FROM salesorders WHERE YEAR(OrderDate) = 2024 AND CustomerID IN (SELECT CustomerID FROM customers)) AS RepeatCustomerCount2024,
+    ((SELECT COUNT(DISTINCT CustomerID) FROM salesorders WHERE YEAR(OrderDate) = 2024 AND CustomerID IN (SELECT CustomerID FROM customers)) / (SELECT COUNT(DISTINCT CustomerID) FROM salesorders WHERE YEAR(OrderDate) = 2024)) AS PercentageOfRevenueFromRepeatCustomers
+FROM salesorders
+WHERE YEAR(OrderDate) = 2024
+
+Error Message:
+[ERROR] Unexpected error: Execution failed on sql 'WITH customers AS (
+    SELECT CustomerID FROM salesorders so
+    JOIN (
+        SELECT CustomerID, COUNT(OrderID) as TotalOrders
+        FROM salesorders
+        GROUP BY CustomerID
+        HAVING TotalOrders > 1
+    ) sc ON so.CustomerID = sc.CustomerID
+)
+SELECT
+    SUM(TotalAmount) AS TotalRevenue2024,
+    (SELECT COUNT(DISTINCT CustomerID) FROM salesorders WHERE YEAR(OrderDate) = 2024 AND CustomerID IN (SELECT CustomerID FROM customers)) AS RepeatCustomerCount2024,
+    ((SELECT COUNT(DISTINCT CustomerID) FROM salesorders WHERE YEAR(OrderDate) = 2024 AND CustomerID IN (SELECT CustomerID FROM customers)) / (SELECT COUNT(DISTINCT CustomerID) FROM salesorders WHERE YEAR(OrderDate) = 2024)) AS PercentageOfRevenueFromRepeatCustomers
+FROM salesorders
+WHERE YEAR(OrderDate) = 2024': 1052 (23000): Column 'CustomerID' in field list is ambiguous
+
+Context:
+  mode: DETAILED
+  profile: None
+  correction_applied: True
+  original_sql: WITH RepeatCustomers AS (
+    SELECT CustomerID FROM salesorders so
+    JOIN (
+        SELECT CustomerID, COUNT(OrderID) as TotalOrders
+        FROM salesorders
+        GROUP BY CustomerID
+        HAVING TotalOrders > 1
+    ) sc ON so.CustomerID = sc.CustomerID
+)
+SELECT
+    SUM(TotalAmount) AS TotalRevenue2024,
+    (SELECT COUNT(DISTINCT CustomerID) FROM salesorders WHERE YEAR(OrderDate) = 2024 AND CustomerID IN (SELECT CustomerID FROM RepeatCustomers)) AS RepeatCustomerCount2024,
+    ((SELECT COUNT(DISTINCT CustomerID) FROM salesorders WHERE YEAR(OrderDate) = 2024 AND CustomerID IN (SELECT CustomerID FROM RepeatCustomers)) / (SELECT COUNT(DISTINCT CustomerID) FROM salesorders WHERE YEAR(OrderDate) = 2024)) AS PercentageOfRevenueFromRepeatCustomers
+FROM salesorders
+WHERE YEAR(OrderDate) = 2024
+======================================================================
+
+======================================================================
+[2025-11-16 21:12:53] SQL ERROR: EXECUTION_ERROR
+======================================================================
+Question: Which industry showed the fastest growth over the past 3 years?
+
+SQL Query:
+CREATE TEMPORARY TABLE temp_year (Year INT)
+
+Error Message:
+[ERROR] Unexpected error: 'NoneType' object is not iterable
+
+Context:
+  mode: DETAILED
+  profile: None
+  correction_applied: False
+  original_sql: CREATE TEMPORARY TABLE temp_year (Year INT)
+======================================================================
+
+======================================================================
+[2025-11-16 21:15:20] SQL ERROR: EXECUTION_ERROR
+======================================================================
+Question: Which sales reps handled the most high-value customers (top 5% by spend)?
+
+SQL Query:
+SELECT e.FirstName, e.LastName, c.CustomerID, SUM(so.TotalAmount) AS TotalSales FROM employees e JOIN salesorders so ON e.EmployeeID = so.EmployeeID JOIN customers c ON so.CustomerID = c.CustomerID
+
+WITH customer_percentiles AS (
+    SELECT CustomerID, Percentile_Rank() OVER (ORDER BY TotalSales DESC) AS Percentile FROM (SELECT c.CustomerID, SUM(so.TotalAmount) AS TotalSales FROM customers c JOIN salesorders so ON c.CustomerID = so.CustomerID GROUP BY c.CustomerID) t
+    WHERE Percentile <= 5
+)
+WHERE e.EmployeeID IN (SELECT EmployeeID FROM customer_percentiles)
+
+Error Message:
+[ERROR] Table not found: customer_percentiles. Available tables: customers, departments, employees, industries, job_titles, name_first, name_last, orderitems, products, salesorders
+
+Context:
+  mode: DETAILED
+  profile: None
+  correction_applied: False
+  original_sql: SELECT e.FirstName, e.LastName, c.CustomerID, SUM(so.TotalAmount) AS TotalSales FROM employees e JOIN salesorders so ON e.EmployeeID = so.EmployeeID JOIN customers c ON so.CustomerID = c.CustomerID
+
+WITH customer_percentiles AS (
+    SELECT CustomerID, Percentile_Rank() OVER (ORDER BY TotalSales DESC) AS Percentile FROM (SELECT c.CustomerID, SUM(so.TotalAmount) AS TotalSales FROM customers c JOIN salesorders so ON c.CustomerID = so.CustomerID GROUP BY c.CustomerID) t
+    WHERE Percentile <= 5
+)
+WHERE e.EmployeeID IN (SELECT EmployeeID FROM customer_percentiles)
+======================================================================
+
+======================================================================
+[2025-11-16 21:15:54] SQL ERROR: EXECUTION_ERROR
+======================================================================
+Question: Find employees whose revenue in 2024 is above the team average.
+
+SQL Query:
+SELECT e.EmployeeID, e.FirstName, e.LastName
+FROM employees e
+JOIN (
+    SELECT EmployeeID, AVG(SUM(so.TotalAmount)) AS AvgTeamRevenue
+    FROM salesorders so
+    JOIN employees e ON so.EmployeeID = e.EmployeeID
+    WHERE YEAR(so.OrderDate) = 2024
+    GROUP BY EmployeeID
+) t ON e.EmployeeID = t.EmployeeID
+WHERE SUM(so.TotalAmount) > t.AvgTeamRevenue AND YEAR(e.HireDate) < 2024
+
+Error Message:
+[ERROR] Unexpected error: Execution failed on sql 'SELECT e.EmployeeID, e.FirstName, e.LastName
+FROM employees e
+JOIN (
+    SELECT EmployeeID, AVG(SUM(so.TotalAmount)) AS AvgTeamRevenue
+    FROM salesorders so
+    JOIN employees e ON so.EmployeeID = e.EmployeeID
+    WHERE YEAR(so.OrderDate) = 2024
+    GROUP BY EmployeeID
+) t ON e.EmployeeID = t.EmployeeID
+WHERE SUM(so.TotalAmount) > t.AvgTeamRevenue AND YEAR(e.HireDate) < 2024': 1052 (23000): Column 'EmployeeID' in field list is ambiguous
+
+Context:
+  mode: DETAILED
+  profile: None
+  correction_applied: False
+  original_sql: SELECT e.EmployeeID, e.FirstName, e.LastName
+FROM employees e
+JOIN (
+    SELECT EmployeeID, AVG(SUM(so.TotalAmount)) AS AvgTeamRevenue
+    FROM salesorders so
+    JOIN employees e ON so.EmployeeID = e.EmployeeID
+    WHERE YEAR(so.OrderDate) = 2024
+    GROUP BY EmployeeID
+) t ON e.EmployeeID = t.EmployeeID
+WHERE SUM(so.TotalAmount) > t.AvgTeamRevenue AND YEAR(e.HireDate) < 2024
+======================================================================
+
+======================================================================
+[2025-11-16 21:17:28] SQL ERROR: EMPTY_RESULT
+======================================================================
+Question: Identify employees who have zero sales in 2024 (should return clean result).
+
+SQL Query:
+ SELECT e.FirstName, e.LastName FROM employees e JOIN salesorders so ON e.EmployeeID = so.EmployeeID WHERE so.OrderDate >= '2024-01-01' AND so.OrderDate <= '2024-12-31' AND so.TotalAmount = 0
+
+Error Message:
+Query executed successfully but returned no data
+
+Context:
+  mode: DETAILED
+  profile: None
+======================================================================
+
+======================================================================
+[2025-11-16 21:20:53] SQL ERROR: EXECUTION_ERROR
+======================================================================
+Question: Which customers show early signs of churn (declining order frequency)?
+
+SQL Query:
+SELECT c.CustomerName, COUNT(so.OrderID) AS TotalOrdersThisYear
+FROM customers c
+JOIN salesorders so ON c.CustomerID = so.CustomerID
+WHERE YEAR(so.OrderDate) = YEAR(CURDATE()) AND
+      (SELECT AVG(COUNT(so2.OrderID)) FROM salesorders so2 WHERE so2.CustomerID = c.CustomerID AND YEAR(so2.OrderDate) >= YEAR(DATE_SUB(CURDATE(), INTERVAL 3 YEAR))) < COUNT(so.OrderID) * 0.5
+GROUP BY c.CustomerName
+ORDER BY TotalOrdersThisYear DESC
+
+Error Message:
+[ERROR] Unexpected error: Execution failed on sql 'SELECT c.CustomerName, COUNT(so.OrderID) AS TotalOrdersThisYear
+FROM customers c
+JOIN salesorders so ON c.CustomerID = so.CustomerID
+WHERE YEAR(so.OrderDate) = YEAR(CURDATE()) AND
+      (SELECT AVG(COUNT(so2.OrderID)) FROM salesorders so2 WHERE so2.CustomerID = c.CustomerID AND YEAR(so2.OrderDate) >= YEAR(DATE_SUB(CURDATE(), INTERVAL 3 YEAR))) < COUNT(so.OrderID) * 0.5
+GROUP BY c.CustomerName
+ORDER BY TotalOrdersThisYear DESC': 1111 (HY000): Invalid use of group function
+
+Context:
+  mode: DETAILED
+  profile: None
+  correction_applied: False
+  original_sql: SELECT c.CustomerName, COUNT(so.OrderID) AS TotalOrdersThisYear
+FROM customers c
+JOIN salesorders so ON c.CustomerID = so.CustomerID
+WHERE YEAR(so.OrderDate) = YEAR(CURDATE()) AND
+      (SELECT AVG(COUNT(so2.OrderID)) FROM salesorders so2 WHERE so2.CustomerID = c.CustomerID AND YEAR(so2.OrderDate) >= YEAR(DATE_SUB(CURDATE(), INTERVAL 3 YEAR))) < COUNT(so.OrderID) * 0.5
+GROUP BY c.CustomerName
+ORDER BY TotalOrdersThisYear DESC
+======================================================================
+
+======================================================================
+[2025-11-16 21:24:35] SQL ERROR: SYNTAX_ERROR
+======================================================================
+Question: Which customers have made purchases in all 4 quarters of 2024?
+
+SQL Query:
+SELECT DISTINCT c.CustomerID FROM salesorders so JOIN (
+    SELECT CustomerID, MIN(OrderDate) AS MinOrderDate
+    FROM salesorders
+    WHERE YEAR(OrderDate) = 2024 AND QUARTER(OrderDate) IN (1, 2, 3, 4)
+    GROUP BY CustomerID
+) q ON so.CustomerID = q.CustomerID AND so.OrderDate > q.MinOrderDate
+
+INTERMEDIATE_SQL:
+SELECT DISTINCT QUARTER(so.OrderDate) AS Quarter
+FROM salesorders so
+WHERE YEAR(so.OrderDate) = 2024
+ORDER BY CustomerID, Quarter
+
+Error Message:
+[ERROR] Unexpected error: Execution failed on sql 'SELECT DISTINCT c.CustomerID FROM salesorders so JOIN (
+    SELECT CustomerID, MIN(OrderDate) AS MinOrderDate
+    FROM salesorders
+    WHERE YEAR(OrderDate) = 2024 AND QUARTER(OrderDate) IN (1, 2, 3, 4)
+    GROUP BY CustomerID
+) q ON so.CustomerID = q.CustomerID AND so.OrderDate > q.MinOrderDate
+
+INTERMEDIATE_SQL:
+SELECT DISTINCT QUARTER(so.OrderDate) AS Quarter
+FROM salesorders so
+WHERE YEAR(so.OrderDate) = 2024
+ORDER BY CustomerID, Quarter': 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near 'INTERMEDIATE_SQL:
+SELECT DISTINCT QUARTER(so.OrderDate) AS Quarter
+FROM sales...' at line 8
+
+Context:
+  mode: DETAILED
+  profile: None
+  correction_applied: False
+  original_sql: SELECT DISTINCT c.CustomerID FROM salesorders so JOIN (
+    SELECT CustomerID, MIN(OrderDate) AS MinOrderDate
+    FROM salesorders
+    WHERE YEAR(OrderDate) = 2024 AND QUARTER(OrderDate) IN (1, 2, 3, 4)
+    GROUP BY CustomerID
+) q ON so.CustomerID = q.CustomerID AND so.OrderDate > q.MinOrderDate
+
+INTERMEDIATE_SQL:
+SELECT DISTINCT QUARTER(so.OrderDate) AS Quarter
+FROM salesorders so
+WHERE YEAR(so.OrderDate) = 2024
+ORDER BY CustomerID, Quarter
+======================================================================
+
+======================================================================
+[2025-11-16 21:26:04] SQL ERROR: COLUMN_NOT_FOUND
+======================================================================
+Question: Which product generated the highest total revenue in the last 24 months?
+
+SQL Query:
+SELECT p.ProductName, SUM(oi.Quantity * oi.UnitPrice) AS TotalRevenue
+FROM products p
+JOIN orderitems oi ON p.ProductID = oi.ProductID
+JOIN salesorders so ON oi.OrderID = so.OrderID
+WHERE so.OrderDate >= DATE_SUB(CURRENT_DATE(), INTERVAL 24 MONTH)
+GROUP BY p.ProductName
+ORDER BY TotalRevenue DESC
+LIMIT 1
+
+Error Message:
+[ERROR] Unexpected error: Execution failed on sql 'SELECT p.ProductName, SUM(oi.Quantity * oi.UnitPrice) AS TotalRevenue
+FROM products p
+JOIN orderitems oi ON p.ProductID = oi.ProductID
+JOIN salesorders so ON oi.OrderID = so.OrderID
+WHERE so.OrderDate >= DATE_SUB(CURRENT_DATE(), INTERVAL 24 MONTH)
+GROUP BY p.ProductName
+ORDER BY TotalRevenue DESC
+LIMIT 1': 1054 (42S22): Unknown column 'oi.UnitPrice' in 'field list'
+
+Context:
+  mode: DETAILED
+  profile: None
+  correction_applied: False
+  original_sql: SELECT p.ProductName, SUM(oi.Quantity * oi.UnitPrice) AS TotalRevenue
+FROM products p
+JOIN orderitems oi ON p.ProductID = oi.ProductID
+JOIN salesorders so ON oi.OrderID = so.OrderID
+WHERE so.OrderDate >= DATE_SUB(CURRENT_DATE(), INTERVAL 24 MONTH)
+GROUP BY p.ProductName
+ORDER BY TotalRevenue DESC
+LIMIT 1
+======================================================================
+
+======================================================================
+[2025-11-16 21:26:57] SQL ERROR: EXECUTION_ERROR
+======================================================================
+Question: Which product has the highest average selling price variation (ItemPrice vs UnitPrice)?
+
+SQL Query:
+SELECT ProductName, AVG(oi.ItemPrice) - UnitPrice AS AvgSellingPriceVariation FROM products p JOIN orderitems oi ON p.ProductID = oi.ProductID GROUP BY p.ProductID ORDER BY ABS(AvgSellingPriceVariation) DESC LIMIT 1
+
+Error Message:
+[ERROR] Unexpected error: Execution failed on sql 'SELECT ProductName, AVG(oi.ItemPrice) - UnitPrice AS AvgSellingPriceVariation FROM products p JOIN orderitems oi ON p.ProductID = oi.ProductID GROUP BY p.ProductID ORDER BY ABS(AvgSellingPriceVariation) DESC LIMIT 1': 1247 (42S22): Reference 'AvgSellingPriceVariation' not supported (reference to group function)
+
+Context:
+  mode: DETAILED
+  profile: None
+  correction_applied: False
+  original_sql: SELECT ProductName, AVG(oi.ItemPrice) - UnitPrice AS AvgSellingPriceVariation FROM products p JOIN orderitems oi ON p.ProductID = oi.ProductID GROUP BY p.ProductID ORDER BY ABS(AvgSellingPriceVariation) DESC LIMIT 1
+======================================================================
+
+======================================================================
+[2025-11-16 21:27:19] SQL ERROR: COLUMN_NOT_FOUND
+======================================================================
+Question: Which product categories have declining 2-year rolling growth?
+
+SQL Query:
+SELECT p.Category, YEAR(o1.OrderDate) AS Year1, SUM(oi1.Quantity * oi1.UnitPrice) AS Sales1,
+       YEAR(o2.OrderDate) AS Year2, SUM(oi2.Quantity * oi2.UnitPrice) AS Sales2,
+       ((Sales2 - Sales1) / Sales1) * 100 AS GrowthRate
+FROM products p
+JOIN orderitems oi1 ON p.ProductID = oi1.ProductID
+JOIN salesorders o1 ON oi1.OrderID = o1.OrderID
+JOIN orderitems oi2 ON p.ProductID = oi2.ProductID
+JOIN salesorders o2 ON oi2.OrderID = o2.OrderID
+WHERE YEAR(o2.OrderDate) - YEAR(o1.OrderDate) = 2
+GROUP BY p.Category, Year1, Year2
+HAVING GrowthRate < 0
+
+Error Message:
+[ERROR] Unexpected error: Execution failed on sql 'SELECT p.Category, YEAR(o1.OrderDate) AS Year1, SUM(oi1.Quantity * oi1.UnitPrice) AS Sales1,
+       YEAR(o2.OrderDate) AS Year2, SUM(oi2.Quantity * oi2.UnitPrice) AS Sales2,
+       ((Sales2 - Sales1) / Sales1) * 100 AS GrowthRate
+FROM products p
+JOIN orderitems oi1 ON p.ProductID = oi1.ProductID
+JOIN salesorders o1 ON oi1.OrderID = o1.OrderID
+JOIN orderitems oi2 ON p.ProductID = oi2.ProductID
+JOIN salesorders o2 ON oi2.OrderID = o2.OrderID
+WHERE YEAR(o2.OrderDate) - YEAR(o1.OrderDate) = 2
+GROUP BY p.Category, Year1, Year2
+HAVING GrowthRate < 0': 1054 (42S22): Unknown column 'oi1.UnitPrice' in 'field list'
+
+Context:
+  mode: DETAILED
+  profile: None
+  correction_applied: False
+  original_sql: SELECT p.Category, YEAR(o1.OrderDate) AS Year1, SUM(oi1.Quantity * oi1.UnitPrice) AS Sales1,
+       YEAR(o2.OrderDate) AS Year2, SUM(oi2.Quantity * oi2.UnitPrice) AS Sales2,
+       ((Sales2 - Sales1) / Sales1) * 100 AS GrowthRate
+FROM products p
+JOIN orderitems oi1 ON p.ProductID = oi1.ProductID
+JOIN salesorders o1 ON oi1.OrderID = o1.OrderID
+JOIN orderitems oi2 ON p.ProductID = oi2.ProductID
+JOIN salesorders o2 ON oi2.OrderID = o2.OrderID
+WHERE YEAR(o2.OrderDate) - YEAR(o1.OrderDate) = 2
+GROUP BY p.Category, Year1, Year2
+HAVING GrowthRate < 0
+======================================================================
+
+======================================================================
+[2025-11-16 21:29:27] SQL ERROR: EXECUTION_ERROR
+======================================================================
+Question: What is the most profitable product (margin = ItemPrice − UnitPrice)?
+
+SQL Query:
+SELECT ProductName, (ItemPrice - UnitPrice) AS ProfitMargin FROM orderitems JOIN products ON OrderItemID = ProductID GROUP BY ProductName ORDER BY ProfitMargin DESC LIMIT 1
+
+Error Message:
+[ERROR] Unexpected error: Execution failed on sql 'SELECT ProductName, (ItemPrice - UnitPrice) AS ProfitMargin FROM orderitems JOIN products ON OrderItemID = ProductID GROUP BY ProductName ORDER BY ProfitMargin DESC LIMIT 1': 1052 (23000): Column 'ProductID' in on clause is ambiguous
+
+Context:
+  mode: DETAILED
+  profile: None
+  correction_applied: False
+  original_sql: SELECT ProductName, (ItemPrice - UnitPrice) AS ProfitMargin FROM orderitems JOIN products ON OrderItemID = ProductID GROUP BY ProductName ORDER BY ProfitMargin DESC LIMIT 1
+======================================================================
+
+======================================================================
+[2025-11-16 21:34:06] SQL ERROR: EMPTY_RESULT
+======================================================================
+Question: What is her phone number?
+
+SQL Query:
+SELECT PhoneNumber FROM employees WHERE FirstName = 'Sunil' AND LastName = 'Rao'
+
+Error Message:
+Query executed successfully but returned no data
+
+Context:
+  mode: DETAILED
+  profile: None
+======================================================================
+
+======================================================================
+[2025-11-16 21:34:36] SQL ERROR: EMPTY_RESULT
+======================================================================
+Question: Simran Ansari Details from the database tell me everything about her 
+
+SQL Query:
+SELECT c.CustomerName AS CompanyName, e.FirstName AS FirstName, e.LastName AS LastName, e.PhoneNumber AS PhoneNumber, e.Email AS Email, e.Address AS Address
+FROM customers c
+JOIN employees e ON c.ManagerID = e.EmployeeID
+WHERE e.FirstName='Simran' AND e.LastName='Ansari'
+
+Error Message:
+Query executed successfully but returned no data
+
+Context:
+  mode: DETAILED
+  profile: None
+======================================================================
+
+======================================================================
+[2025-11-16 21:35:04] SQL ERROR: COLUMN_NOT_FOUND
+======================================================================
+Question: What are the contact details of Simran Ansari
+
+SQL Query:
+ SELECT ContactEmail, PhoneNumber FROM employees WHERE FirstName='Simran' AND LastName='Ansari'
+
+Error Message:
+[ERROR] Unexpected error: Execution failed on sql ' SELECT ContactEmail, PhoneNumber FROM employees WHERE FirstName='Simran' AND LastName='Ansari'': 1054 (42S22): Unknown column 'ContactEmail' in 'field list'
+
+Context:
+  mode: DETAILED
+  profile: None
+  correction_applied: False
+  original_sql:  SELECT ContactEmail, PhoneNumber FROM employees WHERE FirstName='Simran' AND LastName='Ansari'
+======================================================================
+
+======================================================================
+[2025-11-16 21:37:31] SQL ERROR: EXECUTION_ERROR
+======================================================================
+Question: Get data for column units_sold from products
+
+SQL Query:
+SELECT ProductID, UnitsSold FROM (
+    SELECT ProductID, SUM(Quantity) AS UnitsSold
+    FROM orderitems
+    GROUP BY ProductID
+) tmp JOIN products ON tmp.ProductID = products.ProductID
+
+Error Message:
+[ERROR] Unexpected error: Execution failed on sql 'SELECT ProductID, UnitsSold FROM (
+    SELECT ProductID, SUM(Quantity) AS UnitsSold
+    FROM orderitems
+    GROUP BY ProductID
+) tmp JOIN products ON tmp.ProductID = products.ProductID': 1052 (23000): Column 'ProductID' in field list is ambiguous
+
+Context:
+  mode: DETAILED
+  profile: None
+  correction_applied: False
+  original_sql: SELECT ProductID, UnitsSold FROM (
+    SELECT ProductID, SUM(Quantity) AS UnitsSold
+    FROM orderitems
+    GROUP BY ProductID
+) tmp JOIN products ON tmp.ProductID = products.ProductID
+======================================================================
+
+======================================================================
+[2025-11-16 21:37:54] SQL ERROR: EMPTY_RESULT
+======================================================================
+Question: Get all orders from 2030
+
+SQL Query:
+SELECT so.* FROM salesorders so JOIN employees e ON so.EmployeeID = e.EmployeeID WHERE YEAR(so.OrderDate) = 2030
+
+Error Message:
+Query executed successfully but returned no data
+
+Context:
+  mode: DETAILED
+  profile: None
+======================================================================
+
+======================================================================
+[2025-11-16 21:38:15] SQL ERROR: SYNTAX_ERROR
+======================================================================
+Question: Query malformed: “customer purchase radar 2024 matrix inverted”
+
+SQL Query:
+SELECT so.OrderID, so.TotalAmount
+FROM employees e
+JOIN salesorders so ON e.EmployeeID = so.EmployeeID
+WHERE e.EmployeeID = <Employee ID>
+
+Error Message:
+[ERROR] Unexpected error: Execution failed on sql 'SELECT so.OrderID, so.TotalAmount
+FROM employees e
+JOIN salesorders so ON e.EmployeeID = so.EmployeeID
+WHERE e.EmployeeID = <Employee ID>': 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near '<Employee ID>' at line 4
+
+Context:
+  mode: DETAILED
+  profile: None
+  correction_applied: False
+  original_sql: SELECT so.OrderID, so.TotalAmount
+FROM employees e
+JOIN salesorders so ON e.EmployeeID = so.EmployeeID
+WHERE e.EmployeeID = <Employee ID>
+======================================================================
+
+======================================================================
+[2025-11-16 21:51:08] SQL ERROR: COLUMN_NOT_FOUND
+======================================================================
+Question: Which factors correlate the strongest with large order amounts? (Quantity, employee, category, city, etc.)
+
+SQL Query:
+SELECT DISTINCT
+    so.OrderID,
+    c.CustomerID,
+    e.EmployeeID,
+    p.ProductID,
+    so.TotalAmount AS TotalAmount,
+    oi.Quantity,
+    oi.UnitPrice,
+    c.City,
+    e.DepartmentID
+FROM
+    salesorders so
+JOIN
+    customers c ON so.CustomerID = c.CustomerID
+JOIN
+    employees e ON so.EmployeeID = e.EmployeeID
+JOIN
+    orderitems oi ON so.OrderID = oi.OrderID
+JOIN
+    products p ON oi.ProductID = p.ProductID
+
+Error Message:
+[ERROR] Unexpected error: Execution failed on sql 'SELECT DISTINCT
+    so.OrderID,
+    c.CustomerID,
+    e.EmployeeID,
+    p.ProductID,
+    so.TotalAmount AS TotalAmount,
+    oi.Quantity,
+    oi.UnitPrice,
+    c.City,
+    e.DepartmentID
+FROM
+    salesorders so
+JOIN
+    customers c ON so.CustomerID = c.CustomerID
+JOIN
+    employees e ON so.EmployeeID = e.EmployeeID
+JOIN
+    orderitems oi ON so.OrderID = oi.OrderID
+JOIN
+    products p ON oi.ProductID = p.ProductID': 1054 (42S22): Unknown column 'oi.UnitPrice' in 'field list'
+
+Context:
+  mode: DETAILED
+  profile: None
+  correction_applied: False
+  original_sql: SELECT DISTINCT
+    so.OrderID,
+    c.CustomerID,
+    e.EmployeeID,
+    p.ProductID,
+    so.TotalAmount AS TotalAmount,
+    oi.Quantity,
+    oi.UnitPrice,
+    c.City,
+    e.DepartmentID
+FROM
+    salesorders so
+JOIN
+    customers c ON so.CustomerID = c.CustomerID
+JOIN
+    employees e ON so.EmployeeID = e.EmployeeID
+JOIN
+    orderitems oi ON so.OrderID = oi.OrderID
+JOIN
+    products p ON oi.ProductID = p.ProductID
+======================================================================

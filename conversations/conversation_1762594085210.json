@@ -1,0 +1,20 @@
+[
+  {
+    "role": "user",
+    "value": "how many tables are there in the database"
+  },
+  {
+    "role": "assistant",
+    "value": "An error occurred: Execution failed on sql 'There are 6 tables in the database: customers, employees, departments, products, orderitems, and salesorders.': 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near 'There are 6 tables in the database: customers, employees, departments, produc...' at line 1",
+    "sql": "Execution failed on sql There are 6 tables in the database: customers, employees, departments, products, orderitems, and salesorders."
+  },
+  {
+    "role": "user",
+    "value": "how many tables are there in the database"
+  },
+  {
+    "role": "assistant",
+    "value": "An error occurred: Execution failed on sql 'There are 6 tables in the database: customers, employees, departments, products, orderitems, and salesorders.': 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near 'There are 6 tables in the database: customers, employees, departments, produc...' at line 1",
+    "sql": "Execution failed on sql There are 6 tables in the database: customers, employees, departments, products, orderitems, and salesorders."
+  }
+]

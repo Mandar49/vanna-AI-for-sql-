@@ -1,0 +1,20 @@
+[
+  {
+    "role": "user",
+    "value": "hey"
+  },
+  {
+    "role": "assistant",
+    "value": "Hello! I'm your AI assistant for analyzing business data. You can ask me questions about your data, or request strategic analysis. How can I help you today?",
+    "sql": null
+  },
+  {
+    "role": "user",
+    "value": "Tell me the sales in 2022"
+  },
+  {
+    "role": "assistant",
+    "value": "An error occurred while processing your question: name 're' is not defined",
+    "sql": null
+  }
+]

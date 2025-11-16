@@ -1,0 +1,9 @@
+[2025-11-11 17:49:27] SUCCESS: User 'admin' login attempt from 127.0.0.1
+[2025-11-11 17:49:36] SUCCESS: User 'admin' login attempt from 127.0.0.1
+[2025-11-11 17:49:38] FAILED: User 'admin' login attempt from 127.0.0.1
+[2025-11-11 17:49:40] SUCCESS: User 'admin' login attempt from 127.0.0.1
+[2025-11-11 17:59:46] SUCCESS: User 'admin' login attempt from 127.0.0.1
+[2025-11-11 18:10:13] SUCCESS: User 'admin' login attempt from 127.0.0.1
+[2025-11-12 11:38:20] FAILED: User ' admin' login attempt from 127.0.0.1
+[2025-11-12 11:38:25] SUCCESS: User 'admin' login attempt from 127.0.0.1
+[2025-11-12 19:53:03] SUCCESS: User 'admin' login attempt from 127.0.0.1

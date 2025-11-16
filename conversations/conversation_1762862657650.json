@@ -1,0 +1,20 @@
+[
+  {
+    "role": "user",
+    "value": "hry"
+  },
+  {
+    "role": "assistant",
+    "value": " Hello there! I'm here to help. How may I assist you today? Whether it's about business intelligence, general knowledge, or any other topic, feel free to ask me anything. Let's get started!",
+    "sql": null
+  },
+  {
+    "role": "user",
+    "value": "What were our total sales in 2024 compared to 2023?"
+  },
+  {
+    "role": "assistant",
+    "value": "\u274c Unexpected error: Execution failed on sql 'SELECT YEAR(so.OrderDate) AS Year, SUM(so.TotalAmount) AS TotalSales FROM salesorders so GROUP BY Year\n\nINTERMEDIATE_SQL: SELECT DISTINCT YEAR(OrderDate) FROM salesorders': 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near 'INTERMEDIATE_SQL: SELECT DISTINCT YEAR(OrderDate) FROM salesorders' at line 3",
+    "sql": "SELECT YEAR(so.OrderDate) AS Year, SUM(so.TotalAmount) AS TotalSales FROM salesorders so GROUP BY Year\n\nINTERMEDIATE_SQL: SELECT DISTINCT YEAR(OrderDate) FROM salesorders"
+  }
+]

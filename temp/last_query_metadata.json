@@ -1,0 +1,11 @@
+{
+  "timestamp": "2025-11-16T21:53:25.501297",
+  "sql": "SELECT p.Category, DATE_FORMAT(so.OrderDate, '%Y-%m') AS Month, COUNT(*) AS SalesCount\nFROM products p JOIN orderitems oi ON p.ProductID = oi.ProductID JOIN salesorders so ON oi.OrderID = so.OrderID\nWHERE YEAR(so.OrderDate) >= YEAR(CURDATE()) - 5\nGROUP BY p.Category, Month\nORDER BY Category, Month",
+  "row_count": 148,
+  "column_count": 3,
+  "columns": [
+    "Category",
+    "Month",
+    "SalesCount"
+  ]
+}

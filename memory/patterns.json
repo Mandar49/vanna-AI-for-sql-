@@ -1,0 +1,42 @@
+[
+  {
+    "action": "analyze_kpis",
+    "count": 5,
+    "success_count": 5,
+    "success_rate": 1.0,
+    "example_query": "analyze KPIs for Sales",
+    "keywords": [
+      "marketing",
+      "analyze",
+      "sales",
+      "kpis",
+      "finance",
+      "for"
+    ]
+  },
+  {
+    "action": "list_profiles",
+    "count": 3,
+    "success_count": 3,
+    "success_rate": 1.0,
+    "example_query": "list profiles",
+    "keywords": [
+      "profiles",
+      "list"
+    ]
+  },
+  {
+    "action": "generate_report",
+    "count": 3,
+    "success_count": 3,
+    "success_rate": 1.0,
+    "example_query": "generate report for Marketing",
+    "keywords": [
+      "marketing",
+      "finance",
+      "generate",
+      "report",
+      "for"
+    ]
+  }
+]

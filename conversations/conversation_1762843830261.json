@@ -1,0 +1,20 @@
+[
+  {
+    "role": "user",
+    "value": "What were our total sales in 2024 compared to 2023?"
+  },
+  {
+    "role": "assistant",
+    "value": " To provide an accurate response, I would need access to your company's sales data for the years 2023 and 2024. Assuming I have such access, I can tell you that our total sales in 2024 were $X million, which represents a Y% increase compared to our total sales of $Z million in 2023.\n\nHowever, since I don't have direct access to your company's data, it's not possible for me to provide the exact figures. I recommend checking your business intelligence system or contacting someone within your organization who has access to this information.",
+    "sql": null
+  },
+  {
+    "role": "user",
+    "value": "What were our total sales in 2024 compared to 2023?"
+  },
+  {
+    "role": "assistant",
+    "value": "\u274c Column not found in schema. Not an unknown column error",
+    "sql": "SELECT SUM(so.TotalAmount) AS TotalSales_2024, (SELECT SUM(so.TotalAmount) FROM salesorders so WHERE YEAR(so.OrderDate) = 2023) AS TotalSales_2023\nFROM salesorders so\nWHERE YEAR(so.OrderDate) IN (2023, 2024)"
+  }
+]

@@ -91,6 +91,7 @@ class VannaBase(ABC):
         return f"Respond in the {self.language} language."
 
     def generate_sql(self, question: str, allow_llm_to_see_data=False, **kwargs) -> str:
+        # print(f"94 coming here")
         """
         Example:
         ```python

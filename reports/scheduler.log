@@ -1,0 +1,60 @@
+2025-11-11 13:29:30,997 - INFO - Job 1 started (interval: 1 minutes)
+2025-11-11 13:29:30,997 - INFO - Scheduled interval job 1: quick_job every 1 minutes
+2025-11-11 13:29:30,997 - INFO - Job 2 started (daily at 09:00)
+2025-11-11 13:29:30,997 - INFO - Scheduled daily job 2: daily_kpi_summary at 09:00
+2025-11-11 13:29:31,002 - INFO - Daily KPI Summary triggered
+2025-11-11 13:29:31,003 - INFO - Daily KPI Summary saved to: ./reports/daily\20251111_summary.md
+2025-11-11 13:30:01,013 - INFO - Job 1 executing: quick_job
+2025-11-11 13:30:01,013 - INFO - Job 1 completed successfully
+2025-11-11 13:30:06,008 - INFO - Cancelled job 1: quick_job
+2025-11-11 13:30:06,008 - INFO - Cancelled job 2: daily_kpi_summary
+2025-11-11 13:30:06,251 - INFO - Job 3 started (interval: 1 minutes)
+2025-11-11 13:30:06,251 - INFO - Scheduled interval job 3: test_job every 1 minutes
+2025-11-11 13:30:06,252 - INFO - Cancelled job 3: test_job
+2025-11-11 13:30:06,253 - INFO - Job 4 started (daily at 09:00)
+2025-11-11 13:30:06,253 - INFO - Scheduled daily job 4: test_daily at 09:00
+2025-11-11 13:30:06,254 - INFO - Cancelled job 4: test_daily
+2025-11-11 13:30:06,256 - INFO - Job 5 started (interval: 60 minutes)
+2025-11-11 13:30:06,256 - INFO - Scheduled interval job 5: test_job every 60 minutes
+2025-11-11 13:30:06,256 - INFO - Cancelled job 5: test_job
+2025-11-11 13:30:06,256 - WARNING - Cannot cancel job 5: not found
+2025-11-11 13:30:06,258 - INFO - Job 6 started (interval: 30 minutes)
+2025-11-11 13:30:06,258 - INFO - Scheduled interval job 6: job1 every 30 minutes
+2025-11-11 13:30:06,259 - INFO - Job 7 started (daily at 10:30)
+2025-11-11 13:30:06,259 - INFO - Scheduled daily job 7: job2 at 10:30
+2025-11-11 13:30:06,259 - INFO - Cancelled job 6: job1
+2025-11-11 13:30:06,259 - INFO - Cancelled job 7: job2
+2025-11-11 13:30:06,261 - INFO - Job 8 started (interval: 1 minutes)
+2025-11-11 13:30:06,261 - INFO - Scheduled interval job 8: test_job every 1 minutes
+2025-11-11 13:30:31,019 - INFO - Job 1 cancelled, stopping loop
+2025-11-11 13:30:31,019 - INFO - Job 2 cancelled, stopping loop
+2025-11-11 13:30:36,251 - INFO - Job 3 cancelled, stopping loop
+2025-11-11 13:30:36,267 - INFO - Job 8 executing: test_job
+2025-11-11 13:30:36,267 - INFO - Job 7 cancelled, stopping loop
+2025-11-11 13:30:36,267 - INFO - Job 8 completed successfully
+2025-11-11 13:30:36,267 - INFO - Job 6 cancelled, stopping loop
+2025-11-11 13:30:36,269 - INFO - Job 4 cancelled, stopping loop
+2025-11-11 13:30:36,269 - INFO - Job 5 cancelled, stopping loop
+2025-11-11 13:30:41,267 - INFO - Cancelled job 8: test_job
+2025-11-11 13:30:41,269 - INFO - Daily KPI Summary triggered
+2025-11-11 13:30:41,269 - INFO - Daily KPI Summary saved to: ./reports/daily\20251111_summary.md
+2025-11-11 13:30:41,288 - INFO - Daily KPI Summary triggered
+2025-11-11 13:30:41,289 - INFO - Daily KPI Summary saved to: ./reports/daily\20251111_summary.md
+2025-11-11 13:30:41,305 - INFO - Job 9 started (interval: 60 minutes)
+2025-11-11 13:30:41,305 - INFO - Scheduled interval job 9: offline_job every 60 minutes
+2025-11-11 13:30:41,306 - INFO - Cancelled job 9: offline_job
+2025-11-11 13:30:41,306 - INFO - Daily KPI Summary triggered
+2025-11-11 13:30:41,306 - INFO - Daily KPI Summary saved to: ./reports/daily\20251111_summary.md
+2025-11-11 13:30:41,308 - INFO - Job 10 started (interval: 30 minutes)
+2025-11-11 13:30:41,308 - INFO - Scheduled interval job 10: job_a every 30 minutes
+2025-11-11 13:30:41,308 - INFO - Job 11 started (interval: 45 minutes)
+2025-11-11 13:30:41,308 - INFO - Scheduled interval job 11: job_b every 45 minutes
+2025-11-11 13:30:41,309 - INFO - Job 12 started (daily at 14:30)
+2025-11-11 13:30:41,309 - INFO - Scheduled daily job 12: job_c at 14:30
+2025-11-11 13:30:41,309 - INFO - Cancelled job 10: job_a
+2025-11-11 13:30:41,309 - INFO - Cancelled job 11: job_b
+2025-11-11 13:30:41,310 - INFO - Cancelled job 12: job_c
+2025-11-11 13:31:15,428 - INFO - Daily KPI Summary triggered
+2025-11-11 13:31:15,429 - INFO - Daily KPI Summary saved to: ./reports/daily\20251111_summary.md
+2025-11-11 13:32:40,606 - INFO - Using categorical units to plot a list of strings that are all parsable as floats or dates. If these strings should be plotted as numbers, cast to the appropriate data type before plotting.
+2025-11-11 13:32:40,606 - INFO - Using categorical units to plot a list of strings that are all parsable as floats or dates. If these strings should be plotted as numbers, cast to the appropriate data type before plotting.

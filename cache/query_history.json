@@ -1,0 +1,37 @@
+[
+  {
+    "timestamp": "2025-11-16T21:53:25.501619",
+    "question": "Query",
+    "sql": "SELECT p.Category, DATE_FORMAT(so.OrderDate, '%Y-%m') AS Month, COUNT(*) AS SalesCount\nFROM products p JOIN orderitems oi ON p.ProductID = oi.ProductID JOIN salesorders so ON oi.OrderID = so.OrderID\nWHERE YEAR(so.OrderDate) >= YEAR(CURDATE()) - 5\nGROUP BY p.Category, Month\nORDER BY Category, Month",
+    "result_summary": "148 rows, 3 columns",
+    "row_count": 148
+  },
+  {
+    "timestamp": "2025-11-16T21:50:29.287065",
+    "question": "Query",
+    "sql": "SELECT Industry, AVG(TotalSales) AS Average_Sales FROM (\n  SELECT c.Industry, so.TotalAmount AS TotalSales FROM customers c\n  JOIN salesorders so ON c.CustomerID = so.CustomerID\n  GROUP BY c.Industry\n) AS industry_sales ORDER BY Average_Sales DESC",
+    "result_summary": "1 rows, 2 columns",
+    "row_count": 1
+  },
+  {
+    "timestamp": "2025-11-16T21:38:22.665102",
+    "question": "Query",
+    "sql": "SELECT CustomerName, ContactPerson, ContactEmail, PhoneNumber FROM customers WHERE ContactPerson = 'Aditi Kapoor'",
+    "result_summary": "2 rows, 4 columns",
+    "row_count": 2
+  },
+  {
+    "timestamp": "2025-11-16T21:35:56.742185",
+    "question": "Query",
+    "sql": "SELECT PhoneNumber FROM employees",
+    "result_summary": "1502 rows, 1 columns",
+    "row_count": 1502
+  },
+  {
+    "timestamp": "2025-11-16T21:26:20.891555",
+    "question": "Query",
+    "sql": " SELECT p.ProductName, SUM(oi.Quantity) AS TotalUnitsSold\nFROM products p JOIN orderitems oi ON p.ProductID = oi.ProductID\nWHERE oi.Quantity < 20\nGROUP BY p.ProductName",
+    "result_summary": "47 rows, 2 columns",
+    "row_count": 47
+  }
+]

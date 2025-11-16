@@ -1,0 +1,11 @@
+[
+  {
+    "role": "user",
+    "value": "Compare total revenue, total number of orders, and average order value for 2022, 2023, and 2024 \u2014 and calculate year-over-year percentage changes for each metric."
+  },
+  {
+    "role": "assistant",
+    "value": " To provide an answer, I would need the specific numerical values for the total revenue, total number of orders, and average order value (AOV) for the years 2022, 2023, and 2024. Once I have those figures, I can calculate the year-over-year percentage changes as follows:\n\n1. Total Revenue:\n   - Calculate the revenue for each year (e.g., 2022 revenue = $X million)\n   - Find the next year's revenue and subtract the previous year's revenue (e.g., 2023 revenue - 2022 revenue = $Y million)\n   - Calculate the percentage change by dividing the difference ($Y) by the original value ($X), then multiply by 100: [($Y / $X) * 100]%\n\n2. Total Number of Orders:\n   - Count the number of orders for each year (e.g., 2022 orders = Y orders)\n   - Find the next year's order count and subtract the previous year's order count (e.g., 2023 orders - 2022 orders = Z orders)\n   - Calculate the percentage change by dividing the difference (Z) by the original value (Y), then multiply by 100: [(Z / Y) * 100]%\n\n3. Average Order Value (AOV):\n   - Calculate AOV for each year (e.g., 2022 AOV = $X per order)\n   - Find the next year's AOV and subtract the previous year's AOV (e.g., 2023 AOV - 2022 AOV = $Y per order)\n   - Calculate the percentage change by dividing the difference ($Y) by the original value ($X), then multiply by 100: [($Y / $X) * 100]%\n\nPlease provide the numerical values for these metrics to complete the calculation.",
+    "sql": null
+  }
+]

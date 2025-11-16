@@ -1,0 +1,92 @@
+[
+  {
+    "role": "user",
+    "value": "Find the contact information for the customer 'Menon Sameer Pvt Ltd'."
+  },
+  {
+    "role": "assistant",
+    "value": "I found no data for your question.",
+    "sql": "SELECT c.CustomerName, c.ContactPerson, c.ContactEmail, c.PhoneNumber, c.Address FROM customers c WHERE c.CustomerName = 'Menon Sameer Pvt Ltd'"
+  },
+  {
+    "role": "user",
+    "value": "What is the full form of HTML "
+  },
+  {
+    "role": "assistant",
+    "value": "HTML stands for HyperText Markup Language.",
+    "sql": null
+  },
+  {
+    "role": "user",
+    "value": "Find the contact information for the customer 'Menon Sameer Pvt Ltd"
+  },
+  {
+    "role": "assistant",
+    "value": "I found no data for your question.",
+    "sql": "SELECT c.CustomerName, c.ContactPerson, c.ContactEmail, c.PhoneNumber, c.Address FROM customers c WHERE c.CustomerName = 'Menon Sameer Pvt Ltd'"
+  },
+  {
+    "role": "user",
+    "value": "What is the phone number of Tara Reddy?"
+  },
+  {
+    "role": "assistant",
+    "value": "I am unable to access personally identifiable information or sensitive data, and am unable to provide any phone numbers.",
+    "sql": null
+  },
+  {
+    "role": "user",
+    "value": "How many departments are there?"
+  },
+  {
+    "role": "assistant",
+    "value": "The answer to your question 'How many departments are there?' is: 15",
+    "sql": "SELECT COUNT(*) FROM departments"
+  },
+  {
+    "role": "user",
+    "value": "Find the contact information for the customer 'Menon Sameer Pvt Ltd"
+  },
+  {
+    "role": "assistant",
+    "value": "I found no data for your question.",
+    "sql": "SELECT c.CustomerName, c.ContactPerson, c.ContactEmail, c.PhoneNumber, c.Address FROM customers c WHERE c.CustomerName = 'Menon Sameer Pvt Ltd'"
+  },
+  {
+    "role": "user",
+    "value": "What is the phone number of Tara Reddy?"
+  },
+  {
+    "role": "assistant",
+    "value": "I am unable to access or provide personally identifiable information of individuals.",
+    "sql": null
+  },
+  {
+    "role": "user",
+    "value": "Who are the top 3 employees by salary?"
+  },
+  {
+    "role": "assistant",
+    "value": "Based on the provided data, the top 3 employees by salary are Arjun Shah with a salary of $350,000, Devika Thomas with a salary of $349,884.23, and Siddharth Mehta with a salary of $349,465.86.",
+    "sql": "SELECT e.FirstName, e.LastName, e.Salary FROM employees e ORDER BY e.Salary DESC LIMIT 3"
+  },
+  {
+    "role": "user",
+    "value": "Now, what are their hire dates?"
+  },
+  {
+    "role": "assistant",
+    "value": "The provided dataset does not include information regarding the hire dates of the employees, so I am unable to extract the requested data from the given context.",
+    "sql": null
+  },
+  {
+    "role": "user",
+    "value": "Who is the person who has the lowest salary?"
+  },
+  {
+    "role": "assistant",
+    "value": "Based on the data provided, I can confirm that the person with the lowest salary is not included in the results of your SQL query. Therefore, I am unable to provide the requested information.",
+    "sql": "SELECT e.FirstName, e.LastName FROM employees e ORDER BY e.Salary LIMIT 1"
+  }
+]

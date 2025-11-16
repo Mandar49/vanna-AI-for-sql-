@@ -2,22 +2,146 @@
 Business Analyst - AI-powered data introspection and strategic reasoning
 Converts raw SQL results into actionable business insights
 """
+import re
 import ollama
 import pandas as pd
 
 class BusinessAnalyst:
     def __init__(self):
         self.model = "mistral:7b-instruct"
+        self.cagr_keywords = ['cagr', 'compound annual growth', 'growth rate', 'annual growth']
+        self.forecast_keywords = ['forecast', 'project', 'predict', 'future', 'scenario', 'projection', 'estimate']
+        
+        # Metric detection keywords
+        self.metric_keywords = {
+            'growth': ['growth', 'increase', 'decrease', 'change', 'difference'],
+            'ratio': ['ratio', 'proportion', 'per', 'divide'],
+            'share': ['share', 'percentage', 'percent', 'portion', 'contribution'],
+            'aov': ['average order value', 'aov', 'average per order', 'mean order'],
+            'compare': ['compare', 'comparison', 'versus', 'vs', 'against']
+        }
+    
+    def detect_cagr_query(self, question: str) -> bool:
+        """
+        Detect if the query is asking for CAGR calculation
+        
+        Args:
+            question: User's question
+        
+        Returns:
+            True if CAGR-related query
+        """
+        question_lower = question.lower()
+        return any(keyword in question_lower for keyword in self.cagr_keywords)
+    
+    def detect_forecast_query(self, question: str) -> bool:
+        """
+        Detect if the query is asking for forecasting
+        
+        Args:
+            question: User's question
+        
+        Returns:
+            True if forecast-related query
+        """
+        question_lower = question.lower()
+        
+        # Check for forecast keywords
+        if any(keyword in question_lower for keyword in self.forecast_keywords):
+            return True
+        
+        # Check for "will be" pattern (e.g., "What will sales be in 2025?")
+        if "will" in question_lower and ("be" in question_lower or "sales" in question_lower):
+            return True
+        
+        return False
+    
+    def extract_years_from_query(self, question: str) -> tuple:
+        """
+        Extract start and end years from query
+        
+        Args:
+            question: User's question
+        
+        Returns:
+            Tuple of (start_year, end_year) or (None, None)
+        """
+        # Find all 4-digit years in the question
+        years = re.findall(r'\b(20\d{2})\b', question)
+        
+        if len(years) >= 2:
+            years = [int(y) for y in years]
+            years.sort()
+            return (years[0], years[-1])
+        
+        return (None, None)
+    
+    def extract_forecast_years(self, question: str) -> list:
+        """
+        Extract forecast target years from query
+        
+        Args:
+            question: User's question
+        
+        Returns:
+            List of forecast years (e.g., [2025, 2026])
+        """
+        from datetime import datetime
+        
+        # Find all 4-digit years in the question
+        years = re.findall(r'\b(20\d{2})\b', question)
+        years = [int(y) for y in years]
+        
+        # Filter for future years only
+        current_year = datetime.now().year
+        forecast_years = [y for y in years if y > current_year]
+        
+        # If no explicit years, default to next 2 years
+        if not forecast_years and self.detect_forecast_query(question):
+            forecast_years = [current_year + 1, current_year + 2]
+        
+        return sorted(list(set(forecast_years)))
+    
+    def detect_trend(self, series) -> str:
+        """
+        Detect trend direction from a numeric series
+        
+        Args:
+            series: Pandas Series or list of numeric values
+        
+        Returns:
+            "upward", "downward", or "stable"
+        """
+        if series is None or len(series) < 2:
+            return "stable"
+        
+        try:
+            # Convert to list if needed
+            if hasattr(series, 'tolist'):
+                values = series.tolist()
+            else:
+                values = list(series)
+            
+            # Compare last two values
+            if values[-1] > values[-2]:
+                return "upward"
+            elif values[-1] < values[-2]:
+                return "downward"
+            else:
+                return "stable"
+        except Exception:
+            return "stable"
     
     def analyze_trends(self, df: pd.DataFrame) -> str:
         """
         Detect growth patterns and trends in data
+        Uses detect_trend() helper for direction detection
         
         Args:
             df: DataFrame to analyze
         
         Returns:
-            One-line trend summary
+            One-line trend summary with direction
         """
         if df is None or df.empty or len(df) < 2:
             return "Insufficient data for trend analysis."
@@ -27,32 +151,120 @@ class BusinessAnalyst:
         if len(numeric_cols) == 0:
             return "No numeric data for trend analysis."
         
-        # Analyze first numeric column
+        # Analyze first numeric column (skip Year/Period columns)
         col = numeric_cols[0]
+        if 'year' in col.lower() or 'period' in col.lower() or 'date' in col.lower():
+            if len(numeric_cols) > 1:
+                col = numeric_cols[1]
+        
         values = df[col].dropna()
         
         if len(values) < 2:
             return "Insufficient numeric data."
         
-        # Calculate trend
+        # Detect trend direction
+        trend_direction = self.detect_trend(values)
+        
+        # Calculate trend magnitude
         first_val = values.iloc[0]
         last_val = values.iloc[-1]
         
         if first_val == 0:
-            return f"Growing from {first_val} to {last_val}"
+            return f"Trend: {trend_direction.capitalize()} (from {first_val} to {last_val})"
         
         change_pct = ((last_val - first_val) / first_val) * 100
         
+        # Format trend with emoji
+        trend_emoji = {
+            'upward': '📈',
+            'downward': '📉',
+            'stable': '➖'
+        }
+        
+        emoji = trend_emoji.get(trend_direction, '')
+        
         if abs(change_pct) < 1:
-            return "Stable (minimal change)"
+            return f"Trend: Stable {emoji} (minimal change)"
         elif change_pct > 0:
-            return f"Increasing trend (+{change_pct:.1f}% growth)"
+            return f"Trend: Upward {emoji} (+{change_pct:.1f}% growth)"
         else:
-            return f"Declining trend ({change_pct:.1f}% decrease)"
+            return f"Trend: Downward {emoji} ({change_pct:.1f}% decrease)"
+    
+    def analyze_with_cagr(self, question: str, df: pd.DataFrame, cagr_result: dict) -> dict:
+        """
+        Analyze results with CAGR calculation from database
+        NO LLM COMPUTATION - Only commentary on database-returned numbers
+        
+        Args:
+            question: User's question
+            df: DataFrame with query results
+            cagr_result: CAGR calculation result from SQL
+        
+        Returns:
+            dict with analysis including CAGR and forecasts
+        """
+        if not cagr_result['success']:
+            return {
+                'insight': f"Could not calculate CAGR: {cagr_result['message']}",
+                'summary': "CAGR calculation failed",
+                'recommendations': [],
+                'cagr': None,
+                'has_forecast': False
+            }
+        
+        cagr = cagr_result['cagr']
+        start_year = cagr_result['start_year']
+        end_year = cagr_result['end_year']
+        start_sales = cagr_result['start_sales']
+        end_sales = cagr_result['end_sales']
+        
+        # Build insight using exact database values - NO MATH
+        insight = f"The Compound Annual Growth Rate (CAGR) from {start_year} to {end_year} is {cagr}%. "
+        insight += f"Sales grew from {start_sales:.2f} in {start_year} to {end_sales:.2f} in {end_year}."
+        
+        # Add forecast insight if available
+        has_forecast = bool(cagr_result.get('forecast'))
+        if has_forecast:
+            forecast_years = sorted(cagr_result['forecast'].keys())
+            insight += f" Based on this CAGR, forecasts have been calculated for {', '.join(map(str, forecast_years))}."
+        
+        # Recommendations based on CAGR value (qualitative only, no math)
+        if cagr > 10:
+            growth_desc = "strong"
+            recommendation = "Continue current strategies and explore expansion opportunities."
+        elif cagr > 5:
+            growth_desc = "moderate"
+            recommendation = "Identify areas for acceleration and optimize operations."
+        else:
+            growth_desc = "slow"
+            recommendation = "Review strategies and consider new growth initiatives."
+        
+        recommendations = [
+            f"The {cagr}% CAGR indicates {growth_desc} growth over this period.",
+            recommendation,
+            "Monitor this growth rate against industry benchmarks."
+        ]
+        
+        return {
+            'insight': insight,
+            'summary': f"CAGR: {cagr}% ({start_year}-{end_year})",
+            'recommendations': recommendations,
+            'cagr': cagr,
+            'has_forecast': has_forecast,
+            'forecast': cagr_result.get('forecast', {}),
+            'scenarios': cagr_result.get('scenarios', {}),
+            'cagr_details': {
+                'start_year': start_year,
+                'end_year': end_year,
+                'start_sales': start_sales,
+                'end_sales': end_sales
+            }
+        }
     
     def analyze_results_with_llm(self, question: str, df: pd.DataFrame, sql: str = None) -> dict:
         """
         Analyze SQL query results and provide business insights
+        STRICT MODE: Only use actual data from the DataFrame, no fabrication
         
         Args:
             question: Original user question
@@ -60,47 +272,61 @@ class BusinessAnalyst:
             sql: SQL query that was executed (optional)
         
         Returns:
-            dict with 'insight', 'summary', 'recommendations'
+            dict with 'insight', 'summary', 'recommendations', 'raw_data'
         """
         if df is None or df.empty:
             return {
-                'insight': "No data was found for your query.",
-                'summary': "The query returned no results.",
-                'recommendations': []
+                'insight': "No data available for this query in the current database.",
+                'summary': "The query returned no results. Please populate the database with sample data.",
+                'recommendations': [],
+                'raw_data': None
             }
         
         # Prepare data summary for LLM
         data_summary = self._prepare_data_summary(df)
         
-        # Build analysis prompt
+        # Build analysis prompt with STRICT instructions
         prompt = f"""You are a senior business analyst reviewing query results.
+
+🚨 CRITICAL RULES - READ CAREFULLY:
+1. Use ONLY the exact numbers shown in the data below
+2. DO NOT calculate differences, percentages, or any derived values
+3. DO NOT generate, assume, or fabricate ANY numerical values
+4. If you mention a number, it MUST appear EXACTLY in the data below
+5. Simply describe what the data shows, do not perform math
 
 User Question: "{question}"
 
-Data Retrieved:
+Data Retrieved (USE ONLY THESE EXACT NUMBERS):
 {data_summary}
 
 Your task:
-1. Provide a clear, concise insight about what this data shows
-2. Identify key trends, patterns, or notable findings
-3. Offer 2-3 actionable business recommendations based on this data
+1. Describe what the data shows using ONLY the exact numbers provided
+2. Identify patterns or trends by comparing the numbers shown
+3. Provide business recommendations based on what you observe
+
+STRICT RULES:
+- Quote exact numbers from the data above (copy them exactly)
+- Do NOT calculate: differences, percentages, ratios, or any math
+- Do NOT infer or assume numbers not explicitly shown
+- If you want to mention a trend, describe it qualitatively (e.g., "increased", "higher") without calculating the amount
+- If data is insufficient, state that clearly
 
 Format your response as:
 
 INSIGHT:
-[One paragraph summarizing the key finding]
+[One paragraph describing what the data shows using ONLY the exact numbers above]
 
 KEY OBSERVATIONS:
-- [Observation 1]
-- [Observation 2]
-- [Observation 3]
+- [Observation 1: state the exact numbers from data]
+- [Observation 2: state the exact numbers from data]
+- [Observation 3: describe pattern without calculating]
 
 RECOMMENDATIONS:
 - [Actionable recommendation 1]
 - [Actionable recommendation 2]
-- [Actionable recommendation 3]
 
-Keep it professional, data-driven, and actionable. Focus on business value."""
+Keep it professional and data-driven."""
 
         try:
             response = ollama.chat(
@@ -108,7 +334,7 @@ Keep it professional, data-driven, and actionable. Focus on business value."""
                 messages=[
                     {
                         "role": "system",
-                        "content": "You are a senior business analyst with expertise in data interpretation and strategic recommendations. You provide clear, actionable insights based on data."
+                        "content": "You are a senior business analyst with expertise in data interpretation. CRITICAL: You ONLY use exact data provided to you. You NEVER fabricate, assume, or generate numerical values. If you mention a number, it MUST be from the provided data."
                     },
                     {
                         "role": "user",
@@ -126,14 +352,16 @@ Keep it professional, data-driven, and actionable. Focus on business value."""
                 'insight': parsed.get('insight', analysis),
                 'summary': self._generate_summary(df),
                 'recommendations': parsed.get('recommendations', []),
-                'full_analysis': analysis
+                'full_analysis': analysis,
+                'raw_data': df  # Include raw data for verification
             }
             
         except Exception as e:
             return {
                 'insight': f"Analysis unavailable: {str(e)}",
                 'summary': self._generate_summary(df),
-                'recommendations': []
+                'recommendations': [],
+                'raw_data': df
             }
     
     def _prepare_data_summary(self, df: pd.DataFrame) -> str:
@@ -205,6 +433,148 @@ Keep it professional, data-driven, and actionable. Focus on business value."""
             result['insight'] = analysis
         
         return result
+    
+    def detect_metrics(self, query: str) -> list:
+        """
+        Detect which metrics the user is asking for
+        
+        Args:
+            query: User's question
+        
+        Returns:
+            List of detected metric types
+        """
+        query_lower = query.lower()
+        detected = []
+        
+        for metric_type, keywords in self.metric_keywords.items():
+            if any(keyword in query_lower for keyword in keywords):
+                detected.append(metric_type)
+        
+        return detected
+    
+    def calculate_metric(self, df: pd.DataFrame, metric_type: str, query: str = "") -> pd.DataFrame:
+        """
+        Calculate specified metric using numeric columns from DataFrame
+        
+        Args:
+            df: DataFrame with data
+            metric_type: Type of metric ('growth', 'ratio', 'share', 'aov', 'cagr')
+            query: Original query for context (optional)
+        
+        Returns:
+            DataFrame with ComputedMetric column added
+        """
+        if df is None or df.empty:
+            return df
+        
+        # Get numeric columns
+        numeric_cols = df.select_dtypes(include=['number']).columns.tolist()
+        
+        if len(numeric_cols) == 0:
+            return df
+        
+        # Make a copy to avoid modifying original
+        result_df = df.copy()
+        
+        try:
+            if metric_type == 'growth':
+                # Calculate growth percentage between first and last numeric values
+                if len(numeric_cols) >= 1 and len(df) >= 2:
+                    # Use the first numeric column (skip Year/Period columns if they exist)
+                    col = numeric_cols[0]
+                    # If first column looks like a year/period, use second column
+                    if 'year' in col.lower() or 'period' in col.lower() or 'date' in col.lower():
+                        if len(numeric_cols) > 1:
+                            col = numeric_cols[1]
+                    
+                    v1 = float(df[col].iloc[0])
+                    v2 = float(df[col].iloc[-1])
+                    
+                    if v1 != 0:
+                        growth = ((v2 - v1) / v1) * 100
+                        # Add as a single computed value (not per row)
+                        result_df.loc[result_df.index[0], 'ComputedMetric'] = growth
+                        result_df.loc[result_df.index[0], 'MetricType'] = 'Growth%'
+                        result_df.loc[result_df.index[0], 'MetricFormula'] = f'(({v2} - {v1}) / {v1}) * 100'
+            
+            elif metric_type == 'ratio':
+                # Calculate ratio between two numeric columns
+                if len(numeric_cols) >= 2:
+                    col1, col2 = numeric_cols[0], numeric_cols[1]
+                    result_df['ComputedMetric'] = df[col1] / df[col2]
+                    result_df['MetricType'] = f'{col1}/{col2} Ratio'
+                    result_df['MetricFormula'] = f'{col1} / {col2}'
+            
+            elif metric_type == 'share':
+                # Calculate percentage share of total
+                if len(numeric_cols) >= 1:
+                    col = numeric_cols[0]
+                    total = df[col].sum()
+                    if total != 0:
+                        result_df['ComputedMetric'] = (df[col] / total) * 100
+                        result_df['MetricType'] = 'Share%'
+                        result_df['MetricFormula'] = f'(value / total) * 100'
+            
+            elif metric_type == 'aov':
+                # Calculate Average Order Value
+                # Look for TotalAmount and OrderID or similar columns
+                amount_cols = [c for c in numeric_cols if 'amount' in c.lower() or 'total' in c.lower() or 'revenue' in c.lower()]
+                order_cols = [c for c in numeric_cols if 'order' in c.lower() or 'count' in c.lower() or 'quantity' in c.lower()]
+                
+                if amount_cols and order_cols:
+                    amount_col = amount_cols[0]
+                    order_col = order_cols[0]
+                    result_df['ComputedMetric'] = df[amount_col] / df[order_col]
+                    result_df['MetricType'] = 'AOV'
+                    result_df['MetricFormula'] = f'{amount_col} / {order_col}'
+                elif amount_cols:
+                    # If only amount, calculate mean
+                    aov = df[amount_cols[0]].mean()
+                    result_df['ComputedMetric'] = aov
+                    result_df['MetricType'] = 'Average'
+                    result_df['MetricFormula'] = f'MEAN({amount_cols[0]})'
+            
+            elif metric_type == 'compare':
+                # Calculate percentage difference for comparison
+                if len(numeric_cols) >= 1 and len(df) >= 2:
+                    col = numeric_cols[0]
+                    # Calculate pairwise percentage differences
+                    result_df['ComputedMetric'] = df[col].pct_change() * 100
+                    result_df['MetricType'] = 'Change%'
+                    result_df['MetricFormula'] = 'pct_change() * 100'
+        
+        except Exception as e:
+            print(f"[WARNING] Metric calculation failed for {metric_type}: {e}")
+            return df
+        
+        return result_df
+    
+    def apply_metrics(self, df: pd.DataFrame, query: str) -> pd.DataFrame:
+        """
+        Detect and apply relevant metrics to DataFrame
+        
+        Args:
+            df: DataFrame with data
+            query: User's question
+        
+        Returns:
+            DataFrame with computed metrics added
+        """
+        if df is None or df.empty:
+            return df
+        
+        # Detect which metrics to calculate
+        detected_metrics = self.detect_metrics(query)
+        
+        if not detected_metrics:
+            return df
+        
+        # Apply the first detected metric
+        # (could be extended to apply multiple metrics)
+        metric_type = detected_metrics[0]
+        
+        return self.calculate_metric(df, metric_type, query)
     
     def compare_periods(self, question: str, df: pd.DataFrame) -> str:
         """

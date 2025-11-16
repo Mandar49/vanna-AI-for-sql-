@@ -1,0 +1,368 @@
+{
+  "timestamp": "2025-11-16T21:05:30.041766",
+  "schema": {
+    "customers": {
+      "columns": [
+        {
+          "name": "CustomerID",
+          "type": "int",
+          "nullable": false
+        },
+        {
+          "name": "CustomerName",
+          "type": "varchar",
+          "nullable": false
+        },
+        {
+          "name": "ContactPerson",
+          "type": "varchar",
+          "nullable": true
+        },
+        {
+          "name": "ContactEmail",
+          "type": "varchar",
+          "nullable": true
+        },
+        {
+          "name": "PhoneNumber",
+          "type": "varchar",
+          "nullable": true
+        },
+        {
+          "name": "Address",
+          "type": "varchar",
+          "nullable": true
+        },
+        {
+          "name": "Industry",
+          "type": "varchar",
+          "nullable": true
+        },
+        {
+          "name": "City",
+          "type": "varchar",
+          "nullable": true
+        },
+        {
+          "name": "ManagerID",
+          "type": "int",
+          "nullable": true
+        }
+      ],
+      "primary_keys": [
+        "CustomerID"
+      ],
+      "nullable_columns": [
+        "ContactPerson",
+        "ContactEmail",
+        "PhoneNumber",
+        "Address",
+        "Industry",
+        "City",
+        "ManagerID"
+      ]
+    },
+    "departments": {
+      "columns": [
+        {
+          "name": "DepartmentID",
+          "type": "int",
+          "nullable": false
+        },
+        {
+          "name": "DepartmentName",
+          "type": "varchar",
+          "nullable": false
+        }
+      ],
+      "primary_keys": [
+        "DepartmentID"
+      ],
+      "nullable_columns": []
+    },
+    "employees": {
+      "columns": [
+        {
+          "name": "EmployeeID",
+          "type": "int",
+          "nullable": false
+        },
+        {
+          "name": "FirstName",
+          "type": "varchar",
+          "nullable": false
+        },
+        {
+          "name": "LastName",
+          "type": "varchar",
+          "nullable": false
+        },
+        {
+          "name": "Email",
+          "type": "varchar",
+          "nullable": false
+        },
+        {
+          "name": "PhoneNumber",
+          "type": "varchar",
+          "nullable": true
+        },
+        {
+          "name": "HireDate",
+          "type": "date",
+          "nullable": true
+        },
+        {
+          "name": "JobTitle",
+          "type": "varchar",
+          "nullable": true
+        },
+        {
+          "name": "DepartmentID",
+          "type": "int",
+          "nullable": true
+        },
+        {
+          "name": "ManagerID",
+          "type": "int",
+          "nullable": true
+        },
+        {
+          "name": "Salary",
+          "type": "decimal",
+          "nullable": true
+        },
+        {
+          "name": "ActiveStatus",
+          "type": "tinyint",
+          "nullable": true
+        },
+        {
+          "name": "Address",
+          "type": "varchar",
+          "nullable": true
+        },
+        {
+          "name": "DateOfBirth",
+          "type": "date",
+          "nullable": true
+        },
+        {
+          "name": "Role",
+          "type": "varchar",
+          "nullable": true
+        }
+      ],
+      "primary_keys": [
+        "EmployeeID"
+      ],
+      "nullable_columns": [
+        "PhoneNumber",
+        "HireDate",
+        "JobTitle",
+        "DepartmentID",
+        "ManagerID",
+        "Salary",
+        "ActiveStatus",
+        "Address",
+        "DateOfBirth",
+        "Role"
+      ]
+    },
+    "industries": {
+      "columns": [
+        {
+          "name": "industry",
+          "type": "varchar",
+          "nullable": false
+        }
+      ],
+      "primary_keys": [
+        "industry"
+      ],
+      "nullable_columns": []
+    },
+    "job_titles": {
+      "columns": [
+        {
+          "name": "title",
+          "type": "varchar",
+          "nullable": false
+        }
+      ],
+      "primary_keys": [
+        "title"
+      ],
+      "nullable_columns": []
+    },
+    "name_first": {
+      "columns": [
+        {
+          "name": "name",
+          "type": "varchar",
+          "nullable": false
+        }
+      ],
+      "primary_keys": [
+        "name"
+      ],
+      "nullable_columns": []
+    },
+    "name_last": {
+      "columns": [
+        {
+          "name": "name",
+          "type": "varchar",
+          "nullable": false
+        }
+      ],
+      "primary_keys": [
+        "name"
+      ],
+      "nullable_columns": []
+    },
+    "orderitems": {
+      "columns": [
+        {
+          "name": "OrderItemID",
+          "type": "int",
+          "nullable": false
+        },
+        {
+          "name": "OrderID",
+          "type": "int",
+          "nullable": true
+        },
+        {
+          "name": "ProductID",
+          "type": "int",
+          "nullable": true
+        },
+        {
+          "name": "Quantity",
+          "type": "int",
+          "nullable": true
+        },
+        {
+          "name": "ItemPrice",
+          "type": "decimal",
+          "nullable": true
+        }
+      ],
+      "primary_keys": [
+        "OrderItemID"
+      ],
+      "nullable_columns": [
+        "OrderID",
+        "ProductID",
+        "Quantity",
+        "ItemPrice"
+      ]
+    },
+    "products": {
+      "columns": [
+        {
+          "name": "ProductID",
+          "type": "int",
+          "nullable": false
+        },
+        {
+          "name": "ProductName",
+          "type": "varchar",
+          "nullable": false
+        },
+        {
+          "name": "Category",
+          "type": "varchar",
+          "nullable": true
+        },
+        {
+          "name": "UnitPrice",
+          "type": "decimal",
+          "nullable": true
+        },
+        {
+          "name": "StockQuantity",
+          "type": "int",
+          "nullable": true
+        }
+      ],
+      "primary_keys": [
+        "ProductID"
+      ],
+      "nullable_columns": [
+        "Category",
+        "UnitPrice",
+        "StockQuantity"
+      ]
+    },
+    "salesorders": {
+      "columns": [
+        {
+          "name": "OrderID",
+          "type": "int",
+          "nullable": false
+        },
+        {
+          "name": "CustomerID",
+          "type": "int",
+          "nullable": true
+        },
+        {
+          "name": "EmployeeID",
+          "type": "int",
+          "nullable": true
+        },
+        {
+          "name": "OrderDate",
+          "type": "date",
+          "nullable": true
+        },
+        {
+          "name": "TotalAmount",
+          "type": "decimal",
+          "nullable": true
+        },
+        {
+          "name": "Status",
+          "type": "varchar",
+          "nullable": true
+        },
+        {
+          "name": "ShippedDate",
+          "type": "date",
+          "nullable": true
+        }
+      ],
+      "primary_keys": [
+        "OrderID"
+      ],
+      "nullable_columns": [
+        "CustomerID",
+        "EmployeeID",
+        "OrderDate",
+        "TotalAmount",
+        "Status",
+        "ShippedDate"
+      ]
+    }
+  },
+  "aliases": {
+    "customers": "customers",
+    "customer": "customers",
+    "departments": "departments",
+    "employees": "employees",
+    "industries": "industries",
+    "job_titles": "job_titles",
+    "name_first": "name_first",
+    "name_last": "name_last",
+    "orderitems": "orderitems",
+    "orders": "salesorders",
+    "order": "salesorders",
+    "products": "products",
+    "product": "products",
+    "salesorders": "salesorders",
+    "sales": "salesorders",
+    "sale": "salesorders"
+  }
+}

@@ -1,0 +1,18 @@
+[
+  {
+    "id": "20251111_150340_488779",
+    "user": "admin",
+    "message": "Test notification",
+    "priority": "normal",
+    "created_at": "2025-11-11T15:03:40.488779",
+    "read": false
+  },
+  {
+    "id": "20251111_150444_775431",
+    "user": "executive",
+    "message": "System notification",
+    "priority": "normal",
+    "created_at": "2025-11-11T15:04:44.775431",
+    "read": false
+  }
+]

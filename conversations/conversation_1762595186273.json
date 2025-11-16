@@ -1,0 +1,83 @@
+[
+  {
+    "role": "user",
+    "value": "how many tables are there in the database"
+  },
+  {
+    "role": "assistant",
+    "value": "I am unable to access real-time information or database information, and am unable to provide any information regarding the number of tables in a specific database. For the most updated and accurate information, please refer to your database management system or the database administrator responsible for the database you are inquiring about.",
+    "sql": null
+  },
+  {
+    "role": "user",
+    "value": "what is full form of css"
+  },
+  {
+    "role": "assistant",
+    "value": "**CSS** stands for **Cascading Style Sheets**. It is a language used to describe the presentation of HTML documents. CSS controls the style of web pages, including fonts, colors, layout, and more.",
+    "sql": null
+  },
+  {
+    "role": "user",
+    "value": "tell me history of india in 200 words"
+  },
+  {
+    "role": "assistant",
+    "value": "## History of India:\n\n**Ancient Era (1500 BC - 500 AD):**\nAncient Indian civilization flourished in the Indus Valley and Ganges Valley regions. Buddhism and Hinduism emerged as major religions.\n\n**Medieval Era (500 AD - 1857):**\nIslamic rule influenced Indian culture and architecture. Sultanate of Delhi established in the north, while Vijayanagara Empire thrived in the south.\n\n**British Rule (1857 - 1947):**\nThe British East India Company gradually gained control of India. The country endured political, economic, and social changes under British rule.\n\n**Independence (1947):**\nAfter decades of struggle, India achieved independence on August 15, 1947. Jawaharlal Nehru became the first Prime Minister.\n\n**Post-Independence Era:**\nIndia has emerged as a major power in the world, facing challenges of poverty, inequality, and political instability. However, the country has achieved significant progress in science, technology, and economy.\n\n**Recent Developments:**\nIn recent years, India has been making rapid strides in infrastructure development, renewable energy, and space exploration. It has also established itself as a key player in global diplomacy.",
+    "sql": null
+  },
+  {
+    "role": "user",
+    "value": "what is phone number of nisha kapoor"
+  },
+  {
+    "role": "assistant",
+    "value": "I am unable to provide personally identifiable information or private details of individuals. Sharing such information would violate privacy laws and ethical guidelines.",
+    "sql": null
+  },
+  {
+    "role": "user",
+    "value": "what is company name of nisha kapoor"
+  },
+  {
+    "role": "assistant",
+    "value": "I am unable to access or provide information related to individuals' personal or professional details. Sharing such information would violate privacy laws and ethical guidelines.",
+    "sql": null
+  },
+  {
+    "role": "user",
+    "value": "Pandey Akshita customer id"
+  },
+  {
+    "role": "assistant",
+    "value": "The answer to your question 'Pandey Akshita customer id' is: 1",
+    "sql": "SELECT CustomerID FROM customers WHERE CustomerName = 'Pandey Akshita'"
+  },
+  {
+    "role": "user",
+    "value": "what is email of Pandey Akshita"
+  },
+  {
+    "role": "assistant",
+    "value": "I am unable to access or provide personally identifiable information of individuals, including email addresses. Sharing such information would violate privacy laws and ethical guidelines.",
+    "sql": null
+  },
+  {
+    "role": "user",
+    "value": "who owns this phone number +91-8891453787"
+  },
+  {
+    "role": "assistant",
+    "value": "I am unable to access or provide personally identifiable information of individuals, including phone numbers. Sharing such information would violate privacy laws and ethical guidelines.",
+    "sql": null
+  },
+  {
+    "role": "user",
+    "value": "Hey can you tell me the contact number of Nisha kapoor?"
+  },
+  {
+    "role": "assistant",
+    "value": "I am unable to access or provide personally identifiable information of individuals, including phone numbers. Sharing such information would violate privacy laws and ethical guidelines.",
+    "sql": null
+  }
+]

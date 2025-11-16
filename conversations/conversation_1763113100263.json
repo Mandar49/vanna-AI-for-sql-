@@ -1,0 +1,65 @@
+[
+  {
+    "role": "user",
+    "value": "Hi"
+  },
+  {
+    "role": "assistant",
+    "value": "Hello! I'm your AI assistant for analyzing business data. You can ask me questions about your data, or request strategic analysis. How can I help you today?",
+    "sql": null
+  },
+  {
+    "role": "user",
+    "value": "Hoe are you"
+  },
+  {
+    "role": "assistant",
+    "value": " I am an artificial intelligence designed to help you with various tasks and queries, especially those related to business intelligence. How can I assist you today?",
+    "sql": null
+  },
+  {
+    "role": "user",
+    "value": "tell me about mumbai"
+  },
+  {
+    "role": "assistant",
+    "value": " Mumbai, also known as Bombay, is the largest city in India and the financial, commercial, and entertainment capital of the country. It is located on the west coast of India and is the most populous city in the world's second-most populous country.\n\nMumbai was originally a group of seven islands, namely Bombay Island, Parel, Mazgaon, Mahim, Colaba, Worli, and Salsette. The islands were united under British rule during the 19th century, leading to rapid urbanization and development. Today, Mumbai is divided into two parts: the island city and the mainland.\n\nThe city is famous for its landmarks such as the Gateway of India, Chhatrapati Shivaji Maharaj Vastu Sangrahalaya (formerly known as the Prince of Wales Museum), Elephanta Caves, Marine Drive, and Haji Ali Dargah. Mumbai is also home to Bollywood, the Indian film industry, which is one of the largest in the world.\n\nMumbai's economy is primarily driven by its financial sector, including the Bombay Stock Exchange, the National Stock Exchange of India, and Reserve Bank of India. The city is also a major hub for the pharmaceutical industry, textile manufacturing, and information technology.\n\nIn terms of culture, Mumbai offers a mix of traditional Indian and modern influences. The city has a vibrant street food culture, with vendors selling dishes like vada pav, pani puri, and bhelpuri. It also has numerous restaurants serving international cuisines, shopping centers, and nightlife options.\n\nThe city faces challenges related to traffic congestion, air pollution, and overpopulation, but it remains a significant center for commerce, culture, and tourism in India and around the world.",
+    "sql": null
+  },
+  {
+    "role": "user",
+    "value": "what is phone number of Akshiita Pandey"
+  },
+  {
+    "role": "assistant",
+    "value": "\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\nNO DATA FOUND\n\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\n\nNo data found for this query.\n\nPossible causes:\n- No data exists for the given year or time period\n- Filters are too narrow or restrictive\n- The database tables may need to be populated\n\nSQL Query:\n SELECT PhoneNumber FROM customers WHERE CustomerName = 'Pandey Akshita Pvt Ltd - 0001'\n\nSuggestion: Try 'Show me all customers' or 'List all orders' to verify data exists.",
+    "sql": " SELECT PhoneNumber FROM customers WHERE CustomerName = 'Pandey Akshita Pvt Ltd - 0001'"
+  },
+  {
+    "role": "user",
+    "value": "what is phone number of Akshita Pandey"
+  },
+  {
+    "role": "assistant",
+    "value": " I apologize, but I don't have the information you're asking for. The database may not contain that specific data or it might be restricted due to privacy concerns. I suggest checking with the relevant organization or department for accurate and up-to-date contact details.",
+    "sql": null
+  },
+  {
+    "role": "user",
+    "value": "what is phone number of Akshita Pandey"
+  },
+  {
+    "role": "assistant",
+    "value": "\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\nNO DATA FOUND\n\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\n\nNo data found for this query.\n\nPossible causes:\n- No data exists for the given year or time period\n- Filters are too narrow or restrictive\n- The database tables may need to be populated\n\nSQL Query:\n SELECT PhoneNumber FROM customers WHERE CustomerName = 'Pandey Akshita Pvt Ltd - 0001'\n\nSuggestion: Try 'Show me all customers' or 'List all orders' to verify data exists.",
+    "sql": " SELECT PhoneNumber FROM customers WHERE CustomerName = 'Pandey Akshita Pvt Ltd - 0001'"
+  },
+  {
+    "role": "user",
+    "value": "Hi"
+  },
+  {
+    "role": "assistant",
+    "value": "Hello! I'm your AI assistant for analyzing business data. You can ask me questions about your data, or request strategic analysis. How can I help you today?",
+    "sql": null
+  }
+]

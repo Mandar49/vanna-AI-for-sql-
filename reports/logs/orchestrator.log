@@ -1,0 +1,183 @@
+2025-11-11 13:58:51,519 - INFO - Parsed intent: {'action': 'generate_report', 'profile': 'Sales', 'params': {}, 'raw_text': 'generate report for Sales'}
+2025-11-11 13:58:51,519 - INFO - Parsed intent: {'action': 'summarize', 'profile': 'Marketing', 'params': {}, 'raw_text': 'summarize for Marketing'}
+2025-11-11 13:58:51,523 - INFO - Parsed intent: {'action': 'schedule', 'profile': 'HR', 'params': {'frequency': 'daily', 'hour': 9, 'minute': 0}, 'raw_text': 'schedule daily report for HR at 9:00'}
+2025-11-11 13:58:51,523 - INFO - Parsed intent: {'action': 'summarize', 'profile': 'Finance', 'params': {}, 'raw_text': 'speak summary for Finance'}
+2025-11-11 13:58:51,523 - INFO - Parsed intent: {'action': 'list_profiles', 'profile': None, 'params': {}, 'raw_text': 'list profiles'}
+2025-11-11 13:58:51,523 - INFO - Parsed intent: {'action': 'list_reports', 'profile': None, 'params': {}, 'raw_text': 'show reports'}
+2025-11-11 13:58:51,523 - INFO - Parsed intent: {'action': 'activate_profile', 'profile': 'Operations', 'params': {}, 'raw_text': 'activate profile for Operations'}
+2025-11-11 13:58:51,523 - INFO - Parsed intent: {'action': 'generate_chart', 'profile': 'Sales', 'params': {}, 'raw_text': 'generate chart for Sales'}
+2025-11-11 13:58:51,523 - INFO - Parsed intent: {'action': 'list_profiles', 'profile': None, 'params': {}, 'raw_text': 'list profiles'}
+2025-11-11 13:58:51,547 - INFO - Command executed: list_profiles - Status: success - Time: 0.02s
+2025-11-11 13:58:51,547 - INFO - Parsed intent: {'action': 'list_reports', 'profile': None, 'params': {}, 'raw_text': 'list reports'}
+2025-11-11 13:58:51,661 - INFO - Command executed: list_reports - Status: success - Time: 0.11s
+2025-11-11 13:58:51,662 - INFO - Parsed intent: {'action': 'summarize', 'profile': 'TestProfile', 'params': {}, 'raw_text': 'summarize for TestProfile'}
+2025-11-11 13:58:51,663 - INFO - Command executed: summarize - Status: error - Time: 0.00s
+2025-11-11 13:59:27,899 - INFO - Parsed intent: {'action': 'generate_report', 'profile': 'Sales', 'params': {}, 'raw_text': 'generate report for Sales'}
+2025-11-11 13:59:27,899 - INFO - Parsed intent: {'action': 'summarize', 'profile': 'Marketing', 'params': {}, 'raw_text': 'summarize for Marketing'}
+2025-11-11 13:59:27,899 - INFO - Parsed intent: {'action': 'schedule', 'profile': 'HR', 'params': {'frequency': 'daily', 'hour': 9, 'minute': 0}, 'raw_text': 'schedule daily report for HR at 9:00'}
+2025-11-11 13:59:27,902 - INFO - Parsed intent: {'action': 'summarize', 'profile': 'Finance', 'params': {}, 'raw_text': 'speak summary for Finance'}
+2025-11-11 13:59:27,902 - INFO - Parsed intent: {'action': 'list_profiles', 'profile': None, 'params': {}, 'raw_text': 'list profiles'}
+2025-11-11 13:59:27,902 - INFO - Parsed intent: {'action': 'list_reports', 'profile': None, 'params': {}, 'raw_text': 'show reports'}
+2025-11-11 13:59:27,902 - INFO - Parsed intent: {'action': 'activate_profile', 'profile': 'Operations', 'params': {}, 'raw_text': 'activate profile for Operations'}
+2025-11-11 13:59:27,902 - INFO - Parsed intent: {'action': 'generate_chart', 'profile': 'Sales', 'params': {}, 'raw_text': 'generate chart for Sales'}
+2025-11-11 13:59:27,902 - INFO - Parsed intent: {'action': 'list_profiles', 'profile': None, 'params': {}, 'raw_text': 'list profiles'}
+2025-11-11 13:59:27,902 - INFO - Command executed: list_profiles - Status: success - Time: 0.00s
+2025-11-11 13:59:27,902 - INFO - Parsed intent: {'action': 'list_reports', 'profile': None, 'params': {}, 'raw_text': 'list reports'}
+2025-11-11 13:59:28,010 - INFO - Command executed: list_reports - Status: success - Time: 0.11s
+2025-11-11 13:59:28,012 - INFO - Parsed intent: {'action': 'summarize', 'profile': 'TestProfile', 'params': {}, 'raw_text': 'summarize for TestProfile'}
+2025-11-11 13:59:28,013 - INFO - Command executed: summarize - Status: error - Time: 0.00s
+2025-11-11 13:59:28,248 - INFO - Parsed intent: {'action': 'generate_report', 'profile': 'Sales', 'params': {}, 'raw_text': 'generate report for Sales'}
+2025-11-11 13:59:28,248 - INFO - Parsed intent: {'action': 'summarize', 'profile': 'Marketing', 'params': {}, 'raw_text': 'summarize for Marketing'}
+2025-11-11 13:59:28,248 - INFO - Parsed intent: {'action': 'schedule', 'profile': 'HR', 'params': {'frequency': 'daily', 'hour': 9, 'minute': 0}, 'raw_text': 'schedule daily report for HR at 9:00'}
+2025-11-11 13:59:28,248 - INFO - Parsed intent: {'action': 'schedule', 'profile': 'Sales', 'params': {'frequency': 'interval', 'minutes': 30}, 'raw_text': 'schedule report for Sales every 30 minutes'}
+2025-11-11 13:59:28,248 - INFO - Parsed intent: {'action': 'summarize', 'profile': 'Finance', 'params': {}, 'raw_text': 'speak summary for Finance'}
+2025-11-11 13:59:28,380 - INFO - Parsed intent: {'action': 'list_profiles', 'profile': None, 'params': {}, 'raw_text': 'list profiles'}
+2025-11-11 13:59:28,380 - INFO - Parsed intent: {'action': 'list_reports', 'profile': None, 'params': {}, 'raw_text': 'show reports'}
+2025-11-11 13:59:28,380 - INFO - Parsed intent: {'action': 'activate_profile', 'profile': 'Operations', 'params': {}, 'raw_text': 'activate profile for Operations'}
+2025-11-11 13:59:28,380 - INFO - Parsed intent: {'action': 'generate_chart', 'profile': 'Sales', 'params': {'chart_type': 'trend'}, 'raw_text': 'generate trend chart for Sales'}
+2025-11-11 13:59:28,380 - INFO - Parsed intent: {'action': 'list_profiles', 'profile': None, 'params': {}, 'raw_text': 'list profiles'}
+2025-11-11 13:59:28,386 - INFO - Command executed: list_profiles - Status: success - Time: 0.01s
+2025-11-11 13:59:28,386 - INFO - Parsed intent: {'action': 'summarize', 'profile': None, 'params': {}, 'raw_text': 'summarize'}
+2025-11-11 13:59:28,386 - INFO - Command executed: summarize - Status: error - Time: 0.00s
+2025-11-11 13:59:28,388 - INFO - Parsed intent: {'action': 'unknown', 'profile': None, 'params': {}, 'raw_text': 'do something random'}
+2025-11-11 13:59:28,388 - INFO - Command executed: unknown - Status: error - Time: 0.00s
+2025-11-11 13:59:28,388 - INFO - Parsed intent: {'action': 'list_profiles', 'profile': None, 'params': {}, 'raw_text': 'list profiles'}
+2025-11-11 13:59:28,390 - INFO - Command executed: list_profiles - Status: success - Time: 0.00s
+2025-11-11 13:59:28,390 - INFO - Parsed intent: {'action': 'list_reports', 'profile': None, 'params': {}, 'raw_text': 'list reports'}
+2025-11-11 13:59:28,391 - INFO - Command executed: list_reports - Status: success - Time: 0.00s
+2025-11-11 13:59:28,393 - INFO - Parsed intent: {'action': 'generate_report', 'profile': 'Sales', 'params': {}, 'raw_text': 'generate report for Sales'}
+2025-11-11 13:59:28,393 - INFO - Parsed intent: {'action': 'list_profiles', 'profile': None, 'params': {}, 'raw_text': 'list profiles'}
+2025-11-11 13:59:28,393 - INFO - Command executed: list_profiles - Status: success - Time: 0.00s
+2025-11-11 15:04:44,713 - INFO - Parsed intent: {'action': 'notify', 'profile': None, 'params': {'user': 'executive'}, 'raw_text': 'notify executive'}
+2025-11-11 15:04:44,783 - INFO - Command executed: notify - Status: success - Time: 0.07s
+2025-11-11 15:15:30,581 - INFO - Parsed intent: {'action': 'query_document', 'profile': None, 'params': {'query': 'strategic objectives'}, 'raw_text': 'query document: strategic objectives'}
+2025-11-11 15:15:30,600 - WARNING - Number of requested results 5 is greater than number of elements in index 3, updating n_results = 3
+2025-11-11 15:15:30,602 - INFO - Command executed: query_document - Status: success - Time: 0.02s
+2025-11-11 15:15:30,602 - INFO - Parsed intent: {'action': 'query_document', 'profile': None, 'params': {'query': 'revenue target'}, 'raw_text': 'search knowledge: revenue target'}
+2025-11-11 15:15:30,619 - WARNING - Number of requested results 5 is greater than number of elements in index 3, updating n_results = 3
+2025-11-11 15:15:30,622 - INFO - Command executed: query_document - Status: success - Time: 0.02s
+2025-11-11 15:15:30,623 - INFO - Parsed intent: {'action': 'query_document', 'profile': None, 'params': {'query': 'market analysis'}, 'raw_text': 'find document: market analysis'}
+2025-11-11 15:15:30,638 - WARNING - Number of requested results 5 is greater than number of elements in index 3, updating n_results = 3
+2025-11-11 15:15:30,640 - INFO - Command executed: query_document - Status: success - Time: 0.02s
+2025-11-11 15:15:51,446 - INFO - Parsed intent: {'action': 'generate_report', 'profile': 'Sales', 'params': {}, 'raw_text': 'generate report for Sales'}
+2025-11-11 15:15:51,446 - INFO - Parsed intent: {'action': 'summarize', 'profile': 'Marketing', 'params': {}, 'raw_text': 'summarize for Marketing'}
+2025-11-11 15:15:51,446 - INFO - Parsed intent: {'action': 'schedule', 'profile': 'HR', 'params': {'frequency': 'daily', 'hour': 9, 'minute': 0}, 'raw_text': 'schedule daily report for HR at 9:00'}
+2025-11-11 15:15:51,448 - INFO - Parsed intent: {'action': 'summarize', 'profile': 'Finance', 'params': {}, 'raw_text': 'speak summary for Finance'}
+2025-11-11 15:15:51,448 - INFO - Parsed intent: {'action': 'list_profiles', 'profile': None, 'params': {}, 'raw_text': 'list profiles'}
+2025-11-11 15:15:51,448 - INFO - Parsed intent: {'action': 'query_document', 'profile': None, 'params': {'query': 'business strategy'}, 'raw_text': 'query document: business strategy'}
+2025-11-11 15:15:51,449 - INFO - Parsed intent: {'action': 'list_profiles', 'profile': None, 'params': {}, 'raw_text': 'list profiles'}
+2025-11-11 15:15:51,451 - INFO - Command executed: list_profiles - Status: success - Time: 0.00s
+2025-11-11 15:19:17,041 - INFO - Parsed intent: {'action': 'query_document', 'profile': None, 'params': {'query': 'test'}, 'raw_text': 'query document: test'}
+2025-11-11 15:19:17,063 - INFO - Command executed: query_document - Status: success - Time: 0.02s
+2025-11-11 15:21:54,633 - INFO - Parsed intent: {'action': 'query_document', 'profile': None, 'params': {'query': 'revenue'}, 'raw_text': 'query document: revenue'}
+2025-11-11 15:21:56,664 - INFO - Command executed: query_document - Status: success - Time: 2.03s
+2025-11-11 15:23:10,073 - INFO - Parsed intent: {'action': 'query_document', 'profile': None, 'params': {'query': 'revenue targets'}, 'raw_text': 'query document: revenue targets'}
+2025-11-11 15:23:10,107 - INFO - Command executed: query_document - Status: success - Time: 0.03s
+2025-11-11 15:23:10,108 - INFO - Parsed intent: {'action': 'query_document', 'profile': None, 'params': {'query': 'product roadmap Q3'}, 'raw_text': 'search knowledge: product roadmap Q3'}
+2025-11-11 15:23:10,146 - INFO - Command executed: query_document - Status: success - Time: 0.04s
+2025-11-11 16:01:57,942 - INFO - Parsed intent: {'action': 'analyze_kpis', 'profile': 'Sales', 'params': {}, 'raw_text': 'analyze KPIs for Sales'}
+2025-11-11 16:01:57,952 - INFO - Command executed: analyze_kpis - Status: success - Time: 0.01s
+2025-11-11 16:01:57,952 - INFO - Parsed intent: {'action': 'analyze_kpis', 'profile': 'Marketing', 'params': {}, 'raw_text': 'analyze financial metrics for Marketing'}
+2025-11-11 16:01:57,960 - INFO - Command executed: analyze_kpis - Status: success - Time: 0.01s
+2025-11-11 16:41:01,261 - INFO - Parsed intent: {'action': 'generate_report', 'profile': 'Sales', 'params': {}, 'raw_text': 'generate report for Sales'}
+2025-11-11 16:41:01,261 - INFO - Parsed intent: {'action': 'summarize', 'profile': 'Marketing', 'params': {}, 'raw_text': 'summarize for Marketing'}
+2025-11-11 16:41:01,262 - INFO - Parsed intent: {'action': 'schedule', 'profile': 'HR', 'params': {'frequency': 'daily', 'hour': 9, 'minute': 0}, 'raw_text': 'schedule daily report for HR at 9:00'}
+2025-11-11 16:41:01,262 - INFO - Parsed intent: {'action': 'summarize', 'profile': 'Finance', 'params': {}, 'raw_text': 'speak summary for Finance'}
+2025-11-11 16:41:01,262 - INFO - Parsed intent: {'action': 'list_profiles', 'profile': None, 'params': {}, 'raw_text': 'list profiles'}
+2025-11-11 16:41:01,262 - INFO - Parsed intent: {'action': 'query_document', 'profile': None, 'params': {'query': 'business strategy'}, 'raw_text': 'query document: business strategy'}
+2025-11-11 16:41:01,262 - INFO - Parsed intent: {'action': 'analyze_kpis', 'profile': 'Sales', 'params': {}, 'raw_text': 'analyze KPIs for Sales'}
+2025-11-11 16:41:01,263 - INFO - Parsed intent: {'action': 'list_profiles', 'profile': None, 'params': {}, 'raw_text': 'list profiles'}
+2025-11-11 16:41:01,264 - INFO - Command executed: list_profiles - Status: success - Time: 0.00s
+2025-11-11 16:42:31,282 - INFO - Parsed intent: {'action': 'analyze_kpis', 'profile': 'Sales', 'params': {}, 'raw_text': 'analyze KPIs for Sales'}
+2025-11-11 16:42:31,287 - INFO - Command executed: analyze_kpis - Status: success - Time: 0.01s
+2025-11-11 16:42:31,288 - INFO - Parsed intent: {'action': 'analyze_kpis', 'profile': 'Marketing', 'params': {}, 'raw_text': 'analyze financial metrics for Marketing'}
+2025-11-11 16:42:31,290 - INFO - Command executed: analyze_kpis - Status: success - Time: 0.00s
+2025-11-11 16:42:31,983 - INFO - Using categorical units to plot a list of strings that are all parsable as floats or dates. If these strings should be plotted as numbers, cast to the appropriate data type before plotting.
+2025-11-11 16:42:31,984 - INFO - Using categorical units to plot a list of strings that are all parsable as floats or dates. If these strings should be plotted as numbers, cast to the appropriate data type before plotting.
+2025-11-11 16:42:31,984 - INFO - Using categorical units to plot a list of strings that are all parsable as floats or dates. If these strings should be plotted as numbers, cast to the appropriate data type before plotting.
+2025-11-11 16:42:31,985 - INFO - Using categorical units to plot a list of strings that are all parsable as floats or dates. If these strings should be plotted as numbers, cast to the appropriate data type before plotting.
+2025-11-11 16:42:31,985 - INFO - Using categorical units to plot a list of strings that are all parsable as floats or dates. If these strings should be plotted as numbers, cast to the appropriate data type before plotting.
+2025-11-11 16:42:31,993 - INFO - Using categorical units to plot a list of strings that are all parsable as floats or dates. If these strings should be plotted as numbers, cast to the appropriate data type before plotting.
+2025-11-11 16:42:31,994 - INFO - Using categorical units to plot a list of strings that are all parsable as floats or dates. If these strings should be plotted as numbers, cast to the appropriate data type before plotting.
+2025-11-11 16:42:32,203 - INFO - Parsed intent: {'action': 'analyze_kpis', 'profile': 'Sales', 'params': {}, 'raw_text': 'analyze KPIs for Sales'}
+2025-11-11 16:42:32,207 - INFO - Command executed: analyze_kpis - Status: success - Time: 0.00s
+2025-11-11 16:44:23,833 - INFO - Parsed intent: {'action': 'analyze_kpis', 'profile': 'Sales', 'params': {}, 'raw_text': 'analyze KPIs for Sales'}
+2025-11-11 16:44:23,838 - INFO - Command executed: analyze_kpis - Status: success - Time: 0.01s
+2025-11-11 16:57:50,448 - INFO - Parsed intent: {'action': 'list_profiles', 'profile': None, 'params': {}, 'raw_text': 'list profiles'}
+2025-11-11 16:57:50,452 - INFO - Command executed: list_profiles - Status: success - Time: 0.00s
+2025-11-11 16:57:50,453 - INFO - Parsed intent: {'action': 'analyze_kpis', 'profile': 'Sales', 'params': {}, 'raw_text': 'analyze KPIs for Sales'}
+2025-11-11 16:57:50,466 - INFO - Command executed: analyze_kpis - Status: success - Time: 0.01s
+2025-11-11 16:57:50,467 - INFO - Parsed intent: {'action': 'query_document', 'profile': None, 'params': {'query': 'business strategy'}, 'raw_text': 'query document: business strategy'}
+2025-11-11 16:57:52,460 - INFO - Command executed: query_document - Status: success - Time: 1.99s
+2025-11-11 16:57:52,463 - INFO - Parsed intent: {'action': 'list_profiles', 'profile': None, 'params': {}, 'raw_text': 'list profiles'}
+2025-11-11 16:57:52,466 - INFO - Command executed: list_profiles - Status: success - Time: 0.00s
+2025-11-11 16:57:52,467 - INFO - Parsed intent: {'action': 'analyze_kpis', 'profile': 'Sales', 'params': {}, 'raw_text': 'analyze KPIs for Sales'}
+2025-11-11 16:57:52,475 - INFO - Command executed: analyze_kpis - Status: success - Time: 0.01s
+2025-11-11 16:57:52,477 - INFO - Parsed intent: {'action': 'query_document', 'profile': None, 'params': {'query': 'test'}, 'raw_text': 'query document: test'}
+2025-11-11 16:57:52,506 - INFO - Command executed: query_document - Status: success - Time: 0.03s
+2025-11-11 16:57:52,506 - INFO - Parsed intent: {'action': 'generate_report', 'profile': 'Marketing', 'params': {}, 'raw_text': 'generate report for Marketing'}
+2025-11-11 16:57:52,516 - INFO - Command executed: generate_report - Status: success - Time: 0.01s
+2025-11-11 16:57:52,519 - INFO - Parsed intent: {'action': 'list_profiles', 'profile': None, 'params': {}, 'raw_text': 'list profiles'}
+2025-11-11 16:57:52,522 - INFO - Command executed: list_profiles - Status: success - Time: 0.00s
+2025-11-11 16:57:52,525 - INFO - Parsed intent: {'action': 'unknown', 'profile': None, 'params': {}, 'raw_text': 'do something random'}
+2025-11-11 16:57:52,525 - INFO - Command executed: unknown - Status: error - Time: 0.00s
+2025-11-11 16:57:52,527 - INFO - Parsed intent: {'action': 'analyze_kpis', 'profile': 'Sales', 'params': {}, 'raw_text': 'analyze KPIs for Sales'}
+2025-11-11 16:57:52,537 - INFO - Command executed: analyze_kpis - Status: success - Time: 0.01s
+2025-11-11 16:57:52,539 - INFO - Parsed intent: {'action': 'analyze_kpis', 'profile': 'Marketing', 'params': {}, 'raw_text': 'analyze KPIs for Marketing'}
+2025-11-11 16:57:52,546 - INFO - Command executed: analyze_kpis - Status: success - Time: 0.01s
+2025-11-11 16:57:52,547 - INFO - Parsed intent: {'action': 'analyze_kpis', 'profile': 'Finance', 'params': {}, 'raw_text': 'analyze KPIs for Finance'}
+2025-11-11 16:57:52,548 - INFO - Command executed: analyze_kpis - Status: error - Time: 0.00s
+2025-11-11 16:57:52,549 - INFO - Parsed intent: {'action': 'list_profiles', 'profile': None, 'params': {}, 'raw_text': 'list profiles'}
+2025-11-11 16:57:52,552 - INFO - Command executed: list_profiles - Status: success - Time: 0.00s
+2025-11-11 16:57:52,552 - INFO - Parsed intent: {'action': 'list_reports', 'profile': None, 'params': {}, 'raw_text': 'list reports'}
+2025-11-11 16:57:52,731 - INFO - Command executed: list_reports - Status: success - Time: 0.18s
+2025-11-11 16:57:52,732 - INFO - Parsed intent: {'action': 'schedule', 'profile': None, 'params': {}, 'raw_text': 'list schedules'}
+2025-11-11 16:57:52,736 - INFO - Command executed: schedule - Status: error - Time: 0.00s
+2025-11-11 16:57:52,736 - INFO - Parsed intent: {'action': 'analyze_kpis', 'profile': 'Sales', 'params': {}, 'raw_text': 'analyze KPIs for Sales'}
+2025-11-11 16:57:52,743 - INFO - Command executed: analyze_kpis - Status: success - Time: 0.01s
+2025-11-11 16:57:52,744 - INFO - Parsed intent: {'action': 'query_document', 'profile': None, 'params': {'query': 'strategy'}, 'raw_text': 'query document: strategy'}
+2025-11-11 16:57:52,782 - INFO - Command executed: query_document - Status: success - Time: 0.04s
+2025-11-11 16:57:52,784 - INFO - Parsed intent: {'action': 'generate_report', 'profile': 'Marketing', 'params': {}, 'raw_text': 'generate report for Marketing'}
+2025-11-11 16:57:52,791 - INFO - Command executed: generate_report - Status: success - Time: 0.01s
+2025-11-11 16:57:52,793 - INFO - Parsed intent: {'action': 'summarize', 'profile': 'Finance', 'params': {}, 'raw_text': 'summarize for Finance'}
+2025-11-11 16:57:52,795 - INFO - Command executed: summarize - Status: success - Time: 0.00s
+2025-11-11 16:58:35,907 - INFO - Parsed intent: {'action': 'list_profiles', 'profile': None, 'params': {}, 'raw_text': 'list profiles'}
+2025-11-11 16:58:35,912 - INFO - Command executed: list_profiles - Status: success - Time: 0.01s
+2025-11-11 17:04:25,357 - INFO - Parsed intent: {'action': 'list_profiles', 'profile': None, 'params': {}, 'raw_text': 'list profiles'}
+2025-11-11 17:04:25,361 - INFO - Command executed: list_profiles - Status: success - Time: 0.01s
+2025-11-11 17:04:25,362 - INFO - Parsed intent: {'action': 'analyze_kpis', 'profile': 'Sales', 'params': {}, 'raw_text': 'analyze KPIs for Sales'}
+2025-11-11 17:04:25,373 - INFO - Command executed: analyze_kpis - Status: success - Time: 0.01s
+2025-11-11 17:04:25,374 - INFO - Parsed intent: {'action': 'query_document', 'profile': None, 'params': {'query': 'business strategy'}, 'raw_text': 'query document: business strategy'}
+2025-11-11 17:04:27,378 - INFO - Command executed: query_document - Status: success - Time: 2.00s
+2025-11-11 17:04:27,378 - INFO - Parsed intent: {'action': 'generate_report', 'profile': 'Marketing', 'params': {}, 'raw_text': 'generate report for Marketing'}
+2025-11-11 17:04:27,387 - INFO - Command executed: generate_report - Status: success - Time: 0.01s
+2025-11-11 17:07:37,553 - INFO - Parsed intent: {'action': 'list_profiles', 'profile': None, 'params': {}, 'raw_text': 'list profiles'}
+2025-11-11 17:07:37,555 - INFO - Command executed: list_profiles - Status: success - Time: 0.00s
+2025-11-11 17:07:37,555 - INFO - Parsed intent: {'action': 'analyze_kpis', 'profile': 'Sales', 'params': {}, 'raw_text': 'analyze KPIs for Sales'}
+2025-11-11 17:07:37,562 - INFO - Command executed: analyze_kpis - Status: success - Time: 0.01s
+2025-11-11 17:07:37,562 - INFO - Parsed intent: {'action': 'query_document', 'profile': None, 'params': {'query': 'test'}, 'raw_text': 'query document: test'}
+2025-11-11 17:07:38,712 - INFO - Command executed: query_document - Status: success - Time: 1.15s
+2025-11-11 17:07:38,713 - INFO - Parsed intent: {'action': 'list_profiles', 'profile': None, 'params': {}, 'raw_text': 'list profiles'}
+2025-11-11 17:07:38,714 - INFO - Command executed: list_profiles - Status: success - Time: 0.00s
+2025-11-11 17:07:38,714 - INFO - Parsed intent: {'action': 'analyze_kpis', 'profile': 'Sales', 'params': {}, 'raw_text': 'analyze KPIs for Sales'}
+2025-11-11 17:07:38,719 - INFO - Command executed: analyze_kpis - Status: success - Time: 0.01s
+2025-11-11 17:07:38,720 - INFO - Parsed intent: {'action': 'list_profiles', 'profile': None, 'params': {}, 'raw_text': 'list profiles'}
+2025-11-11 17:07:38,722 - INFO - Command executed: list_profiles - Status: success - Time: 0.00s
+2025-11-11 17:07:38,722 - INFO - Parsed intent: {'action': 'list_reports', 'profile': None, 'params': {}, 'raw_text': 'list reports'}
+2025-11-11 17:07:38,832 - INFO - Command executed: list_reports - Status: success - Time: 0.11s
+2025-11-11 17:07:38,832 - INFO - Parsed intent: {'action': 'analyze_kpis', 'profile': 'Sales', 'params': {}, 'raw_text': 'analyze KPIs for Sales'}
+2025-11-11 17:07:38,837 - INFO - Command executed: analyze_kpis - Status: success - Time: 0.00s
+2025-11-11 17:07:38,837 - INFO - Parsed intent: {'action': 'query_document', 'profile': None, 'params': {'query': 'test'}, 'raw_text': 'query document: test'}
+2025-11-11 17:07:38,852 - INFO - Command executed: query_document - Status: success - Time: 0.02s
+2025-11-11 17:07:38,853 - INFO - Parsed intent: {'action': 'generate_report', 'profile': 'Marketing', 'params': {}, 'raw_text': 'generate report for Marketing'}
+2025-11-11 17:07:38,858 - INFO - Command executed: generate_report - Status: success - Time: 0.01s
+2025-11-11 17:13:46,634 - INFO - Parsed intent: {'action': 'list_profiles', 'profile': None, 'params': {}, 'raw_text': 'list profiles'}
+2025-11-11 17:13:46,634 - INFO - Command executed: list_profiles - Status: success - Time: 0.00s
+2025-11-11 17:14:06,931 - INFO - Parsed intent: {'action': 'list_profiles', 'profile': None, 'params': {}, 'raw_text': 'list profiles'}
+2025-11-11 17:14:06,932 - INFO - Command executed: list_profiles - Status: success - Time: 0.00s
+2025-11-11 17:17:05,807 - INFO - Parsed intent: {'action': 'list_profiles', 'profile': None, 'params': {}, 'raw_text': 'list profiles'}
+2025-11-11 17:17:05,808 - INFO - Command executed: list_profiles - Status: success - Time: 0.00s
+2025-11-11 17:17:05,810 - INFO - Parsed intent: {'action': 'analyze_kpis', 'profile': 'Sales', 'params': {}, 'raw_text': 'analyze KPIs for Sales'}
+2025-11-11 17:17:05,813 - INFO - Command executed: analyze_kpis - Status: success - Time: 0.00s
+2025-11-11 17:20:42,559 - INFO - Parsed intent: {'action': 'list_profiles', 'profile': None, 'params': {}, 'raw_text': 'list profiles'}
+2025-11-11 17:20:42,561 - INFO - Command executed: list_profiles - Status: success - Time: 0.00s

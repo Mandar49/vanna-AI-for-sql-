@@ -1,0 +1,12 @@
+
+{
+  "company": "AI Solutions Inc",
+  "departments": ["Sales", "Marketing", "Finance", "HR"],
+  "fiscal_year": 2025,
+  "targets": {
+    "revenue": 50000000,
+    "growth": 0.5,
+    "customers": 1000
+  }
+}
+            

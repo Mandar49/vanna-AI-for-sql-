@@ -1,0 +1,8 @@
+2025-11-11 17:25:42,775 - INFO - Executive Intelligence System launched
+2025-11-11 17:32:02,751 - INFO - Starting web server...
+2025-11-11 17:32:02,985 - INFO - Web server started successfully
+2025-11-11 17:32:03,033 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://10.10.10.234:5000
+2025-11-11 17:32:03,033 - INFO - [33mPress CTRL+C to quit[0m

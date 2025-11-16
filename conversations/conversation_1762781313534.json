@@ -1,0 +1,83 @@
+[
+  {
+    "role": "user",
+    "value": "Hello"
+  },
+  {
+    "role": "assistant",
+    "value": "Hello! I'm your AI assistant for analyzing business data. You can ask me questions about your data, or request strategic analysis. How can I help you today?",
+    "sql": null
+  },
+  {
+    "role": "user",
+    "value": "tell me about lenovo company"
+  },
+  {
+    "role": "assistant",
+    "value": "I found no data for your question.",
+    "sql": "SELECT CustomerName FROM customers WHERE CustomerName LIKE '%lenovo%'"
+  },
+  {
+    "role": "user",
+    "value": "tell me about east india company"
+  },
+  {
+    "role": "assistant",
+    "value": "I found no data for your question.",
+    "sql": "SELECT * FROM customers WHERE CustomerName LIKE '%East India Company%'"
+  },
+  {
+    "role": "user",
+    "value": "what is cricket"
+  },
+  {
+    "role": "assistant",
+    "value": " Cricket is a bat-and-ball sport played between two teams, each consisting of eleven players. The game is played on a field with a rectangular 22-yard long pitch in the center. One team bats, attempting to score runs, while the other team fields. Each team has a turn to bat and field.\n\nThe objective of the batting team is to score as many runs as possible by hitting the ball bowled by the opposing team's bowler with the bat, and running between two sets of three stumps (wickets) placed at each end of the pitch. A run is scored when both batsmen have safely crossed their respective creases at opposite ends of the pitch.\n\nThe objective of the fielding team is to prevent the opposing team from scoring runs by getting the batters out or preventing them from hitting the ball past the fielders and onto the boundary, where additional runs can be scored. The most common ways to get a batter out are through bowling (by throwing the ball in such a way that it hits the wicket), catching the ball after it has been hit by the bat before it touches the ground, or running the batter out by throwing the ball at one of the wickets while a batsman is running between the wickets.\n\nCricket originated in southeast England during the 16th century and was first played in its current form in the mid-18th century. It became popular in the British Isles, the West Indies, and parts of what is now India before spreading to many other parts of the world. Cricket has a rich history and tradition and is followed by millions of fans around the world.",
+    "sql": null
+  },
+  {
+    "role": "user",
+    "value": "tell me about east india company"
+  },
+  {
+    "role": "assistant",
+    "value": "I found no data for your question.",
+    "sql": "SELECT * FROM customers WHERE CustomerName LIKE '%East%India%Company%'"
+  },
+  {
+    "role": "user",
+    "value": "what is html css js"
+  },
+  {
+    "role": "assistant",
+    "value": " HTML (HyperText Markup Language), CSS (Cascading Style Sheets), and JavaScript are three essential technologies for building websites on the World Wide Web.\n\nHTML is a markup language used to create the structure of web pages. It allows developers to define the content and layout of a website by using tags, such as `<html>`, `<head>`, `<body>`, `<h1>`, `<p>`, etc., which contain information about the content within them.\n\nCSS is a stylesheet language used for describing the look and formatting of HTML documents. It allows developers to define styling properties, such as fonts, colors, layout, and animations, that can be applied to HTML elements. CSS separates the presentation of web pages from their structure, making it easier to maintain and update the appearance of multiple pages on a website.\n\nJavaScript is a scripting language used for adding interactive functionality to websites. It allows developers to create dynamic content, manipulate the Document Object Model (DOM) to change the layout and behavior of HTML elements in response to user interaction or other events, and perform calculations and logic on client-side, without requiring a page reload.\n\nTogether, HTML, CSS, and JavaScript are fundamental technologies for creating modern web applications, with many frameworks and libraries built on top of them to simplify development and enable rich interactive experiences on the web.",
+    "sql": null
+  },
+  {
+    "role": "user",
+    "value": "tell me about lenovo company"
+  },
+  {
+    "role": "assistant",
+    "value": "I found no data for your question.",
+    "sql": "SELECT `CustomerName` FROM customers WHERE `CustomerName` = 'Lenovo'"
+  },
+  {
+    "role": "user",
+    "value": "what is lenovo"
+  },
+  {
+    "role": "assistant",
+    "value": " The data provided appears to be a list of products offered by Lenovo, and does not directly answer your question about what Lenovo is. However, Lenovo is a multinational technology company that primarily produces personal computers, tablets, smartphones, workstations, and electronic storage devices, among other tech products. The products in the provided list seem to be additional services and solutions offered by Lenovo beyond their core hardware offerings.",
+    "sql": "SELECT DISTINCT ProductName FROM products"
+  },
+  {
+    "role": "user",
+    "value": "give me the names of all of its products"
+  },
+  {
+    "role": "assistant",
+    "value": " Here are the names of all products we offer: Analytics Suite, API Credits 100k, Backup Appliance 2TB, BI Connector, Billing Engine, Chatbot Basic, Chatbot Pro, Cloud CRM Pro, Cloud Storage 1TB, Compliance Pack, Contractor Day Rate, Custom Integration, Cyber Insurance Add-on, Data Lake Setup, Data Migration - Flat, DevOps Bundle, Edge Router Pro, Enterprise VPN, GPU Workstation, Hardware Gateway X1, HR Onboarding Module, Integration Package A, IoT Starter Kit, LeadGen Module, Localization Pack, Managed Services - Monthly, Mobile Device Mgmt, Monitoring Agent, Network Cable Pack, Office Suite License, Onsite Consulting Day, Premium Support SLA, Printer A3, Project Management Tool, Prototype Build, Retainer - 3 months, Security Audit, Security Camera 1080p, SLA Upgrade, Smart Access Control, SSD 1TB, Support Desk Basic, Training Workshop (1 day), UX Audit, Voice IVR, Wireless AP, and Workstation Pro.",
+    "sql": " SELECT `ProductName` FROM `products`"
+  }
+]

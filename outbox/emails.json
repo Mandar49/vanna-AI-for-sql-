@@ -1,0 +1,13 @@
+[
+  {
+    "id": "20251111_150340_488779",
+    "to": "test@example.com",
+    "subject": "Test",
+    "body": "Body",
+    "attachments": [],
+    "priority": "normal",
+    "created_at": "2025-11-11T15:03:40.488779",
+    "status": "draft",
+    "sent_at": null
+  }
+]

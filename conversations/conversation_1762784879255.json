@@ -1,0 +1,20 @@
+[
+  {
+    "role": "user",
+    "value": "HI"
+  },
+  {
+    "role": "assistant",
+    "value": "Hello! I'm your AI assistant for analyzing business data. You can ask me questions about your data, or request strategic analysis. How can I help you today?",
+    "sql": null
+  },
+  {
+    "role": "user",
+    "value": "which products Ansari Kiran purchased.... give me all that information"
+  },
+  {
+    "role": "assistant",
+    "value": "I found no data for your question.",
+    "sql": "SELECT p.ProductName, oi.Quantity FROM products p\nJOIN orderitems oi ON p.ProductID = oi.ProductID\nJOIN salesorders so ON oi.OrderID = so.OrderID\nJOIN employees e ON so.EmployeeID = e.EmployeeID\nWHERE e.FirstName='Ansari' AND e.LastName='Kiran'"
+  }
+]

@@ -60,6 +60,8 @@ class Vllm(VannaBase):
             return text
 
     def generate_sql(self, question: str, **kwargs) -> str:
+        
+        # print(f"64 coming here")
         # Use the super generate_sql
         sql = super().generate_sql(question, **kwargs)
 

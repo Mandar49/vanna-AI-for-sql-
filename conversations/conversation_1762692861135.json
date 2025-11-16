@@ -1,0 +1,38 @@
+[
+  {
+    "role": "user",
+    "value": "hi can you share the phone number of Nisha Kapoor?"
+  },
+  {
+    "role": "assistant",
+    "value": "I am unable to provide personally identifiable information of individuals. Sharing phone numbers would be a violation of privacy laws.",
+    "sql": null
+  },
+  {
+    "role": "user",
+    "value": "What is the IEC in exports?"
+  },
+  {
+    "role": "assistant",
+    "value": "**IEC in exports stands for Import-Export Code.**\n\nAn IEC code is a standardized numerical code that is used to classify traded goods internationally for tariff, statistical, and customs purposes. It is a hierarchical system that assigns a unique code to each product or commodity.\n\n**Purpose of IEC codes:**\n\n* To facilitate international trade by providing a common language for classifying goods.\n* To simplify customs clearance and reduce errors in trade documents.\n* To provide statistical data on trade volumes and values.\n\n**Structure of an IEC code:**\n\n* The first six digits identify the chapter heading.\n* The next two digits identify the heading.\n* The last four digits identify the product or commodity.\n\n**Example of an IEC code:**\n\n* **8471.30.00** - Electrical machinery and equipment, including apparatus for the control of electrical power, for use in manufacturing industries.\n\n**Uses of IEC codes:**\n\n* Import and export documentation\n* Customs declarations\n* Statistical reporting\n* Trade negotiations\n* Supply chain management",
+    "sql": null
+  },
+  {
+    "role": "user",
+    "value": "So now i want you to share the list of products we have and also i want to know how we can add a few products and what should be the strategy to double our sales "
+  },
+  {
+    "role": "assistant",
+    "value": "## Summary\n\nThe provided facts lack details regarding the current product portfolio and sales figures, making it impossible to generate a definitive strategy for doubling sales. However, by leveraging general business principles, we can outline potential actions to consider.\n\n## Actionable Insights\n\n* **Product Portfolio Analysis:**\n    * Analyze current product line for profitability, market demand, and alignment with customer needs.\n    * Identify underperforming or obsolete products for potential removal.\n    * Research new market trends and identify potential product opportunities.\n\n\n* **Product Development Strategy:**\n    * Develop a product roadmap focused on enhancing existing products and introducing innovative new ones.\n    * Prioritize features and functionalities based on market research and customer feedback.\n    * Invest in product design and packaging to enhance product appeal.\n\n\n* **Marketing & Promotional Activities:**\n    * Develop targeted marketing campaigns to promote new and existing products.\n    * Leverage online channels (e.g. website, social media) for product discovery and engagement.\n    * Explore influencer marketing and partnerships to expand reach.\n\n\n* **Sales Strategy Optimization:**\n    * Analyze current sales channels and pricing strategies.\n    * Consider offering online purchasing options and/or expanding distribution channels.\n    * Implement targeted sales promotions and discounts.\n\n\n* **Customer Engagement & Feedback:**\n    * Monitor customer feedback channels and analyze purchase data to identify product improvement opportunities.\n    * Engage with customers through surveys and social media to gather insights on new product ideas and preferences.",
+    "sql": null
+  },
+  {
+    "role": "user",
+    "value": "What is the phone number of Tara Reddy "
+  },
+  {
+    "role": "assistant",
+    "value": "I am unable to access personally identifiable information or sensitive data, and am unable to provide any phone numbers.",
+    "sql": null
+  }
+]

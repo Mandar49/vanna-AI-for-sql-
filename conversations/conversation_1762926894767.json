@@ -1,0 +1,11 @@
+[
+  {
+    "role": "user",
+    "value": "Can you share the contact details of Nisha kapoor"
+  },
+  {
+    "role": "assistant",
+    "value": "\u2705 **SQL Result:**\n```\nContactPerson               ContactEmail    PhoneNumber\n Nisha Kapoor pandey.1@exampleclient.com +91-8171712405\n```\n\n\ud83d\udcca **Analyst Response:**\n\n **Key Finding:** The contact details for Nisha Kapoor are provided in the given data.\n\n**Observations:**\n- Nisha Kapoor's name is \"Nisha Kapoor\".\n- Her email address is \"[pandey.1@exampleclient.com](mailto:pandey.1@exampleclient.com)\".\n- The phone number associated with her is \"+91-8171712405.\"\n\n**Data Summary:**\nThe data shows that Nisha Kapoor's contact details include her name, email address, and phone number.\n\n\n\ud83d\udca1 *All numbers above are from the actual database query results.*\n\n\u26a0\ufe0f **Data Validation Warning:**\nThe following numbers in the analysis may not match the actual database values: [8171712405.0, 8171712405.0]\nPlease verify these numbers against the raw SQL results shown above.\n\n**SQL Query:**\n```sql\n SELECT ContactPerson, ContactEmail, PhoneNumber FROM customers WHERE ContactPerson = 'Nisha Kapoor'\n```",
+    "sql": " SELECT ContactPerson, ContactEmail, PhoneNumber FROM customers WHERE ContactPerson = 'Nisha Kapoor'"
+  }
+]

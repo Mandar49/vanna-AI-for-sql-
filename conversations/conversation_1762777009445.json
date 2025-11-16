@@ -1,0 +1,11 @@
+[
+  {
+    "role": "user",
+    "value": "What is the phone number of Nisha Kapoor?"
+  },
+  {
+    "role": "assistant",
+    "value": "I found no data for your question.",
+    "sql": " SELECT PhoneNumber FROM customers WHERE CustomerName = 'Nisha Kapoor'"
+  }
+]

@@ -1,0 +1,11 @@
+
+[2025-11-16 21:11:32] Query Rewrite
+Corrections: RepeatCustomers → customers, RepeatCustomers → customers
+SQL: WITH customers AS (
+    SELECT CustomerID FROM salesorders so
+    JOIN (
+        SELECT CustomerID, COUNT(OrderID) as TotalOrders
+        FROM salesorders
+        GROUP BY CustomerID
+        HAVING To...
+======================================================================

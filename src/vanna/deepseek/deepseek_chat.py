@@ -43,6 +43,8 @@ class DeepSeekChat(VannaBase):
         return {"role": "assistant", "content": message}
 
     def generate_sql(self, question: str, **kwargs) -> str:
+        # print(f"46 coming here")
+
         # 使用父类的 generate_sql
         sql = super().generate_sql(question, **kwargs)
         
