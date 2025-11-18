@@ -1,16 +1,23 @@
 """
-Business Analyst - AI-powered data introspection and strategic reasoning
-Converts raw SQL results into actionable business insights
+Business Analyst - DB-INTELLIGENCE-V1 Hybrid Intelligence Engine
+Combines strict SQL accuracy with advanced business reasoning and strategic insights
+Converts raw SQL results into actionable business intelligence
 """
 import re
 import ollama
 import pandas as pd
+from hybrid_reasoner import HybridReasoner
 
 class BusinessAnalyst:
     def __init__(self):
         self.model = "mistral:7b-instruct"
+        self.hybrid_reasoner = HybridReasoner()
+        
         self.cagr_keywords = ['cagr', 'compound annual growth', 'growth rate', 'annual growth']
         self.forecast_keywords = ['forecast', 'project', 'predict', 'future', 'scenario', 'projection', 'estimate']
+        
+        # Person/entity detection keywords
+        self.person_keywords = ['tell me about', 'who is', 'what company', 'phone number', 'email', 'contact', 'works at', 'employee']
         
         # Metric detection keywords
         self.metric_keywords = {
@@ -20,6 +27,19 @@ class BusinessAnalyst:
             'aov': ['average order value', 'aov', 'average per order', 'mean order'],
             'compare': ['compare', 'comparison', 'versus', 'vs', 'against']
         }
+    
+    def detect_person_query(self, question: str) -> bool:
+        """
+        Detect if the query is asking about a specific person
+        
+        Args:
+            question: User's question
+        
+        Returns:
+            True if asking about a person
+        """
+        question_lower = question.lower()
+        return any(keyword in question_lower for keyword in self.person_keywords)
     
     def detect_cagr_query(self, question: str) -> bool:
         """
@@ -135,13 +155,13 @@ class BusinessAnalyst:
     def analyze_trends(self, df: pd.DataFrame) -> str:
         """
         Detect growth patterns and trends in data
-        Uses detect_trend() helper for direction detection
+        DB-ANALYST-V3: NO CALCULATIONS - only describe direction using exact values
         
         Args:
             df: DataFrame to analyze
         
         Returns:
-            One-line trend summary with direction
+            One-line trend summary with direction (NO percentages, NO calculations)
         """
         if df is None or df.empty or len(df) < 2:
             return "Insufficient data for trend analysis."
@@ -165,16 +185,11 @@ class BusinessAnalyst:
         # Detect trend direction
         trend_direction = self.detect_trend(values)
         
-        # Calculate trend magnitude
+        # Get exact first and last values (NO CALCULATIONS)
         first_val = values.iloc[0]
         last_val = values.iloc[-1]
         
-        if first_val == 0:
-            return f"Trend: {trend_direction.capitalize()} (from {first_val} to {last_val})"
-        
-        change_pct = ((last_val - first_val) / first_val) * 100
-        
-        # Format trend with emoji
+        # Format trend with emoji - ONLY state direction and exact values
         trend_emoji = {
             'upward': '📈',
             'downward': '📉',
@@ -183,12 +198,13 @@ class BusinessAnalyst:
         
         emoji = trend_emoji.get(trend_direction, '')
         
-        if abs(change_pct) < 1:
-            return f"Trend: Stable {emoji} (minimal change)"
-        elif change_pct > 0:
-            return f"Trend: Upward {emoji} (+{change_pct:.1f}% growth)"
+        # DB-ANALYST-V3: NO percentage calculations, only exact values
+        if trend_direction == 'upward':
+            return f"Trend: Upward {emoji} (from {first_val} to {last_val})"
+        elif trend_direction == 'downward':
+            return f"Trend: Downward {emoji} (from {first_val} to {last_val})"
         else:
-            return f"Trend: Downward {emoji} ({change_pct:.1f}% decrease)"
+            return f"Trend: Stable {emoji} ({first_val} to {last_val})"
     
     def analyze_with_cagr(self, question: str, df: pd.DataFrame, cagr_result: dict) -> dict:
         """
@@ -261,10 +277,127 @@ class BusinessAnalyst:
             }
         }
     
+    def check_person_in_database(self, name: str) -> dict:
+        """
+        Check if a person exists in employees or customers tables
+        MUST be called before providing any information about a person
+        
+        Args:
+            name: Person's name to search for
+        
+        Returns:
+            dict with 'found', 'table', 'data', 'message'
+        """
+        import mysql.connector
+        from common import AppConfig
+        
+        result = {
+            'found': False,
+            'table': None,
+            'data': None,
+            'message': ''
+        }
+        
+        try:
+            conn = mysql.connector.connect(
+                host=AppConfig.DB_HOST,
+                user=AppConfig.DB_USER,
+                password=AppConfig.DB_PASSWORD,
+                database=AppConfig.DB_NAME
+            )
+            cursor = conn.cursor(dictionary=True)
+            
+            # Split name into parts
+            name_parts = name.strip().split()
+            
+            if len(name_parts) >= 2:
+                first_name = name_parts[0]
+                last_name = name_parts[-1]
+                
+                # Search employees
+                cursor.execute(
+                    "SELECT * FROM employees WHERE FirstName = %s AND LastName = %s",
+                    (first_name, last_name)
+                )
+                employee = cursor.fetchone()
+                
+                if employee:
+                    result['found'] = True
+                    result['table'] = 'employees'
+                    result['data'] = employee
+                    result['message'] = f"Found in employees table"
+                    conn.close()
+                    return result
+            
+            # Search customers (ContactPerson field)
+            cursor.execute(
+                "SELECT * FROM customers WHERE ContactPerson LIKE %s",
+                (f"%{name}%",)
+            )
+            customer = cursor.fetchone()
+            
+            if customer:
+                result['found'] = True
+                result['table'] = 'customers'
+                result['data'] = customer
+                result['message'] = f"Found in customers table"
+            else:
+                result['message'] = f"This person does not exist in your database."
+            
+            conn.close()
+            return result
+            
+        except Exception as e:
+            result['message'] = f"Database search error: {str(e)}"
+            return result
+    
+    def analyze_with_hybrid_intelligence(self, question: str, df: pd.DataFrame, sql: str = None) -> dict:
+        """
+        DB-INTELLIGENCE-V1: Hybrid analysis combining SQL accuracy with business reasoning
+        
+        Args:
+            question: Original user question
+            df: DataFrame with query results (can be empty)
+            sql: SQL query that was executed
+        
+        Returns:
+            dict with 'sql_result', 'insight', 'recommendation', 'sql_query'
+        """
+        # Prepare SQL result summary
+        if df is None or df.empty:
+            sql_result_summary = "No data found matching the query criteria."
+            query_context = {'empty': True, 'sql': sql}
+        else:
+            sql_result_summary = self._format_sql_result(df)
+            query_context = {'empty': False, 'sql': sql, 'row_count': len(df)}
+        
+        # Use hybrid reasoner to interpret results
+        reasoning = self.hybrid_reasoner.interpret_result(df, query_context, question)
+        
+        return {
+            'sql_result': sql_result_summary,
+            'insight': reasoning['insight'],
+            'recommendation': reasoning['recommendation'],
+            'sql_query': sql,
+            'framework_used': reasoning.get('framework_used', 'default'),
+            'raw_data': df
+        }
+    
+    def _format_sql_result(self, df: pd.DataFrame) -> str:
+        """Format SQL result for display"""
+        if df is None or df.empty:
+            return "No data found."
+        
+        if len(df) <= 10:
+            return df.to_string(index=False)
+        else:
+            return f"{df.head(10).to_string(index=False)}\n\n... ({len(df)} total rows)"
+    
     def analyze_results_with_llm(self, question: str, df: pd.DataFrame, sql: str = None) -> dict:
         """
         Analyze SQL query results and provide business insights
-        STRICT MODE: Only use actual data from the DataFrame, no fabrication
+        DB-ANALYST-V3 ULTRA-STRICT MODE: Only use actual data from the DataFrame
+        NO calculations, NO fabrication, NO external knowledge
         
         Args:
             question: Original user question
@@ -277,7 +410,7 @@ class BusinessAnalyst:
         if df is None or df.empty:
             return {
                 'insight': "No data available for this query in the current database.",
-                'summary': "The query returned no results. Please populate the database with sample data.",
+                'summary': "The query returned no results.",
                 'recommendations': [],
                 'raw_data': None
             }
@@ -285,48 +418,46 @@ class BusinessAnalyst:
         # Prepare data summary for LLM
         data_summary = self._prepare_data_summary(df)
         
-        # Build analysis prompt with STRICT instructions
-        prompt = f"""You are a senior business analyst reviewing query results.
+        # Build analysis prompt with DB-ANALYST-V3 ULTRA-STRICT instructions
+        prompt = f"""You are DB-ANALYST-V3, a STRICT database-only analyst.
 
-🚨 CRITICAL RULES - READ CAREFULLY:
-1. Use ONLY the exact numbers shown in the data below
-2. DO NOT calculate differences, percentages, or any derived values
-3. DO NOT generate, assume, or fabricate ANY numerical values
-4. If you mention a number, it MUST appear EXACTLY in the data below
-5. Simply describe what the data shows, do not perform math
+🔐 ABSOLUTE RULES (VIOLATION = FAILURE):
+
+1. You ONLY describe what appears in the SQL RESULT below
+2. ❌ NEVER calculate ANY number (no %, no growth, no averages, no differences)
+3. ❌ NEVER use external knowledge (no actors, no companies, no world facts)
+4. ❌ NEVER invent or assume ANY value
+5. ✔ ONLY copy exact numbers from the data
+6. If asked about someone/something not in data → say "does not exist in your database"
+7. NO math, NO world knowledge, NO assumptions, NO calculations
 
 User Question: "{question}"
 
-Data Retrieved (USE ONLY THESE EXACT NUMBERS):
+SQL RESULT (YOUR ONLY SOURCE OF TRUTH):
 {data_summary}
 
 Your task:
-1. Describe what the data shows using ONLY the exact numbers provided
-2. Identify patterns or trends by comparing the numbers shown
-3. Provide business recommendations based on what you observe
+- Restate what the SQL RESULT shows using EXACT values only
+- Compare values if both are present (e.g., "X is higher than Y")
+- NO percentages, NO growth rates, NO calculations of any kind
 
-STRICT RULES:
-- Quote exact numbers from the data above (copy them exactly)
-- Do NOT calculate: differences, percentages, ratios, or any math
-- Do NOT infer or assume numbers not explicitly shown
-- If you want to mention a trend, describe it qualitatively (e.g., "increased", "higher") without calculating the amount
-- If data is insufficient, state that clearly
+FORBIDDEN EXAMPLES:
+❌ "Growth rate is 15%" (unless 15 appears in SQL RESULT)
+❌ "Average is 500" (unless 500 appears in SQL RESULT)
+❌ "Increased by 20%" (unless 20 appears in SQL RESULT)
+❌ "Shah Rukh Khan is a Bollywood actor" (external knowledge)
 
-Format your response as:
+ALLOWED EXAMPLES:
+✔ "The data shows: 2023 sales = 100, 2024 sales = 150"
+✔ "Customer A has 500, Customer B has 300. A is higher."
+✔ "The highest value in the table is 200"
 
-INSIGHT:
-[One paragraph describing what the data shows using ONLY the exact numbers above]
+Output format:
+INSIGHT: [One sentence restating exact data]
+OBSERVATIONS: [2-3 bullet points with exact numbers from SQL RESULT]
+RECOMMENDATIONS: [Actionable suggestions based on observations, NO calculations]
 
-KEY OBSERVATIONS:
-- [Observation 1: state the exact numbers from data]
-- [Observation 2: state the exact numbers from data]
-- [Observation 3: describe pattern without calculating]
-
-RECOMMENDATIONS:
-- [Actionable recommendation 1]
-- [Actionable recommendation 2]
-
-Keep it professional and data-driven."""
+NO MARKDOWN. NO CALCULATIONS. EXACT DATA ONLY."""
 
         try:
             response = ollama.chat(
@@ -334,7 +465,7 @@ Keep it professional and data-driven."""
                 messages=[
                     {
                         "role": "system",
-                        "content": "You are a senior business analyst with expertise in data interpretation. CRITICAL: You ONLY use exact data provided to you. You NEVER fabricate, assume, or generate numerical values. If you mention a number, it MUST be from the provided data."
+                        "content": "You are DB-ANALYST-V3. ABSOLUTE RULE: You ONLY use exact data from SQL RESULT. You NEVER calculate, fabricate, assume, or use external knowledge. Every number you mention MUST appear EXACTLY in the SQL RESULT. NO MATH. NO EXTERNAL KNOWLEDGE. VIOLATION = FAILURE."
                     },
                     {
                         "role": "user",

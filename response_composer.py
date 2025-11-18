@@ -43,11 +43,64 @@ class ResponseComposer:
             'writer': WRITER
         }
         self.mode = "DETAILED"  # Default mode
+        self.hybrid_mode = True  # DB-INTELLIGENCE-V1: Enable hybrid output
     
     def set_mode(self, mode: str):
         """Set response mode: COMPACT or DETAILED"""
         if mode.upper() in ["COMPACT", "DETAILED"]:
             self.mode = mode.upper()
+    
+    def compose_hybrid_response(self, sql_result: str, insight: str, recommendation: str, 
+                               sql_query: str = None, mode: str = None) -> str:
+        """
+        DB-INTELLIGENCE-V1: Compose hybrid response with SQL + reasoning
+        
+        Args:
+            sql_result: Formatted SQL result
+            insight: Business insight from hybrid reasoner
+            recommendation: Strategic recommendation
+            sql_query: SQL query executed (optional)
+            mode: COMPACT or DETAILED
+        
+        Returns:
+            Formatted hybrid response
+        """
+        mode = mode or self.mode
+        response_parts = []
+        
+        # SQL RESULT section
+        response_parts.append(self._format_section_header("SQL RESULT"))
+        response_parts.append(sql_result)
+        
+        # INSIGHT section
+        response_parts.append("\n" + self._format_section_header("INSIGHT"))
+        response_parts.append(self._strip_markdown(insight))
+        
+        # STRATEGIC RECOMMENDATION section
+        response_parts.append("\n" + self._format_section_header("STRATEGIC RECOMMENDATION"))
+        response_parts.append(self._strip_markdown(recommendation))
+        
+        # SQL QUERY section (if detailed mode and query provided)
+        if mode == "DETAILED" and sql_query:
+            response_parts.append("\n" + self._format_section_header("SQL QUERY EXECUTED"))
+            response_parts.append(sql_query)
+        
+        return "\n".join(response_parts)
+    
+    def compose_general_answer(self, answer: str) -> str:
+        """
+        DB-INTELLIGENCE-V1: Compose general knowledge answer (no SQL)
+        
+        Args:
+            answer: Answer from hybrid reasoner
+        
+        Returns:
+            Formatted answer
+        """
+        response_parts = []
+        response_parts.append(self._format_section_header("ANSWER"))
+        response_parts.append(self._strip_markdown(answer))
+        return "\n".join(response_parts)
     
     def _format_section_header(self, title: str, width: int = 60) -> str:
         """Format a section header with separator lines"""
@@ -293,16 +346,25 @@ class ResponseComposer:
     
     def _build_prompt(self, persona: Persona, query: str, analysis: Dict, 
                      raw_data: Optional[str], context: Optional[str], mode: str) -> str:
-        """Build persona-specific prompt with STRICT data-only enforcement"""
+        """Build persona-specific prompt with ULTRA-STRICT data-only enforcement"""
         
         prompt_parts = []
         
-        # CRITICAL: Add strict no-fabrication instruction at the top
-        prompt_parts.append("""CRITICAL INSTRUCTION: You MUST use ONLY the exact numbers and data provided below. 
-DO NOT generate, calculate, assume, or fabricate ANY numerical values. 
-If you mention any number, it MUST appear EXACTLY in the data provided.
-If data is missing or insufficient, state that clearly instead of guessing.
-OUTPUT PLAIN TEXT ONLY - NO MARKDOWN FORMATTING (no *, #, **, etc.)
+        # DB-ANALYST-V3: CRITICAL enforcement at the top
+        prompt_parts.append("""🔐 DB-ANALYST-V3 ABSOLUTE RULES (VIOLATION = FAILURE):
+
+1. You are DB-ANALYST-V3, operating STRICTLY on the user's private business database
+2. ALL analysis MUST use ONLY exact numbers from SQL RESULT below
+3. ❌ NEVER calculate, compute, or derive ANY values (no math, no %, no differences, no averages, no growth)
+4. ❌ NEVER use external knowledge (no actors, no companies, no world facts, no biographies)
+5. ❌ NEVER invent, assume, or fabricate ANY numerical values
+6. ✔ ONLY copy exact numbers from SQL RESULT verbatim
+7. If person/entity not in SQL RESULT → say "does not exist in your database"
+8. NO math, NO world knowledge, NO assumptions, NO calculations, NO percentages
+9. OUTPUT PLAIN TEXT ONLY - NO MARKDOWN (no *, #, **, etc.)
+
+EVERY NUMBER YOU MENTION MUST APPEAR EXACTLY IN SQL RESULT BELOW.
+If you calculate or invent ANY number, you FAIL.
 """)
         
         # Add mode instruction

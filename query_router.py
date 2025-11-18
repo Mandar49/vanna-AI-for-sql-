@@ -1,12 +1,17 @@
 """
-Query Router - Dual-Brain Intelligence System
-Routes queries between SQL Brain (Vanna) and General Intelligence Brain (Mistral)
+Query Router - DB-INTELLIGENCE-V1 Hybrid System
+Routes queries intelligently between SQL execution and business reasoning
+Combines strict data accuracy with advanced business intelligence
 """
 import ollama
 from common import vn
+from hybrid_reasoner import HybridReasoner
 
 class QueryRouter:
     def __init__(self):
+        # Initialize hybrid reasoning engine
+        self.hybrid_reasoner = HybridReasoner()
+        
         # Initialize general LLM for conversational queries
         self.general_model = "mistral:7b-instruct"
         
@@ -21,12 +26,39 @@ class QueryRouter:
             "lowest", "sum", "calculate", "find", "get", "retrieve"
         ]
     
+    def detect_person_query(self, question: str) -> bool:
+        """
+        Detect if query is asking about a specific person
+        Returns: True if person query detected
+        """
+        person_patterns = [
+            'tell me about',
+            'who is',
+            'what company does',
+            'phone number',
+            'email',
+            'contact',
+            'works at',
+            'employee named',
+            'customer named'
+        ]
+        question_lower = question.lower()
+        return any(pattern in question_lower for pattern in person_patterns)
+    
     def classify_query(self, question: str) -> str:
         """
-        Classify whether a query should go to SQL brain or General brain
-        Returns: 'sql' or 'general'
+        DB-INTELLIGENCE-V1: Classify query type with hybrid intelligence
+        Returns: 'sql', 'person', 'hybrid', or 'general'
         """
         question_lower = question.lower()
+        
+        # Check for person queries first (must search DB before answering)
+        if self.detect_person_query(question):
+            return "person"
+        
+        # Use hybrid reasoner to determine if SQL is needed
+        if self.hybrid_reasoner.should_use_sql(question):
+            return "sql"
         
         # Check for SQL-related keywords
         if any(keyword in question_lower for keyword in self.sql_keywords):
@@ -39,6 +71,7 @@ class QueryRouter:
             if any(keyword in question_lower for keyword in ["customer", "employee", "order", "sales", "department"]):
                 return "sql"
         
+        # General knowledge/business concept questions
         return "general"
     
     def route_query(self, question: str, conversation_history: list = None):
@@ -48,7 +81,13 @@ class QueryRouter:
         """
         query_type = self.classify_query(question)
         
-        if query_type == "sql":
+        if query_type == "person":
+            # Person query - must search database first
+            return {
+                "type": "person",
+                "question": question
+            }
+        elif query_type == "sql":
             # Use Vanna SQL Brain
             return {
                 "type": "sql",
@@ -60,53 +99,28 @@ class QueryRouter:
     
     def _handle_general_query(self, question: str, conversation_history: list = None):
         """
-        Handle general conversational queries using Mistral
+        DB-INTELLIGENCE-V1: Handle general queries with business intelligence
+        No longer blocks questions - provides knowledgeable answers
         """
-        # Build context from conversation history
-        context_messages = []
+        question_lower = question.lower()
         
-        if conversation_history:
-            # Include last 5 exchanges for context
-            for msg in conversation_history[-10:]:  # Last 5 exchanges (10 messages)
-                if msg['role'] == 'user':
-                    context_messages.append(f"User: {msg['value']}")
-                elif msg['role'] == 'assistant':
-                    context_messages.append(f"Assistant: {msg['value']}")
-        
-        # Build the prompt with context
-        system_prompt = """You are a helpful, knowledgeable AI assistant. You provide clear, accurate, and conversational responses to questions on any topic. 
-You are friendly, professional, and always aim to be helpful. When you don't know something, you admit it honestly.
-You are part of a business intelligence system, but you can also answer general knowledge questions."""
-        
-        # Combine context and current question
-        if context_messages:
-            full_prompt = "\n".join(context_messages) + f"\nUser: {question}\nAssistant:"
-        else:
-            full_prompt = f"User: {question}\nAssistant:"
-        
-        try:
-            # Call Ollama with Mistral model
-            response = ollama.chat(
-                model=self.general_model,
-                messages=[
-                    {"role": "system", "content": system_prompt},
-                    {"role": "user", "content": full_prompt}
-                ]
-            )
-            
-            answer = response['message']['content']
-            
+        # System/help queries
+        help_keywords = ['help', 'how to use', 'what can you', 'commands', 'features']
+        if any(keyword in question_lower for keyword in help_keywords):
             return {
                 "type": "general",
-                "answer": answer,
+                "answer": "I am DB-INTELLIGENCE-V1, a hybrid AI Business Analyst. I combine strict SQL accuracy for data queries with advanced business intelligence for interpretation and strategy. Ask me about your data, business concepts, or strategic recommendations.",
                 "sql": None
             }
-        except Exception as e:
-            return {
-                "type": "general",
-                "answer": f"I apologize, but I encountered an error while processing your question: {str(e)}",
-                "sql": None
-            }
+        
+        # Use hybrid reasoner for general business questions
+        answer = self.hybrid_reasoner.answer_general_question(question)
+        
+        return {
+            "type": "general",
+            "answer": answer,
+            "sql": None
+        }
 
 # Global router instance
 router = QueryRouter()
